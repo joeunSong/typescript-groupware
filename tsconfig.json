@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
     // * 절대 경로 지정
-    "baseUrl": "./src",
+    // "baseUrl": "./src",
     "paths": {
-      "@components/*": ["./components/*"],
-      "@page/*": ["./page/*"]
+      "@/*": ["./*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@page/*": ["./src/page/*"],
+      "@services/*": ["./src/services/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@types/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

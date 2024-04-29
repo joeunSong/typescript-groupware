@@ -1,14 +1,45 @@
-const App = () => {
+// * basic
+import { useEffect } from 'react';
+//  * install libraries
+import _ from 'lodash';
+import { useUpdateEffect } from 'react-use';
+import Button from '@mui/material/Button';
+// * components
+import Test from '@components/common/test';
+// * constants
+import { TEST_CONSTANT } from 'constants/constant';
+// * apis
+import { TEST_LOGIN } from 'services/login';
+// * utils
+import axios from 'utils/axios';
+
+const App = (props: any) => {
+  const {} = props;
+
+  // * react-use Test
+  useUpdateEffect(() => {
+    console.log('zz');
+  }, []);
+
+  useEffect(() => {
+    // * lodash 테스트
+    console.log(_.isEmpty(10));
+  }, []);
+
   return (
     <div className='flex flex-col w-full h-screen items-center justify-center'>
-      <div className='flex w-40 items-center justify-center bg-black'>
-        <span className='text-lg font-bold text-white'>zzz</span>
+      <div className='flex flex-col w-40 items-center justify-center bg-black'>
+        <span className='text-sm font-medium text-white'>APP.tsx 테스트</span>
+        <span className='text-base font-semibold text-gray-500'>tailwind 테스트</span>
+        <span className='text-lg font-bold text-blue-200'>Babel 테스트</span>
       </div>
       <div className='flex w-40 items-center justify-center bg-red-400'>
-        <span className='text-lg font-bold'>안녕하세요</span>
+        <span className='text-lg font-bold text-indigo-300'>안녕하세요</span>
       </div>
+      {/*  MUI 테스트 */}
+      <Button variant='text'>Text</Button>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
