@@ -5,13 +5,12 @@ import _ from 'lodash';
 import { useUpdateEffect } from 'react-use';
 import Button from '@mui/material/Button';
 // * components
-import Test from '@components/common/test';
 // * constants
-import { TEST_CONSTANT } from 'constants/constant';
+import { TEST_CONSTANT } from '@constants/constant';
 // * apis
-import { TEST_LOGIN } from 'services/login';
+import { TEST_LOGIN } from '@services/login';
 // * utils
-import axios from 'utils/axios';
+import axios from '@utils/axios';
 
 const App = (props: any) => {
   const {} = props;
