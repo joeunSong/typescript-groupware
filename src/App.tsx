@@ -37,8 +37,6 @@ const App = (props: any) => {
       </div>
       {/*  MUI 테스트 */}
       <p className='text-primary font-Logo'>tailwind config test</p>
-      <p className='text-primary font-Logo'>테스트</p>
-      <p>ㅎㅇ</p>
       <Button variant='text'>Text</Button>
     </div>
   );

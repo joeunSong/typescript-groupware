@@ -31,27 +31,27 @@ module.exports = {
         '.font-h1': {
           '@apply font-default': {},
           fontSize: '1.875rem',
-          weight: '600',
+          fontWeight: '600',
         },
         '.font-h2': {
           '@apply font-default': {},
           fontSize: '1.5rem',
-          weight: '600',
+          fontWeight: '600',
         },
         '.font-body1': {
           '@apply font-default': {},
           fontSize: '1.125rem',
-          weight: ' 500',
+          fontWeight: ' 500',
         },
         '.font-body1-bold': {
           '@apply font-default': {},
           fontSize: '1.125rem',
-          weight: '600',
+          fontWeight: '600',
         },
         '.font-placeholder': {
           '@apply font-default': {},
           fontSize: '1rem',
-          weight: '100',
+          fontWeight: '100',
         },
       });
     },
