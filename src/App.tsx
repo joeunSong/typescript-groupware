@@ -1,29 +1,15 @@
 // * basic
-import { useEffect } from 'react';
 //  * install libraries
 import _ from 'lodash';
-import { useUpdateEffect } from 'react-use';
-import Button from '@mui/material/Button';
 // * components
+import Button from '@mui/material/Button';
+import SideBarLayout from './components/common/SideBar';
 // * constants
-import { TEST_CONSTANT } from '@constants/constant';
 // * apis
-import { TEST_LOGIN } from '@services/login';
 // * utils
-import axios from '@utils/axios';
 
 const App = (props: any) => {
   const {} = props;
-
-  // * react-use Test
-  useUpdateEffect(() => {
-    console.log('zz');
-  }, []);
-
-  useEffect(() => {
-    // * lodash 테스트
-    console.log(_.isEmpty(10));
-  }, []);
 
   return (
     <div className='flex flex-col items-center justify-center w-full h-screen'>

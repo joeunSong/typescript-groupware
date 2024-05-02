@@ -1,5 +1,6 @@
 // * install librarys
 import axios from 'axios';
+import { AccessToken } from '../constants/constant';
 
 const ApiClient = () => {
   // * 기초 설정
@@ -19,7 +20,7 @@ const ApiClient = () => {
   const instance = axios.create(defaultOptions);
   // * Token 설정
   instance.interceptors.request.use(async (req: any) => {
-    let session = localStorage.getItem('access_token');
+    let session = localStorage.getItem(AccessToken);
     if (session !== undefined) {
       req.headers.Authorization = `Bearer ${session}`;
     } else {

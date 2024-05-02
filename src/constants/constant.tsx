@@ -1,1 +1,2 @@
-export const TEST_CONSTANT = 'test';
+// * Global
+export const AccessToken = 'access_token';

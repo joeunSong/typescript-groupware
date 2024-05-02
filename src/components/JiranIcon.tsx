@@ -1,32 +1,45 @@
 // * basic
-// * svg
+import React from 'react';
+// * install libraries
+import _ from 'lodash';
 
-const render = (src: any, w: any, h: any, className: any, onClick: any | undefined = null) => {
+// * image
+// * svg
+import JiranFullLogo from '../assets/svg/JiranFullLogo.svg';
+
+const render = (
+  src: any,
+  w: any,
+  h: any,
+  width: any | undefined = null,
+  height: any | undefined = null,
+  className: any,
+  onClick: any | undefined = null,
+) => {
   return (
-    <></>
-    // <Image
-    //   alt=''
-    //   priority={true}
-    //   className={[
-    //     `w-${w && h ? w : '5'} h-${w && h ? h : '5'}`,
-    //     className !== undefined ? className : '',
-    //   ].join(' ')}
-    //   // className={classNames(w && h ? `w-${w} h-${h}` : 'w-5 h-5')}
-    //   width={200}
-    //   height={200}
-    //   unoptimized={true}
-    //   src={src}
-    //   loader={({ src, width, quality }) => {
-    //     return `${src}?w=${width}&q=${quality || 100}`;
-    //   }}
-    //   onClick={() => {
-    //     if (onClick !== null) {
-    //       onClick();
-    //     }
-    //   }}
-    // />
+    <img
+      alt={''}
+      src={src}
+      className={`w-${w && h ? w : '5'} h-${w && h ? h : '5'} ${className !== undefined ? className : ''}`}
+      width={!_.isEmpty(width) && width !== undefined ? width : 200}
+      height={!_.isEmpty(height) && width !== undefined ? width : 200}
+      onClick={() => {
+        if (onClick !== null) {
+          onClick();
+        }
+      }}
+    />
   );
 };
 
 // icon
-export const TestIcon = (props: any) => render(props.w, props.h, props.className, props.onClick);
+export const JiranFullLogoIcon = (props: any) =>
+  render(
+    JiranFullLogo,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+  );
