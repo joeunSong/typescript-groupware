@@ -7,6 +7,7 @@ const theme = createTheme({
     },
     secondary: {
       main: '#C7C7C7', // tailwind에서 설정한 secondary 색상 사용
+      300: '#F5F5F5',
     },
   },
   typography: {
