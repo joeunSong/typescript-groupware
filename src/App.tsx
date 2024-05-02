@@ -3,7 +3,7 @@
 import _ from 'lodash';
 // * components
 import Button from '@mui/material/Button';
-import SideBarLayout from './components/common/SideBar';
+import { CustomButton } from './components/common/Components';
 // * constants
 // * apis
 // * utils
@@ -23,6 +23,9 @@ const App = (props: any) => {
       </div>
       {/*  MUI 테스트 */}
       <p className='text-primary font-Logo'>tailwind config test</p>
+      <CustomButton variant='contained' size='md'>
+        버튼
+      </CustomButton>
       <Button variant='text'>Text</Button>
     </div>
   );
