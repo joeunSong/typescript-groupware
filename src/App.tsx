@@ -3,7 +3,7 @@
 import _ from 'lodash';
 // * components
 import Button from '@mui/material/Button';
-import { CustomButton } from './components/common/Components';
+import { ContentBox, CustomButton } from './components/common/Components';
 // * constants
 // * apis
 // * utils
@@ -27,6 +27,7 @@ const App = (props: any) => {
         버튼
       </CustomButton>
       <Button variant='text'>Text</Button>
+      <ContentBox title='제목'>내용입니다.</ContentBox>
     </div>
   );
 };
