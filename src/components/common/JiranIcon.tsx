@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 // * image
 // * svg
-import JiranFullLogo from '../assets/svg/JiranFullLogo.svg';
+import JiranFullLogo from '../../assets/svg/JiranFullLogo.svg';
 
 const render = (
   src: any,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import { JiranFullLogoIcon } from '../JiranIcon';
+import { JiranFullLogoIcon } from './JiranIcon';
 import ApiClient from '../../utils/axios';
 import * as ENDPOINT from '../../constants/apiEndpoints';
 import { ACCESS_TOKEN } from '../../constants/constant';

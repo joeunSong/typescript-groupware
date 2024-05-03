@@ -1,5 +1,5 @@
 import React from 'react';
-import Signin from '../components/common/Signin';
+import Signin from '../../components/common/Signin';
 
 const Login = () => {
   return <Signin />;
