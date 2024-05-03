@@ -1,9 +1,8 @@
-const Login = () => {
-  return (
-    <div className='flex flex-col'>
-      <span>로그인 페이지 테스트</span>
-    </div>
-  )
-}
+import React from 'react';
+import Signin from '../components/common/Signin';
 
-export default Login
+const Login = () => {
+  return <Signin />;
+};
+
+export default Login;
