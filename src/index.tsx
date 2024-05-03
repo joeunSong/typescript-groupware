@@ -1,26 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
+import { createBrowserRouter } from 'react-router-dom';
 // * css
 import './styles/global.css';
+import { MuiTheme } from './styles/MuiTheme';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-
 // * component
 import App from './App';
-import Login from './pages/Login';
-import { MuiTheme } from './styles/MuiTheme';
+import Login from './pages/user/Login';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: '/',
+//     element: <App />,
+//   },
+//   {
+//     path: '/login',
+//     element: <Login />,
+//   },
+// ]);
 
 const rootElement = document.getElementById('root') as HTMLElement;
 
@@ -29,7 +27,7 @@ root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={MuiTheme(rootElement)}>
-        <RouterProvider router={router} />
+        <App />
       </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>,
