@@ -1,93 +1,107 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 
-const AttendMenu = () => {
-  const [onWork, setOnWork] = useState<boolean>(false);
-  const [startTime, setStartTime] = useState<Date | null>(null);
+interface AttendMenuProps {
+  userInfo?: any; //유저의 정보
+  todayWorkInfo?: any; //당일 출퇴근 정보
+  setTodayWorkInfo?: any; //당일 출퇴근 정보 변경 함수
+  onWork?: boolean; //출근 여부
+  setOnWork?: any; //출근 여부 상태 변경 함수
+}
 
-  useEffect(() => {
-    //API통신을 통해서 출근 상태 및 시간 확인
-    // axios.get('/api/get').then((res) => {
-    //   console.log(res.data);
-    // });
-  }, [onWork]);
+const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWork }: AttendMenuProps) => {
+  const [startTime, setStartTime] = useState<any>(todayWorkInfo?.startTime || null);
+  const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endTime || null);
 
   const handleGoWorkClick = () => {
-    //출근 시간 등록 API
-    const data = {
-      email: 'sample@email.com',
-      startTime: new Date().toISOString(),
-      endTime: null,
-    };
-    //API 통신을 통해서 출근 시간 전송
-    // axios
-    //   .post('/api/attend', data)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => console.log(err));
-    setStartTime(new Date());
-    setOnWork(true);
+    //출근 기록이 없을 경우 등록
+    if (!startTime) {
+      let curTime = new Date();
+      //출근 시간 등록 API
+      const data = {
+        email: 'sample@email.com',
+        startTime: curTime.toISOString(),
+        endTime: null,
+      };
+      //API 통신을 통해서 출근 시간 전송
+      // axios
+      //   .post('/api/attend', data)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((err) => console.log(err));
+      setStartTime(curTime);
+      setOnWork(true);
+    }
   };
 
   const handleLeaveWorkClick = () => {
-    //퇴근 시간 등록 API
-
-    const data = {
-      email: 'sample@email.com',
-      startTime: new Date().toISOString(),
-    };
-
-    //API 통신을 통해서 퇴근 시간 전송
-    // axios
-    //   .post('/api/home', data)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => console.log(err));
-    setOnWork(false);
+    //퇴근 기록이 없을 경우 등록
+    if (!endTime) {
+      let curTime = new Date();
+      //퇴근 시간 등록 API
+      const data = {
+        email: 'sample@email.com',
+        endTime: curTime.toISOString(),
+      };
+      //API 통신을 통해서 퇴근 시간 전송
+      // axios
+      //   .post('/api/home', data)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((err) => console.log(err));
+      setEndTime(curTime);
+      setOnWork(false);
+    }
   };
 
-  // 12시간제 시간과 오전/오후 구분, 분을 얻기 위한 함수
-  function formatAMPM(date: Date): string {
-    let hours: number = date.getHours();
-    let minutes: number = date.getMinutes();
-    const ampm: string = hours >= 12 ? '오후' : '오전';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // 0시는 12시로 표현
-    const strMinutes: string = minutes < 10 ? '0' + minutes : minutes.toString();
-    const formattedTime: string = `${ampm} ${hours}:${strMinutes}`;
-    return formattedTime;
-  }
+  //시간 format 변환
+  const formattedTime = (startTime: any) => {
+    let time = moment(startTime).format('A hh시 mm분');
+    time = time.replace('AM', '오전').replace('PM', '오후');
+    return time;
+  };
+
+  // 근무 시간 구하기
+  const getWorkTime = () => {
+    if (startTime && endTime) {
+      let diff = moment.duration(moment(endTime).diff(moment(startTime))).asMinutes();
+      diff = Math.floor(diff);
+      return diff;
+    }
+  };
+
+  console.log(startTime, endTime);
 
   return (
-    <>
+    <div className='flex w-full justify-center'>
+      {/* 근무시간 */}
+      {/* <div>{getWorkTime()}</div> */}
       {onWork ? (
-        <div className='flex flex-col  gap-4 w-62 h-40 border-2 border-orange-500 p-2.5 rounded-md bg-white'>
-          <div className=' text-2xl flex justify-between items-center font-bold text-orange-500 content-between'>
-            근무
-            <span className='w-16 h-5 rounded-lg bg-orange-500 text-xs text-white text-center text-base'>
-              진행중
-            </span>
+        //출근 상태일 경우
+        <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-solid border-primary'>
+          <div className='flex justify-between items-center content-between'>
+            <span className='font-h2 text-primary'>근무</span>
+            <span className='w-[60px] h-[20px] rounded-[50px] bg-primary text-white text-center'>진행중</span>
           </div>
 
-          <div className='text-ml'>{startTime && `${formatAMPM(startTime)} 부터 진행중`}</div>
+          <div className='font-body1'>{`${formattedTime(startTime)}부터 진행중`}</div>
           <button
             onClick={handleLeaveWorkClick}
-            className='w-30 h-10 text-lg px-6 font-semibold rounded-md bg-orange-500 text-white'
+            className='text-white w-[230px] h-[45px] bg-primary rounded-[5px] font-body1-bold border-transparent'
           >
-            퇴근 기록
+            퇴근하기
           </button>
         </div>
       ) : (
-        <button
-          onClick={handleGoWorkClick}
-          className='w-56 h-10 text-lg px-6 font-semibold rounded-md bg-orange-500 text-white'
-        >
-          출근 기록
+        //퇴근 상태일 경우
+        <button onClick={handleGoWorkClick} className='text-white w-[230px] h-[45px] bg-primary rounded-[5px] font-body1-bold border-transparent'>
+          출근하기
         </button>
       )}
-    </>
+    </div>
   );
 };
 

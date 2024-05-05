@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
+import { useNavigate } from 'react-router-dom';
 
-const ProfileMenu = () => {
-  const [name, setName] = useState<string>('김지란');
-  const [src, setSrc] = useState<string>('');
+interface ProfileMenuProps {
+  userInfo: any;
+}
 
-  useEffect(() => {
-    //API로 User 정보 받기
-  }, []);
-
+const ProfileMenu = ({ userInfo }: ProfileMenuProps) => {
+  const navigate = useNavigate();
   const handleMovePage = () => {
     //profile 페이지 이동
+    navigate('/user/profile');
   };
 
   return (
-    <button onClick={handleMovePage} className='w-52 h-11 flex flex-row items-center gap-2.5'>
-      <Avatar src={src} sx={{ width: 36, height: 36 }} />
-      <span className='text-2xl'>{name}</span>
-    </button>
+    <div onClick={handleMovePage} className='flex w-full p-[10px] pl-[25px] gap-[10px]'>
+      <Avatar src={userInfo?.src || ''} sx={{ width: 36, height: 36 }} />
+      <span className='font-h2'>{userInfo?.name || '김지란'}</span>
+    </div>
   );
 };
 
