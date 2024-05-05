@@ -6,6 +6,7 @@ import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui
 
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   width?: string; // 사이드바 Width
@@ -40,15 +41,24 @@ const SideBarLayout = ({
   // * 선택 아이템 변경
   const handleSelectItem = (item: any) => {
     setSelectItem(item);
+    handleMovePage(item);
   };
 
+  // * 페이지 이동
+  const navigate = useNavigate();
+  const handleMovePage = (item: any) => {
+    if (item.url) {
+      navigate(item.url);
+    }
+  };
   return (
     <div className={`flex flex-col ${width} min-w-[250px] h-full gap-5 ${padding} ${color}`}>
       {/* 상단 제목 */}
       <div className='flex w-full items-center justify-center'>{icon}</div>
 
       {/* Header */}
-      <div className='flex w-full border-b-[1px] border-gray-200'>{headerTemplate}</div>
+      <div className='flex w-full'>{headerTemplate?.profileMenu}</div>
+      <div className='flex w-full'>{headerTemplate?.attendMenu}</div>
 
       {/* Content */}
       <div className='flex w-full felx h-auto overflow-y-auto scrollYWrap'>
@@ -86,7 +96,9 @@ const SideBarLayout = ({
                           <ListItemButton
                             sx={{ pl: 4 }}
                             key={lastIndex}
-                            onClick={() => handleSelectItem(lastItem)}
+                            onClick={() => {
+                              handleSelectItem(lastItem);
+                            }}
                           >
                             <ListItemIcon style={{ minWidth: '33px' }}>
                               <lastItem.icon />
