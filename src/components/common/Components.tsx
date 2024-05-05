@@ -1,4 +1,4 @@
-import { Button, Container, Modal } from '@mui/material';
+import { Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface CustomButtonProps {
@@ -9,6 +9,12 @@ interface CustomButtonProps {
   color: 'primary' | 'secondary';
 }
 
+/**
+ * CustomButton
+ * @param variant 'contained'만 사용
+ * @param size lg: 로그인 버튼, md: 근태등록버튼
+ * @returns
+ */
 export const CustomButton = ({ onClick, children, variant, size, color }: CustomButtonProps) => {
   const width: Record<CustomButtonProps['size'], string> = {
     auto: 'auto',
@@ -35,24 +41,32 @@ export const CustomButton = ({ onClick, children, variant, size, color }: Custom
   );
 };
 
-interface ContentBoxProps {
+interface CustomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   title: string;
-  children: ReactNode;
+  content: ReactNode;
 }
 
-export const ContentBox = ({ title, children }: ContentBoxProps) => {
+/**
+ * CustomModal
+ * @param isOpen 모달이 열려있다면 true, 그렇지 않다면 false
+ * @param onClose const closeModal = () => setIsModalOpen(false);
+ * @param title 모달 상단 제목
+ * @param content 모달 내용
+ */
+export const CustomModal = ({ isOpen, onClose, title, content }: CustomModalProps) => {
   return (
-    <div className='flex flex-col w-full h-full gap-2.5 p-2.5 bg-secondary-300'>
-      <div className='px-16 py-3 bg-white font-h1'>{title}</div>
-      <div className='px-10 py-16 bg-white h-fit font-body1'>{children}</div>
-    </div>
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <p>{title}</p>
+        <p onClick={onClose} className='cursor-pointer'>
+          x
+        </p>
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>{content}</DialogContentText>
+      </DialogContent>
+    </Dialog>
   );
 };
-
-// export const CustomModal = () => {
-//   return(
-//     <Modal>
-
-//     </Modal>
-//   )
-// }
