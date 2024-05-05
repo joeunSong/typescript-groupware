@@ -1,9 +1,7 @@
 // * basic
 //  * install libraries
-import _ from 'lodash';
 // * components
-import Button from '@mui/material/Button';
-import { ContentBox, CustomButton } from './components/common/Components';
+import Router from './routes/Index';
 // * constants
 // * apis
 // * utils
@@ -11,25 +9,22 @@ import { ContentBox, CustomButton } from './components/common/Components';
 const App = (props: any) => {
   const {} = props;
 
-  return (
-    <div className='flex flex-col items-center justify-center w-full h-screen'>
-      <div className='flex flex-col items-center justify-center w-40 bg-black'>
-        <span className='text-sm font-medium text-white'>APP.tsx 테스트</span>
-        <span className='text-base font-semibold text-gray-500'>tailwind 테스트</span>
-        <span className='text-lg font-bold text-blue-200'>Babel 테스트</span>
-      </div>
-      <div className='flex items-center justify-center w-40 bg-red-400'>
-        <span className='text-lg font-bold text-indigo-300'>안녕하세요</span>
-      </div>
-      {/*  MUI 테스트 */}
-      <p className='text-primary font-Logo'>tailwind config test</p>
-      <CustomButton variant='contained' size='md'>
-        버튼
-      </CustomButton>
-      <Button variant='text'>Text</Button>
-      <ContentBox title='제목'>내용입니다.</ContentBox>
-    </div>
-  );
+  return <Router />;
 };
 
 export default App;
+
+/* <div className='w-full h-screen'>
+<BrowserRouter>
+  <div className='flex w-full h-full'>
+    <SideBarLayout />
+    <div className='flex flex-col w-full h-full'>
+      <div className='flex w-full h-full'>
+        <Routes>
+          <Route path='login' element={<Login />} />
+        </Routes>
+      </div>
+    </div>
+  </div>
+</BrowserRouter>
+</div> */

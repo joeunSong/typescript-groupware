@@ -1,25 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material';
+import { createBrowserRouter } from 'react-router-dom';
 // * css
 import './styles/global.css';
+import { MuiTheme } from './styles/MuiTheme';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 // * component
 import App from './App';
-import theme from './styles/theme';
+import Login from './pages/user/Login';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-  },
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: '/',
+//     element: <App />,
+//   },
+//   {
+//     path: '/login',
+//     element: <Login />,
+//   },
+// ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const rootElement = document.getElementById('root') as HTMLElement;
+
+const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={MuiTheme(rootElement)}>
+        <App />
+      </ThemeProvider>
+    </StyledEngineProvider>
   </React.StrictMode>,
 );
