@@ -7,7 +7,8 @@ export const MuiTheme = (rootElement: HTMLElement) => {
         main: '#FF7F00',
       },
       secondary: {
-        main: '#C7C7C7',
+        700: '#777777',
+        main: '#DDDDDD',
         300: '#F5F5F5',
       },
     },
