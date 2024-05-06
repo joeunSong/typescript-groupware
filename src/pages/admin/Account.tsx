@@ -1,6 +1,4 @@
-import { useOutletContext } from 'react-router-dom';
-
-const Account = () => {
+const AccountPageLayout = () => {
   return (
     <div>
       관리자 계정페이지인데용?
@@ -9,4 +7,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default AccountPageLayout;
