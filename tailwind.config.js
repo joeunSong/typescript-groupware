@@ -6,7 +6,7 @@ module.exports = {
     extend: {
       colors: {
         primary: '#FF7F00',
-        secondary: { 700: '#777777', 500: '#DDDDDD', 300: '#F5F5F5' },
+        secondary: { 700: '#777777', 600: '#b9b9b9', 500: '#DDDDDD', 300: '#F5F5F5' },
       },
       fontFamily: {
         'noto-sans-kr': ['"Noto Sans KR"', 'sans-serif'],

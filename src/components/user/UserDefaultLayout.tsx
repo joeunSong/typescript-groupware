@@ -81,7 +81,7 @@ const UserDefaultLayout = (props: any) => {
           // <div className='flex w-full h-full'>{React.cloneElement(children, { onWork }) || <Outlet />}</div>
           <></>
         ) : (
-          <div className='flex w-full h-full'>{children || <Outlet />}</div>
+          children || <Outlet />
         )}
       </div>
     </div>
