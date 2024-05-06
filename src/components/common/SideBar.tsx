@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { JiranFullLogoIcon } from './JiranIcon';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
@@ -78,7 +78,7 @@ const SideBarLayout = ({
         <List className='w-full' component='nav' disablePadding>
           {_.map(items, (item: any, index: number) => {
             return (
-              <>
+              <Fragment key={index}>
                 <ListItemButton
                   // TODO label이 겹치치 않는다는 생각으로 만듦 추후 수정을 해야할 듯?
                   onClick={() => {
@@ -88,7 +88,6 @@ const SideBarLayout = ({
                       handleCollapseClick(item);
                     }
                   }}
-                  key={index}
                 >
                   {_.isEmpty(item?.icon) ? (
                     <> </>
@@ -134,7 +133,7 @@ const SideBarLayout = ({
                 ) : (
                   <></>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </List>
