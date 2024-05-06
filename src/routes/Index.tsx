@@ -39,7 +39,7 @@ const Router = () => {
           </Route>
 
           {/* 인증을 반드시 해야지만 접속 가능한 페이지 정의 ex) 로그인 이후 대쉬보드*/}
-          <Route element={<PrivateRoute authentication={true} />}>
+          <Route element={<PrivateRoute authentication={false} />}>
             {/* !! 사용자 페이지 !! */}
             {_.map(userRoutes, (userRoute: any) => {
               return (
@@ -55,7 +55,6 @@ const Router = () => {
             })}
             {/* !! 관리자 페이지 !! */}
             {_.map(adminRoutes, (adminRoute: any) => {
-              console.log('adminRoute', adminRoute);
               return (
                 <Route
                   path={adminRoute.path}

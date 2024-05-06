@@ -16,16 +16,18 @@ interface Props {
   headerTemplate?: any; // 헤더 템플릿
   items: any; // content 아이템
   setItems: any; // content 아이템 Set
+  selectItem?: any; // 선택 아이템
   setSelectItem?: any; // 선택 아이템 set
 }
 const SideBarLayout = ({
   width = 'w-[250px]',
   color = 'bg-gray-100',
-  padding = 'p-4 py-8',
-  icon = <JiranFullLogoIcon w={10} h={10} />,
-  headerTemplate = <></>,
+  padding = 'p-4 py-6',
+  icon = <JiranFullLogoIcon width={200} height={60} w={10} h={5} />,
+  headerTemplate,
   items,
   setItems,
+  selectItem,
   setSelectItem,
   ...props
 }: Props) => {
@@ -50,15 +52,24 @@ const SideBarLayout = ({
     if (item.url) {
       navigate(item.url);
     }
+    if (item.path) {
+      navigate(item.url);
+    }
   };
   return (
     <div className={`flex flex-col ${width} min-w-[250px] h-full gap-5 ${padding} ${color}`}>
       {/* 상단 제목 */}
-      <div className='flex w-full items-center justify-center'>{icon}</div>
+      <div className='flex w-full items-center justify-center border-solid border-b-[1px] border-[#C7C7C7]'>{icon}</div>
 
       {/* Header */}
-      <div className='flex w-full'>{headerTemplate?.profileMenu}</div>
-      <div className='flex w-full'>{headerTemplate?.attendMenu}</div>
+      {!_.isEmpty(headerTemplate) ? (
+        <>
+          <div className='flex w-full'>{headerTemplate?.profileMenu}</div>
+          <div className='flex w-full'>{headerTemplate?.attendMenu}</div>
+        </>
+      ) : (
+        <></>
+      )}
 
       {/* Content */}
       <div className='flex w-full felx h-auto overflow-y-auto scrollYWrap'>
@@ -102,6 +113,7 @@ const SideBarLayout = ({
                             onClick={() => {
                               handleSelectItem(lastItem);
                             }}
+                            selected={lastItem?.label === selectItem?.label}
                           >
                             {_.isEmpty(lastItem?.icon) ? (
                               <> </>

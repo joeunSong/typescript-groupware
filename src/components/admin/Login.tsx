@@ -41,7 +41,7 @@ const AdminLoginLayout = (props: any) => {
       <div className='flex flex-col h-full items-center justify-center gap-8'>
         {/* 헤더 제목 */}
         <div className='flex w-full justify-center'>
-          <span className='font-noto-sans text-4xl font-extrabold text-primary'>지란지교 소프트 Admin</span>
+          <span className='font-noto-sans text-4xl font-extrabold text-primary '>지란지교 소프트 Admin</span>
         </div>
         {/* 내용 */}
         <div className='flex flex-col w-[300px] gap-3'>

@@ -16,13 +16,15 @@ const render = (
   className: any,
   onClick: any | undefined = null,
 ) => {
+  console.log('width', width);
+  console.log('z', !_.isEmpty(height) && height !== undefined);
   return (
     <img
       alt={''}
       src={src}
       // className={`w-${w && h ? w : '5'} h-${w && h ? h : '5'} ${className !== undefined ? className : ''}`}
-      width={!_.isEmpty(width) && width !== undefined ? width : 200}
-      height={!_.isEmpty(height) && height !== undefined ? height : 200}
+      width={width !== undefined ? width : 200}
+      height={height !== undefined ? height : 200}
       onClick={() => {
         if (onClick !== null) {
           onClick();
@@ -33,13 +35,4 @@ const render = (
 };
 
 // icon
-export const JiranFullLogoIcon = (props: any) =>
-  render(
-    JiranFullLogo,
-    props.w,
-    props.h,
-    props.width,
-    props.height,
-    props.className,
-    props.onClick,
-  );
+export const JiranFullLogoIcon = (props: any) => render(JiranFullLogo, props.w, props.h, props.width, props.height, props.className, props.onClick);
