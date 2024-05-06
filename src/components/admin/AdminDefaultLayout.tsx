@@ -1,24 +1,23 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import SideBarLayout from '../common/SideBar';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import * as ENDPOINT from '../../constants/apiEndpoints';
 import SendIcon from '@mui/icons-material/Send';
-
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import _ from 'lodash';
 
 const AdminDefaultLayout = (props: any) => {
   const { children } = props;
-  const [selectItem, setSelectItem] = useState<any>(null);
+  const location = useLocation();
   const [items, setItems] = useState([
     {
       icon: SendIcon,
       label: '조직도 관리',
       open: false,
       items: [
-        { icon: DraftsIcon, label: '부서 관리', explan: '' },
-        { icon: DraftsIcon, label: '계정 관리', explan: '계정을 등록하고 관리할 수 있습니다.' },
+        { path: ENDPOINT.ADMIN_DEPARTMENT, icon: DraftsIcon, label: '부서 관리', explan: '' },
+        { path: ENDPOINT.ADMIN_ACCOUNT, icon: DraftsIcon, label: '계정 관리', explan: '계정을 등록하고 관리할 수 있습니다.' },
       ],
     },
     {
@@ -40,25 +39,49 @@ const AdminDefaultLayout = (props: any) => {
       ],
     },
   ]);
+  const [selectItem, setSelectItem] = useState<any>(null);
 
+  // * url로 접속한 경우 뎁스 open
+  useEffect(() => {
+    if (_.isEmpty(selectItem)) {
+      setItems((prevs) => {
+        return _.map(prevs, (prev: any) => {
+          const updatedItems = _.map(prev.items, (subItem: any) => {
+            if (subItem.path === location.pathname) {
+              setSelectItem(subItem);
+              return { ...subItem, open: true };
+            }
+            return subItem;
+          });
+
+          if (_.some(updatedItems, { path: location.pathname })) {
+            return { ...prev, open: true, items: updatedItems };
+          }
+          return prev;
+        });
+      });
+    }
+  }, []);
+  console.log('selectItem', selectItem);
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
-      <SideBarLayout items={items} setItems={setItems} setSelectItem={setSelectItem} />
+      <SideBarLayout items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
       <div className='flex flex-col w-full h-full bg-gray-100 '>
         {/* 헤더 */}
         <div className='flex flex-col'>
-          <div className='flex p-6 px-10 bg-gray-100'>
-            <span className='text-2xl font-bold'>
+          <div className='flex p-6 bg-gray-100'>
+            <span className='font-noto-sans text-[30px] font-bold'>
               {_.isEmpty(selectItem)
-                ? '???'
+                ? 'Dashboard'
                 : _.find(items, (item) => {
                     return item.items && _.some(item.items, { label: selectItem?.label });
                   })?.label}
             </span>
           </div>
-          <div className='flex flex-col p-5 bg-white border-b-2'>
-            <span className=''></span>
+          <div className='flex flex-col p-3 bg-white border-b-2 gap-1'>
+            <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label}</span>
+            <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
           </div>
         </div>
         {/* 메인 콘텐츠 */}
