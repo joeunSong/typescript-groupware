@@ -18,7 +18,10 @@ const UserDefaultLayout = (props: any) => {
   const [onWork, setOnWork] = useState<boolean>(false);
 
   //당일 근무 정보
-  const [todayWorkInfo, setTodayWorkInfo] = useState<any>();
+  const [todayWorkInfo, setTodayWorkInfo] = useState<any>({
+    startTime: null,
+    endTime: null,
+  });
 
   // 메뉴 정보
   const [selectItem, setSelectItem] = useState<any>(null);
@@ -78,8 +81,7 @@ const UserDefaultLayout = (props: any) => {
 
         {children?.type?.name === 'UserDashBoard' ? (
           // UserDashBoard일 경우 props전달
-          // <div className='flex w-full h-full'>{React.cloneElement(children, { onWork }) || <Outlet />}</div>
-          <></>
+          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}</div>
         ) : (
           <div className='flex w-full h-full'>{children || <Outlet />}</div>
         )}
