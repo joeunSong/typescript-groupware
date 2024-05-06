@@ -31,7 +31,9 @@ const SideBarLayout = ({
   setSelectItem,
   ...props
 }: Props) => {
-  // * ContentTemplate Open
+  const navigate = useNavigate();
+
+  // * 1차 뎁스 Open 상태 변경
   const handleCollapseClick = (item: any) => {
     setItems((prevs: any) => {
       return _.map(prevs, (prev: any) => {
@@ -47,15 +49,15 @@ const SideBarLayout = ({
   };
 
   // * 페이지 이동
-  const navigate = useNavigate();
   const handleMovePage = (item: any) => {
     if (item.url) {
       navigate(item.url);
     }
-    if (item.path) {
-      navigate(item.url);
+    if (!_.isEmpty(item.path)) {
+      navigate(item.path);
     }
   };
+
   return (
     <div className={`flex flex-col ${width} min-w-[250px] h-full gap-5 ${padding} ${color}`}>
       {/* 상단 제목 */}
@@ -112,6 +114,7 @@ const SideBarLayout = ({
                             key={lastIndex}
                             onClick={() => {
                               handleSelectItem(lastItem);
+                              handleMovePage(lastItem);
                             }}
                             selected={lastItem?.label === selectItem?.label}
                           >

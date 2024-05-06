@@ -16,8 +16,6 @@ const render = (
   className: any,
   onClick: any | undefined = null,
 ) => {
-  console.log('width', width);
-  console.log('z', !_.isEmpty(height) && height !== undefined);
   return (
     <img
       alt={''}

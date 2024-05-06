@@ -16,7 +16,7 @@ const AdminDefaultLayout = (props: any) => {
       label: '조직도 관리',
       open: false,
       items: [
-        { path: ENDPOINT.ADMIN_DEPARTMENT, icon: DraftsIcon, label: '부서 관리', explan: '' },
+        { path: ENDPOINT.ADMIN_DEPARTMENT, icon: DraftsIcon, label: '부서 관리', explan: '부서를 등록하고 관리할 수 있습니다.' },
         { path: ENDPOINT.ADMIN_ACCOUNT, icon: DraftsIcon, label: '계정 관리', explan: '계정을 등록하고 관리할 수 있습니다.' },
       ],
     },
@@ -25,8 +25,8 @@ const AdminDefaultLayout = (props: any) => {
       label: '근무 관리',
       open: false,
       items: [
-        { icon: DraftsIcon, label: '기념일/공휴일 관리', explan: '' },
-        { icon: DraftsIcon, label: '근무 유형 관리', explan: '' },
+        { icon: DraftsIcon, label: '기념일/공휴일 관리', explan: '기념일과 공휴일을 등록하고 관리할 수 있습니다.' },
+        { icon: DraftsIcon, label: '근무 유형 관리', explan: '근무 유형을 등록하고 관리할 수 있습니다.' },
       ],
     },
     {
@@ -34,8 +34,8 @@ const AdminDefaultLayout = (props: any) => {
       label: '휴가 관리',
       open: false,
       items: [
-        { icon: DraftsIcon, label: '휴가 신청 조회', explan: '' },
-        { icon: DraftsIcon, label: '휴가 유형 관리', explan: '' },
+        { icon: DraftsIcon, label: '휴가 신청 조회', explan: '휴가 신청을 관리할 수 있습니다.' },
+        { icon: DraftsIcon, label: '휴가 유형 관리', explan: '휴가 유형을 등록하고 관리할 수 있습니다.' },
       ],
     },
   ]);
@@ -62,7 +62,7 @@ const AdminDefaultLayout = (props: any) => {
       });
     }
   }, []);
-  console.log('selectItem', selectItem);
+
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
