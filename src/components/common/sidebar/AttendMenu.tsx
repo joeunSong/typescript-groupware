@@ -11,8 +11,8 @@ interface AttendMenuProps {
 }
 
 const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWork }: AttendMenuProps) => {
-  const [startTime, setStartTime] = useState<any>(todayWorkInfo?.startTime || null);
-  const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endTime || null);
+  const [startTime, setStartTime] = useState<any>();
+  const [endTime, setEndTime] = useState<any>();
 
   const handleGoWorkClick = () => {
     //출근 기록이 없을 경우 등록
@@ -32,6 +32,7 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
       //   })
       //   .catch((err) => console.log(err));
       setStartTime(curTime);
+      setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
       setOnWork(true);
     }
   };
@@ -53,6 +54,7 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
       //   })
       //   .catch((err) => console.log(err));
       setEndTime(curTime);
+      setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
       setOnWork(false);
     }
   };
@@ -73,7 +75,10 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     }
   };
 
-  console.log(startTime, endTime);
+  useEffect(() => {
+    setStartTime(todayWorkInfo.startTime);
+    setEndTime(todayWorkInfo.endTime);
+  }, [onWork]);
 
   return (
     <div className='flex w-full justify-center'>
