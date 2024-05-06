@@ -44,6 +44,7 @@ const Router = () => {
             {_.map(userRoutes, (userRoute: any) => {
               return (
                 <Route
+                  key={userRoute.path}
                   path={userRoute.path}
                   element={
                     <UserDefaultLayout>
@@ -57,6 +58,7 @@ const Router = () => {
             {_.map(adminRoutes, (adminRoute: any) => {
               return (
                 <Route
+                  key={adminRoute.path}
                   path={adminRoute.path}
                   element={
                     <AdminDefaultLayout>

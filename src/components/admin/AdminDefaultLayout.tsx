@@ -70,6 +70,7 @@ const AdminDefaultLayout = (props: any) => {
       <div className='flex flex-col w-full h-full bg-gray-100 '>
         {/* 헤더 */}
         <div className='flex flex-col'>
+          {/* 큰제목 */}
           <div className='flex p-6 bg-gray-100'>
             <span className='font-noto-sans text-[30px] font-bold'>
               {_.isEmpty(selectItem)
@@ -79,13 +80,16 @@ const AdminDefaultLayout = (props: any) => {
                   })?.label}
             </span>
           </div>
-          <div className='flex flex-col p-3 bg-white border-b-2 gap-1'>
-            <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label}</span>
-            <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
+          {/* 소제목 */}
+          <div className='flex w-full bg-white'>
+            <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
+              <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label}</span>
+              <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
+            </div>
           </div>
         </div>
         {/* 메인 콘텐츠 */}
-        <div className='flex w-full h-full p-5 bg-white'>{children || <Outlet />}</div>
+        {children || <Outlet />}
       </div>
     </div>
   );
