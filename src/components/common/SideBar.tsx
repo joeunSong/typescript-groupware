@@ -67,7 +67,7 @@ const SideBarLayout = ({
             return (
               <>
                 <ListItemButton
-                  // TODO label이 겹치치 않는다는 생각으로 만듦 수정필요
+                  // TODO label이 겹치치 않는다는 생각으로 만듦 추후 수정을 해야할 듯?
                   onClick={() => {
                     if (_.isEmpty(item?.items)) {
                       handleSelectItem(item);
@@ -77,11 +77,14 @@ const SideBarLayout = ({
                   }}
                   key={index}
                 >
-                  {/* TODO 아이콘 영역이 크기만큼 차치하도록(text 공간 확보용) */}
-                  <ListItemIcon style={{ minWidth: '33px' }}>
-                    {/* TODO 아이콘은 필수라고 생각하였으나 필수가 아니라면 예외처리 필요 */}
-                    <item.icon />
-                  </ListItemIcon>
+                  {_.isEmpty(item?.icon) ? (
+                    <> </>
+                  ) : (
+                    <ListItemIcon style={{ minWidth: '33px' }}>
+                      <item.icon />
+                    </ListItemIcon>
+                  )}
+
                   {/* TODO text overflow 처리필요 */}
                   <ListItemText primary={item?.label} />
                   {/* 화살표 아이콘 */}
@@ -100,9 +103,13 @@ const SideBarLayout = ({
                               handleSelectItem(lastItem);
                             }}
                           >
-                            <ListItemIcon style={{ minWidth: '33px' }}>
-                              <lastItem.icon />
-                            </ListItemIcon>
+                            {_.isEmpty(lastItem?.icon) ? (
+                              <> </>
+                            ) : (
+                              <ListItemIcon style={{ minWidth: '33px' }}>
+                                <lastItem.icon />
+                              </ListItemIcon>
+                            )}
                             <ListItemText primary={lastItem?.label} />
                           </ListItemButton>
                         );

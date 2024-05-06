@@ -1,8 +1,8 @@
 import React from 'react';
+import * as ENDPOINT from '../constants/apiEndpoints';
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { LOGIN_AUTH } from '../constants/constant';
 import _ from 'lodash';
-import { redirect } from 'react-router-dom';
 
 /**
  * 해당 Route의 기능은
@@ -29,19 +29,19 @@ const PrivateRoute = (props: any) => {
     if (isAuthentication === 'user') {
       if (_.includes(location?.pathname, '/login') || _.includes(location?.pathname, '/admin')) {
         localStorage.clear();
-        return <Navigate to={'/login'} />;
+        return <Navigate to={ENDPOINT.USER_LOGIN} />;
       } else {
         return <Outlet />;
       }
     } else if (isAuthentication === 'admin') {
       if (_.includes(location?.pathname, '/login') || _.includes(location?.pathname, '/user')) {
-        return <Navigate to={'/adminLogin'} />;
+        return <Navigate to={ENDPOINT.ADMIN_LOGIN} />;
       } else {
         return <Outlet />;
       }
     } else {
       localStorage.clear();
-      return <Navigate to={'/login'} />;
+      return <Navigate to={ENDPOINT.USER_LOGIN} />;
     }
   } else {
     // 인증이 반드시 필요 없는 페이지
@@ -50,7 +50,7 @@ const PrivateRoute = (props: any) => {
       return <Outlet />;
     } else {
       localStorage.clear();
-      return <Navigate to={'/login'} />;
+      return <Navigate to={ENDPOINT.USER_LOGIN} />;
     }
   }
 };

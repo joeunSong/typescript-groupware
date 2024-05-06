@@ -21,7 +21,7 @@ const Signin = () => {
       localStorage.setItem(ACCESS_TOKEN, _localStorageJson);
 
       if (response.data.role === 'manager') {
-        return redirect(ENDPOINT.MANAGER_DASHBOARD);
+        return redirect(ENDPOINT.ADMIN_ACCOUNT);
       } else {
         return redirect(ENDPOINT.USER_DASHBOARD);
       }
@@ -34,14 +34,7 @@ const Signin = () => {
     <div className='flex flex-col gap-[17px] items-center justify-center h-screen'>
       <JiranFullLogoIcon width='370px' height='50px' />
       <h1 className='font-h1'>로그인</h1>
-      <TextField
-        label='아이디'
-        variant='outlined'
-        size='medium'
-        className='w-[300px]'
-        placeholder='아이디'
-        required
-      />
+      <TextField label='아이디' variant='outlined' size='medium' className='w-[300px]' placeholder='아이디' required />
       <TextField
         label='비밀번호'
         variant='outlined'
