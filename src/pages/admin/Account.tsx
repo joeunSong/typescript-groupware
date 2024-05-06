@@ -1,18 +1,20 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { CustomButton } from '../../components/common/Components';
 
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-  return { name, calories, fat, carbs, protein };
+function createData(name: string, company: string, position: string, id: string, startWork: number, startAccount: number, accountStatus: string) {
+  return { name, company, position, id, startWork, startAccount, accountStatus };
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData('김지란', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+  createData('김지란', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+  createData('김지란', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+  createData('김지란', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
 ];
 
+/**
+ * @todo api연결, 날짜 포맷
+ */
 const AccountPageLayout = () => {
   return (
     <div className='flex flex-col w-full h-full gap-5'>
@@ -22,26 +24,28 @@ const AccountPageLayout = () => {
         </CustomButton>
       </div>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-          <TableHead>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: 'secondary.main' }}>
             <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align='right'>Calories</TableCell>
-              <TableCell align='right'>Fat&nbsp;(g)</TableCell>
-              <TableCell align='right'>Carbs&nbsp;(g)</TableCell>
-              <TableCell align='right'>Protein&nbsp;(g)</TableCell>
+              <TableCell align='center'>이름</TableCell>
+              <TableCell align='center'>회사</TableCell>
+              <TableCell align='center'>직위</TableCell>
+              <TableCell align='center'>ID</TableCell>
+              <TableCell align='center'>입사일</TableCell>
+              <TableCell align='center'>계정 생성일</TableCell>
+              <TableCell align='center'>계정 상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component='th' scope='row'>
-                  {row.name}
-                </TableCell>
-                <TableCell align='right'>{row.calories}</TableCell>
-                <TableCell align='right'>{row.fat}</TableCell>
-                <TableCell align='right'>{row.carbs}</TableCell>
-                <TableCell align='right'>{row.protein}</TableCell>
+              <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}>
+                <TableCell align='center'>{row.name}</TableCell>
+                <TableCell align='center'>{row.company}</TableCell>
+                <TableCell align='center'>{row.position}</TableCell>
+                <TableCell align='center'>{row.id}</TableCell>
+                <TableCell align='center'>{row.startWork}</TableCell>
+                <TableCell align='center'>{row.startAccount}</TableCell>
+                <TableCell align='center'>{row.accountStatus}</TableCell>
               </TableRow>
             ))}
           </TableBody>
