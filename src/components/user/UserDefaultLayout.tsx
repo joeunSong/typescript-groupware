@@ -83,7 +83,7 @@ const UserDefaultLayout = (props: any) => {
           // UserDashBoard일 경우 props전달
           <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}</div>
         ) : (
-          <div className='flex w-full h-full'>{children || <Outlet />}</div>
+          children || <Outlet />
         )}
       </div>
     </div>

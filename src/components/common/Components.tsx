@@ -22,8 +22,8 @@ export const CustomButton = ({ onClick, children, variant, size, color }: Custom
     lg: '18.75rem',
   };
   const colorSet: Record<CustomButtonProps['color'], { backgroundColor: string; hover: string }> = {
-    primary: { backgroundColor: 'primary.main', hover: '' },
-    secondary: { backgroundColor: 'secondary.main', hover: '#959595' },
+    primary: { backgroundColor: 'primary.main', hover: '#bc6003' },
+    secondary: { backgroundColor: 'secondary.600', hover: '#959595' },
   };
   return (
     <Button
