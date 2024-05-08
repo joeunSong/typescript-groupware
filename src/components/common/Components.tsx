@@ -1,4 +1,4 @@
-import { Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, makeStyles, Theme } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface CustomButtonProps {
@@ -45,7 +45,7 @@ interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  content: ReactNode;
+  children: ReactNode;
 }
 
 /**
@@ -55,17 +55,27 @@ interface CustomModalProps {
  * @param title 모달 상단 제목
  * @param content 모달 내용
  */
-export const CustomModal = ({ isOpen, onClose, title, content }: CustomModalProps) => {
+export const CustomModal = ({ isOpen, onClose, title, children }: CustomModalProps) => {
   return (
-    <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          padding: '1.2rem',
+          gap: '0.5rem',
+          '& .custom-dialog-title': { display: 'flex', justifyContent: 'space-between', fontWeight: '600', fontSize: '1.875rem' },
+        },
+      }}
+    >
+      <DialogTitle className='custom-dialog-title'>
         <p>{title}</p>
         <p onClick={onClose} className='cursor-pointer'>
           x
         </p>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>{content}</DialogContentText>
+        <DialogContentText>{children}</DialogContentText>
       </DialogContent>
     </Dialog>
   );

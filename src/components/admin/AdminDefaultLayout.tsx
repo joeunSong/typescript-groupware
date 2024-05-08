@@ -67,7 +67,7 @@ const AdminDefaultLayout = (props: any) => {
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
       <SideBarLayout items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
-      <div className='flex flex-col w-full h-full bg-gray-100 '>
+      <div className='flex flex-col w-full h-full pb-10 pr-4 bg-gray-100'>
         {/* 헤더 */}
         <div className='flex flex-col'>
           {/* 큰제목 */}
