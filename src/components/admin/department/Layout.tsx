@@ -2,7 +2,10 @@ import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import _ from 'lodash';
+import moment from 'moment';
 import { useState } from 'react';
+import { CustomButton } from '../../common/Components';
+import { MiniOrganizationIcon } from '../../common/JiranIcon';
 
 const DepartmentLayout = (props: any) => {
   const {} = props;
@@ -70,17 +73,24 @@ const DepartmentLayout = (props: any) => {
       ],
     },
   ]);
-  const [selectDepartment, setSelectDepartment] = useState(null);
-  const [selectUser, setSelectUser] = useState(null);
 
-  const handleItemClick = (item: any) => {
-    console.log('item', item);
+  const [selectDepartment, setSelectDepartment]: any = useState(null);
+  const [selectUser, setSelectUser]: any = useState(null);
+
+  const handleDepartmentClick = (_department: any) => {
+    setSelectDepartment(_department);
+    setSelectUser(null);
+  };
+
+  const handleUserClick = (_department: any, _user: any) => {
+    setSelectDepartment(_department);
+    setSelectUser(_user);
   };
 
   return (
-    <div className='flex w-full h-full gap-3'>
+    <div className='flex w-full h-full '>
       {/* 조직도 */}
-      <div className='flex flex-col w-[250px] min-w-[250px] h-full p-3 gap-3 bg-white'>
+      <div className='flex flex-col w-[250px] min-w-[250px] h-full px-3 pt-3 gap-3 bg-white'>
         {/* 조직도 제목 */}
         <span className='text-lg font-medium'>조직도</span>
         {/* 조직도 내용 */}
@@ -93,12 +103,12 @@ const DepartmentLayout = (props: any) => {
           <div className='flex w-full h-full '>
             {/* // TODO!! Tree overflow 발생하지 않음 수정필요 */}
             <Box component='div' sx={{ width: '100%', height: '100%', overflowY: 'auto' }} className='scrollYWrap'>
-              <SimpleTreeView>
+              <SimpleTreeView sx={{ height: '100%' }}>
                 {/* 트리 순회 */}
                 {_.map(treeItems, (treeItem: any) => {
                   // 회사별 순회
                   return (
-                    <TreeItem itemId={treeItem?.label} label={treeItem?.label} key={treeItem?.label} onClick={() => handleItemClick(treeItem)}>
+                    <TreeItem itemId={treeItem?.label} label={treeItem?.label} key={treeItem?.label} onClick={() => handleDepartmentClick(treeItem)}>
                       {/* 회사 */}
                       {_.map(treeItem?.departments, (departments: any) => {
                         return (
@@ -106,7 +116,7 @@ const DepartmentLayout = (props: any) => {
                             itemId={departments?.label}
                             label={departments?.label}
                             key={departments?.label}
-                            onClick={() => handleItemClick(departments)}
+                            onClick={() => handleDepartmentClick(departments)}
                           >
                             {/* 부서 */}
                             {_.map(departments?.departments, (department: any) => {
@@ -115,14 +125,19 @@ const DepartmentLayout = (props: any) => {
                                   itemId={department?.label}
                                   label={department?.label}
                                   key={department?.label}
-                                  onClick={() => handleItemClick(department)}
+                                  onClick={() => handleDepartmentClick(department)}
                                 ></TreeItem>
                               );
                             })}
                             {/* 부서 내 사용자 */}
                             {_.map(departments?.users, (user: any) => {
                               return (
-                                <TreeItem itemId={user?.label} label={user?.label} key={user?.label} onClick={() => handleItemClick(user)}></TreeItem>
+                                <TreeItem
+                                  itemId={user?.label}
+                                  label={user?.label}
+                                  key={user?.label}
+                                  onClick={() => handleUserClick(departments, user)}
+                                ></TreeItem>
                               );
                             })}
                           </TreeItem>
@@ -136,7 +151,7 @@ const DepartmentLayout = (props: any) => {
                             label={users?.label}
                             key={users?.label}
                             onClick={() => {
-                              handleItemClick(users);
+                              handleUserClick(treeItem, users);
                             }}
                           ></TreeItem>
                         );
@@ -150,7 +165,61 @@ const DepartmentLayout = (props: any) => {
         </div>
       </div>
       {/* 내용 */}
-      <div className='flex w-full h-full bg-white'></div>
+      <div className='flex flex-col w-full h-full pt-3 gap-5 bg-white'>
+        {/* 부서 정보 */}
+        <div className='flex flex-col w-full gap-3'>
+          {/* 부서 정보 및 부서원 추가 */}
+          <div className='flex w-full justify-between'>
+            <span className='text-2xl font-bold'>{selectDepartment?.label} 부서 정보</span>
+            <div className='flex px-10'>
+              <CustomButton variant='contained' color='secondary' size='auto'>
+                계정 추가
+              </CustomButton>
+            </div>
+          </div>
+          {/* 부서 정보 내용 */}
+          <div className='flex flex-col w-full gap-5'>
+            {/* 부서명 */}
+            <div className='flex w-full'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서명(한글)</span>
+              </div>
+              <div className='flex w-full'>
+                <span>개발부서</span>
+              </div>
+            </div>
+            {/* 부서 생성일  */}
+            <div className='flex w-full'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서 생성일</span>
+              </div>
+              <div className='flex w-full'>
+                <span>{moment().format('YYYY-MM-DD hh:mm:ss')}</span>
+              </div>
+            </div>
+            {/* 부서 생성일  */}
+            <div className='flex w-full items-center'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서 근태관리자</span>
+              </div>
+              <div className='flex w-full'>
+                <CustomButton variant='contained' color='secondary' size='md'>
+                  <div className='flex w-full justify-between'>
+                    <span>근태 관리자 선택</span>
+                    <MiniOrganizationIcon width={25} height={25} />
+                  </div>
+                </CustomButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 부서원 목록  */}
+        <div className='flex flex-col w-full gap-3'>
+          {/* 부서 정보 제목 */}
+          <span className='text-2xl font-bold'>부서원 목록</span>
+        </div>
+      </div>
     </div>
   );
 };

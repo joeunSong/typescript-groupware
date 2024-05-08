@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 interface LoginProps {
-  logo?: React.JSX.Element;
-  loginEndpoint: string;
-  redirectEndpoint: string;
+  logo?: React.JSX.Element; // 사용자 로고
+  loginEndpoint: string; // api 호출 경로
+  redirectEndpoint: string; //
   role: 'admin' | 'user';
 }
 
@@ -17,13 +17,14 @@ const Login = ({ logo, loginEndpoint, redirectEndpoint, role }: LoginProps) => {
   const [isError, setIsError] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  // * 로그인 로직 (동기적)
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { instance } = ApiClient;
 
     try {
       const data = new FormData(e.currentTarget);
-
+      // 로그인 API 호출
       const response = await instance.get(loginEndpoint, {
         data: {
           email: data.get('email'),
@@ -49,28 +50,20 @@ const Login = ({ logo, loginEndpoint, redirectEndpoint, role }: LoginProps) => {
     }
   };
 
+  // * 페이지 리다이렉트
   const handleToggleLogin = () => {
     navigate(role === 'user' ? ENDPOINT.ADMIN_LOGIN : ENDPOINT.USER_LOGIN);
   };
 
   return (
     <div className='flex w-full h-screen justify-center content-center'>
-      <span
-        className='font-body1 text-primary underline underline-offset-2 absolute right-14 top-7 cursor-pointer'
-        onClick={handleToggleLogin}
-      >
+      <span className='font-body1 text-primary underline underline-offset-2 absolute right-14 top-7 cursor-pointer' onClick={handleToggleLogin}>
         {role === 'admin' ? '사용자 로그인' : '관리자 로그인'}
       </span>
       <div className='flex flex-col items-center justify-center gap-9'>
         {logo}
 
-        <Box
-          component='form'
-          onSubmit={handleLogin}
-          noValidate
-          sx={{ mt: 1 }}
-          className='flex flex-col items-center gap-[17px] m-0'
-        >
+        <Box component='form' onSubmit={handleLogin} noValidate sx={{ mt: 1 }} className='flex flex-col items-center gap-[17px] m-0'>
           <h1 className='font-h1 self-start'>로그인</h1>
           <TextField
             label='아이디'
