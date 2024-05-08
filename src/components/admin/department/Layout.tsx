@@ -53,6 +53,20 @@ const DepartmentLayout = (props: any) => {
     setSelectUser(_user);
   };
 
+  // * 선택 사용자 DataGird 선택 Row에 추가
+  useUpdateEffect(() => {
+    if (!_.isEmpty(selectUser)) {
+      let _selectUserIndex: any = null;
+      _.map(selectDepartment?.users, (user: any, index: number) => {
+        if (user.id === selectUser.id) {
+          _selectUserIndex = index;
+        }
+      });
+
+      setRowSelectionModel([_selectUserIndex + 1]);
+    }
+  }, [selectUser]);
+
   // * 초기 세팅
   useEffect(() => {
     try {
