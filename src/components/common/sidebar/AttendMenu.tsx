@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { CustomButton } from '../Components';
 
 interface AttendMenuProps {
   userInfo?: any; //유저의 정보
@@ -61,8 +62,9 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
 
   //시간 format 변환
   const formattedTime = (startTime: any) => {
-    let time = moment(startTime).format('A hh시 mm분');
+    let time = moment(startTime).format('A hh:mm');
     time = time.replace('AM', '오전').replace('PM', '오후');
+
     return time;
   };
 
@@ -71,7 +73,14 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     if (startTime && endTime) {
       let diff = moment.duration(moment(endTime).diff(moment(startTime))).asMinutes();
       diff = Math.floor(diff);
-      return diff;
+
+      if (diff >= 60) {
+        const hours = Math.floor(diff / 60);
+        const minutes = diff % 60;
+        return `${hours}시간 ${minutes}분`;
+      } else {
+        return `${diff}분`;
+      }
     }
   };
 
@@ -83,28 +92,27 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   return (
     <div className='flex w-full justify-center'>
       {/* 근무시간 */}
-      {/* <div>{getWorkTime()}</div> */}
+      {endTime && (
+        <div className='flex w-full h-[50px] items-center justify-center bg-white rounded-[5px] text-primary'>{`오늘 한 근무 ${getWorkTime()}`}</div>
+      )}
       {onWork ? (
         //출근 상태일 경우
-        <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-solid border-primary'>
+        <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
           <div className='flex justify-between items-center content-between'>
             <span className='font-h2 text-primary'>근무</span>
-            <span className='w-[60px] h-[20px] rounded-[50px] bg-primary text-white text-center'>진행중</span>
+            <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>진행중</div>
           </div>
-
-          <div className='font-body1'>{`${formattedTime(startTime)}부터 진행중`}</div>
-          <button
-            onClick={handleLeaveWorkClick}
-            className='text-white w-[230px] h-[45px] bg-primary rounded-[5px] font-body1-bold border-transparent'
-          >
+          <div className='font-body1'>{`${formattedTime(startTime)} 부터 진행중`}</div>
+          <CustomButton onClick={handleLeaveWorkClick} variant='contained' size='md' color='primary'>
             퇴근하기
-          </button>
+          </CustomButton>
         </div>
       ) : (
-        //퇴근 상태일 경우
-        <button onClick={handleGoWorkClick} className='text-white w-[230px] h-[45px] bg-primary rounded-[5px] font-body1-bold border-transparent'>
-          출근하기
-        </button>
+        !startTime && (
+          <CustomButton onClick={handleGoWorkClick} variant='contained' size='md' color='primary'>
+            출근하기
+          </CustomButton>
+        )
       )}
     </div>
   );
