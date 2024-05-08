@@ -3,6 +3,7 @@ import TimelineBar from '../../components/user/dashboard/TimelineBar';
 import TodayWorkBar from '../../components/user/dashboard/TodayWorkBar';
 import WorkBar from '../../components/user/dashboard/WorkBar';
 import moment from 'moment';
+import ApiClient from '../../utils/axios';
 
 interface UserDashBoardProps {
   userInfo?: any;
@@ -69,7 +70,27 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
 
   useEffect(() => {
     //TODO :일주일 근무 정보 받아오기
-  }, [onWork]);
+    const getWeekWorkInfo = async () => {
+      let startDay = moment(`${currentWeek[0]} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').toISOString();
+      let endDay = moment(`${currentWeek[6]} 23:59:59`, 'YYYY-MM-DD HH:mm:ss').toISOString();
+
+      try {
+        const { instance } = ApiClient;
+
+        const response = await instance.post('http://localhost:8080/api/commutes?startAt=' + startDay + '&endAt=' + endDay);
+        const data = response.data;
+
+        setWeekWorkInfo(data);
+
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (currentWeek[0] && currentWeek[6]) {
+      getWeekWorkInfo();
+    }
+  }, [currentWeek]);
 
   // 이전 주로 이동하는 함수
   const handlePreviousWeek = () => {
@@ -84,14 +105,19 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
   };
 
   // 같은 날짜인지 확인하는 함수
-  const isSameDate = (day: string) => {
+  const isToday = (day: string) => {
     const currentDate = moment().format('YYYY-MM-DD');
     return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
   };
 
+  const isSameDate = (day: string, day2: any) => {
+    const currentDate = moment(day2).format('YYYY-MM-DD');
+    return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
+  };
+
   return (
-    <div className='flex flex-col w-full h-full p-[10px] gap-[10px]'>
-      <div>
+    <div className='flex flex-col w-full h-full p-[10px] '>
+      <div className='mb-[10px]'>
         <button onClick={handlePreviousWeek}>{'<'}</button>
         {`${currentWeek[0]} - ${currentWeek[6]}`}
         <button onClick={handleNextWeek}>{'>'}</button>
@@ -100,11 +126,17 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
       <TimelineBar />
 
       {currentWeek.map((_day: string, idx: number) => (
-        <div key={idx} className='flex h-[70px]'>
-          <div className='w-[200px]'>
+        <div key={idx} className='flex h-[70px] border-solid border-t-[1px] border-primary'>
+          <div className='w-[200px] border-solid border-r-[1px] border-primary'>
             {workDays[idx]} {_day}
           </div>
-          <div className='flex flex-1'>{isSameDate(_day) ? <TodayWorkBar todayWorkInfo={todayWorkInfo} /> : <WorkBar workInfo={null} />}</div>
+          <div className='flex flex-1 items-center'>
+            {isToday(_day) ? (
+              <TodayWorkBar todayWorkInfo={todayWorkInfo} />
+            ) : (
+              <WorkBar workInfo={weekWorkInfo.find((_info: any) => isSameDate(_day, _info.startTime))} />
+            )}
+          </div>
         </div>
       ))}
     </div>

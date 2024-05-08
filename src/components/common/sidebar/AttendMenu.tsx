@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { CustomButton } from '../Components';
+import ApiClient from '../../../utils/axios';
 
 interface AttendMenuProps {
   userInfo?: any; //유저의 정보
@@ -12,26 +13,41 @@ interface AttendMenuProps {
 }
 
 const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWork }: AttendMenuProps) => {
-  const [startTime, setStartTime] = useState<any>();
-  const [endTime, setEndTime] = useState<any>();
+  const [startTime, setStartTime] = useState<any>(todayWorkInfo?.startTime);
+  const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endTime);
+  const { instance } = ApiClient;
 
   const handleGoWorkClick = () => {
     //출근 기록이 없을 경우 등록
     if (!startTime) {
-      let curTime = new Date();
+      let curTime = moment().toISOString();
+      //console.log(curTime);
       //출근 시간 등록 API
       const data = {
-        email: 'sample@email.com',
-        startTime: curTime.toISOString(),
-        endTime: null,
+        startAt: curTime,
+        endAt: null,
       };
+
       //API 통신을 통해서 출근 시간 전송
-      // axios
-      //   .post('/api/attend', data)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((err) => console.log(err));
+
+      const postStartTime = async () => {
+        try {
+          const response = await instance.post('http://localhost:8080/api/commutes/in', data);
+
+          setStartTime(curTime);
+          setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
+          setOnWork(true);
+
+          // 요청이 성공하면 여기에서 응답 처리
+          return response.data; // 예를 들어, 서버에서 반환한 데이터를 반환할 수 있습니다.
+        } catch (error) {
+          // 요청이 실패하면 여기에서 에러 처리
+          console.log(error);
+        }
+      };
+
+      postStartTime();
+
       setStartTime(curTime);
       setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
       setOnWork(true);
@@ -41,19 +57,30 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   const handleLeaveWorkClick = () => {
     //퇴근 기록이 없을 경우 등록
     if (!endTime) {
-      let curTime = new Date();
+      let curTime = moment().toISOString();
       //퇴근 시간 등록 API
       const data = {
-        email: 'sample@email.com',
-        endTime: curTime.toISOString(),
+        endAt: curTime,
       };
       //API 통신을 통해서 퇴근 시간 전송
-      // axios
-      //   .post('/api/home', data)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((err) => console.log(err));
+      const postEndTime = async () => {
+        try {
+          const response = await instance.post('http://localhost:8080/api/commutes/' + todayWorkInfo.id + '/out', data);
+
+          setEndTime(curTime);
+          setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
+          setOnWork(false);
+          // 요청이 성공하면 여기에서 응답 처리
+          return response.data;
+        } catch (error) {
+          // 요청이 실패하면 여기에서 에러 처리
+          console.log(error);
+        }
+      };
+      if (todayWorkInfo.id) {
+        postEndTime();
+      }
+
       setEndTime(curTime);
       setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
       setOnWork(false);
@@ -64,7 +91,6 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   const formattedTime = (startTime: any) => {
     let time = moment(startTime).format('A hh:mm');
     time = time.replace('AM', '오전').replace('PM', '오후');
-
     return time;
   };
 
@@ -95,7 +121,7 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
       {endTime && (
         <div className='flex w-full h-[50px] items-center justify-center bg-white rounded-[5px] text-primary'>{`오늘 한 근무 ${getWorkTime()}`}</div>
       )}
-      {onWork ? (
+      {startTime && !endTime ? (
         //출근 상태일 경우
         <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
           <div className='flex justify-between items-center content-between'>
