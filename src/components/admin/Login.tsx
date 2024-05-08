@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Navigate, redirect, useNavigate } from 'react-router-dom';
 import * as ENDPOINT from '../../constants/apiEndpoints';
 import React from 'react';
+import { ADMIN_LOGIN } from '../../services/login';
+import { ACCESS_TOKEN, COMPANY_ID, USER_ID } from '../../constants/constant';
 
 const AdminLoginLayout = (props: any) => {
   const {} = props;
@@ -29,7 +31,18 @@ const AdminLoginLayout = (props: any) => {
     });
   };
 
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    try {
+      const id: any = _.find(inputs, { type: 'id' });
+      const password: any = _.find(inputs, { type: 'password' });
+      const result: any = await ADMIN_LOGIN(id?.value, password?.value);
+      localStorage.setItem(ACCESS_TOKEN, result.data?.access_token);
+      localStorage.setItem(COMPANY_ID, result.data?.company_id);
+      localStorage.setItem(USER_ID, result.data?.user_id);
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
 
   return (
     <div className='flex flex-col w-full h-full'>
