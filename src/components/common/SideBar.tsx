@@ -59,9 +59,9 @@ const SideBarLayout = ({
   };
 
   return (
-    <div className={`flex flex-col ${width} min-w-[250px] h-full gap-5 ${padding} ${color}`}>
+    <div className={`flex flex-col ${width} min-w-[270px] h-full gap-5 ${padding} ${color}`}>
       {/* 상단 제목 */}
-      <div className='flex w-full items-center justify-center border-solid border-b-[1px] border-[#C7C7C7]'>{icon}</div>
+      <div className='flex w-full items-center justify-center'>{icon}</div>
 
       {/* Header */}
       {!_.isEmpty(headerTemplate) ? (
@@ -72,6 +72,8 @@ const SideBarLayout = ({
       ) : (
         <></>
       )}
+      {/* 구분선 추가 */}
+      <div className='flex w-full border-solid border-b-[1px] border-[#C7C7C7]' />
 
       {/* Content */}
       <div className='flex w-full felx h-auto overflow-y-auto scrollYWrap'>
