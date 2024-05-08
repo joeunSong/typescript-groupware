@@ -54,7 +54,13 @@ const DepartmentLayout = (props: any) => {
   };
 
   // * 초기 세팅
-  useEffect(() => {}, []);
+  useEffect(() => {
+    try {
+      API_ORGANIZATION(localStorage.getItem(COMPANY_ID)).then((res: any) => {
+        setOrganization([res.data.data]);
+      });
+    } catch (e) {}
+  }, []);
 
   return (
     <div className='flex w-full h-full '>
