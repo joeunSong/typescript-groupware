@@ -102,7 +102,7 @@ const DepartmentLayout = (props: any) => {
           {/* 실제 조직도 */}
           <div className='flex w-full h-full '>
             {/* // TODO!! Tree overflow 발생하지 않음 수정필요 */}
-            <Box component='div' sx={{ width: '100%', height: '100%', overflowY: 'auto' }} className='scrollYWrap'>
+            <Box component='div' sx={{ width: '100%', height: '45rem', overflowY: 'auto' }} className='scrollYWrap'>
               <SimpleTreeView sx={{ height: '100%' }}>
                 {/* 트리 순회 */}
                 {_.map(treeItems, (treeItem: any) => {

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Navigate, redirect, useNavigate } from 'react-router-dom';
 import * as ENDPOINT from '../../constants/apiEndpoints';
 import React from 'react';
-import { ADMIN_LOGIN } from '../../services/login';
+import { API_ADMIN_LOGIN } from '../../services/login';
 import { ACCESS_TOKEN, COMPANY_ID, USER_ID } from '../../constants/constant';
 
 const AdminLoginLayout = (props: any) => {
@@ -35,7 +35,7 @@ const AdminLoginLayout = (props: any) => {
     try {
       const id: any = _.find(inputs, { type: 'id' });
       const password: any = _.find(inputs, { type: 'password' });
-      const result: any = await ADMIN_LOGIN(id?.value, password?.value);
+      const result: any = await API_ADMIN_LOGIN(id?.value, password?.value);
       localStorage.setItem(ACCESS_TOKEN, result.data?.access_token);
       localStorage.setItem(COMPANY_ID, result.data?.company_id);
       localStorage.setItem(USER_ID, result.data?.user_id);
