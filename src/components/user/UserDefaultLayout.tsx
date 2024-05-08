@@ -6,7 +6,11 @@ import React, { useEffect, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
+import WorkIcon from '@mui/icons-material/Work';
+
 import _ from 'lodash';
+import moment from 'moment';
+import ApiClient from '../../utils/axios';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
@@ -19,6 +23,7 @@ const UserDefaultLayout = (props: any) => {
 
   //당일 근무 정보
   const [todayWorkInfo, setTodayWorkInfo] = useState<any>({
+    id: null,
     startTime: null,
     endTime: null,
   });
@@ -27,26 +32,26 @@ const UserDefaultLayout = (props: any) => {
   const [selectItem, setSelectItem] = useState<any>(null);
   const [items, setItems] = useState([
     {
-      icon: SendIcon,
+      icon: WorkIcon,
       label: '근무',
-      open: false,
-      items: [
-        { icon: DraftsIcon, label: '근무', url: '/user/dashboard' },
-        { icon: DraftsIcon, label: '근무 승인', url: '/user/work/approval' },
-      ],
+      // open: false,
+      // items: [
+      //   { icon: DraftsIcon, label: '근무', url: '/user/dashboard' },
+      //   { icon: DraftsIcon, label: '근무 승인', url: '/user/work/approval' },
+      // ],
     },
 
-    {
-      icon: InboxIcon,
-      label: '휴가',
-      open: false,
-      items: [
-        { icon: DraftsIcon, label: '휴가 신청', url: '/user/vacation/request' },
-        { icon: DraftsIcon, label: '휴가 기록', url: '/user/vacation/records' },
-        { icon: DraftsIcon, label: '휴가 현황', url: '/user/vacation/status' },
-        { icon: DraftsIcon, label: '휴가 승인', url: '/user/vacation/approval' },
-      ],
-    },
+    // {
+    //   icon: InboxIcon,
+    //   label: '휴가',
+    //   open: false,
+    //   items: [
+    //     { icon: DraftsIcon, label: '휴가 신청', url: '/user/vacation/request' },
+    //     { icon: DraftsIcon, label: '휴가 기록', url: '/user/vacation/records' },
+    //     { icon: DraftsIcon, label: '휴가 현황', url: '/user/vacation/status' },
+    //     { icon: DraftsIcon, label: '휴가 승인', url: '/user/vacation/approval' },
+    //   ],
+    // },
   ]);
 
   //헤더 템플릿
@@ -58,14 +63,25 @@ const UserDefaultLayout = (props: any) => {
   };
 
   useEffect(() => {
-    //API 통신을 통해서 사용자의 정보 받기
-  }, []);
-
-  useEffect(() => {
     //API통신을 통해서 출근 상태 및 시간 확인
-    // axios.get('/api/get').then((res) => {
-    //   console.log(res.data);
-    // });
+    const today = moment().format('YYYY-MM-DD');
+    const getTodayWorkTInfo = async () => {
+      try {
+        const { instance } = ApiClient;
+        //const response = await ApiClient.instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
+        const response = await instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
+
+        const data = response.data;
+        const { id, startAt, endAt } = data;
+        //TODO
+        setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
+
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTodayWorkTInfo();
   }, [onWork]);
 
   return (

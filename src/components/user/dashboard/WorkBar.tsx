@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { Tooltip } from '@mui/material';
 
 interface workBarProps {
   workInfo: any;
@@ -17,21 +18,24 @@ function WorkBar({ workInfo }: workBarProps) {
   // 하루 시작부터 출근까지의 시간 계산
   const startOfDay = startTime.clone().startOf('day');
   const startPlace = startTime.diff(startOfDay, 'minutes');
-  console.log(startTime, startPlace);
 
   return (
     workInfo?.startTime &&
     workInfo?.endTime && (
-      <div
-        className='bg-primary w-0'
-        style={{
-          marginLeft: `calc(100%/1440 * ${startPlace})`, // 하루 중 시작 위치
-          width: `calc(100%/1440 * ${workTime})`, // 근무 시간에 비례하는 너비
-          transition: 'all 0.5s ease', // 부드러운 전환 효과
-        }}
+      <Tooltip
+        title={`      
+      ${workTime}분`}
+        placement='top'
       >
-        {workTime}분
-      </div>
+        <div
+          className='bg-primary w-0 h-[30px]'
+          style={{
+            marginLeft: `calc(100%/1440 * ${startPlace})`,
+            width: `calc(100%/1440 * ${workTime})`,
+            transition: 'all 0.5s ease',
+          }}
+        />
+      </Tooltip>
     )
   );
 }

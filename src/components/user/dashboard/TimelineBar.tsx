@@ -7,7 +7,7 @@ function TimelineBar() {
     .map((v, i) => i);
 
   return (
-    <div className='flex w-full  '>
+    <div className='flex w-full mb-[10px] '>
       <div className='w-[200px]'></div>
       <div className='flex-1 flex w-full justify-between'>
         {timeline.map((_it, idx) => (
