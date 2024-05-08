@@ -6,3 +6,15 @@
 .css-sijacu-MuiButtonBase-root-MuiListItemButton-root.Mui-selected {
   background-color: #c6c6c6;
 }
+
+.MuiDataGrid-cell:focus {
+  outline: none !important;
+}
+
+.MuiDataGrid-row.Mui-selected {
+  background-color: #ff1122;
+}
+
+.MuiDataGrid-filler {
+  background-color: #dddddd;
+}
