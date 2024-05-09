@@ -61,23 +61,14 @@ const Login = ({ logo, role }: LoginProps) => {
 
   return (
     <div className='flex w-full h-screen justify-center content-center'>
-      <span
-        className='font-body1 text-primary underline underline-offset-2 absolute right-14 top-7 cursor-pointer'
-        onClick={handleToggleLogin}
-      >
+      <span className='font-body1 text-primary underline underline-offset-2 absolute right-14 top-7 cursor-pointer' onClick={handleToggleLogin}>
         {role === 'admin' ? '사용자 로그인' : '관리자 로그인'}
       </span>
       <div className='flex flex-col items-center justify-center gap-9'>
         {logo}
 
-        <Box
-          component='form'
-          onSubmit={handleLogin}
-          noValidate
-          sx={{ mt: 1 }}
-          className='flex flex-col items-center gap-[17px] m-0'
-        >
-          <h1 className='font-h1 self-start'>로그인</h1>
+        <Box component='form' onSubmit={handleLogin} noValidate sx={{ mt: 1 }} className='flex flex-col items-center gap-[17px] m-0'>
+          <div className='font-h1 self-start'>로그인</div>
           <TextField
             label='아이디'
             variant='outlined'

@@ -1,145 +1,117 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
-  font-family: Poppins, sans-serif;
-  font-size: 12px;
+@media (min-width: 1200px) {
+  #main-layout {
+    width: calc(100% - 16rem);
+  }
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
 html,
 body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
+div {
   padding: 0;
+  margin: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
   vertical-align: baseline;
   box-sizing: border-box;
+  font-family: Poppins, sans-serif;
 }
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
-body {
-  line-height: 1;
+
+* {
+  box-sizing: border-box;
 }
-ol,
-ul {
-  list-style: none;
+
+input:focus {
+  outline: none;
 }
-blockquote,
-q {
-  quotes: none;
+
+textarea:focus {
+  outline: none;
 }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
+
+#modal::-webkit-scrollbar {
+  display: none !important;
 }
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+#modal {
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+
+#modalContainer {
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+#modalContainer::-webkit-scrollbar {
+  display: none !important;
+}
+
+#commandModal::-webkit-scrollbar {
+  display: none !important;
+}
+#commandModal {
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+#confirmInfoScroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+#confirmInfoScroll::-webkit-scrollbar-thumb {
+  background-color: gray;
+}
+
+#confirmInfoScroll::-webkit-scrollbar-track {
+  background-color: rgb(232, 232, 232);
+}
+
+.css-t3ipsp-control {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 1px #6366f1 !important;
+}
+
+.css-d7l1ni-option {
+  background-color: #6366f1 !important;
+  color: white !important;
+}
+
+.css-tr4s17-option {
+  background-color: #6366f1 !important;
+  color: white !important;
+}
+
+.page-enter {
+  opacity: 0;
+}
+
+.page-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 500ms;
+}
+
+.scroll-none::-webkit-scrollbar {
+  display: none;
+}
+
+#react-select-3-listbox {
+  z-index: 10;
 }
 
 /* scrollbar */
