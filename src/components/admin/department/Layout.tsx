@@ -2,85 +2,84 @@ import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import _ from 'lodash';
-import { useState } from 'react';
+import moment from 'moment';
+import { useEffect, useRef, useState } from 'react';
+import { CustomButton } from '../../common/Components';
+import { MiniOrganizationIcon } from '../../common/JiranIcon';
+import { API_ORGANIZATION } from '../../../services/organzation';
+import { COMPANY_ID } from '../../../constants/constant';
+import { DataGrid, GridColumnHeaderParams, GridRowSelectionModel, useGridApiContext, useGridApiRef } from '@mui/x-data-grid';
+import { useUpdateEffect } from 'react-use';
+import React from 'react';
 
 const DepartmentLayout = (props: any) => {
   const {} = props;
-  const [treeItems, setTreeItems] = useState([
+  // * 조직도
+  const [organization, setOrganization]: any = useState([]);
+  // * 선택된 회사, 사용자
+  const [selectDepartment, setSelectDepartment]: any = useState(null);
+  const [selectUser, setSelectUser]: any = useState(null);
+  // * 선택된 Row
+  const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+  // * DataGrid 컬럼 정의
+  const [columns, setColumns] = useState([
+    { field: 'name', headerClassName: 'bg-[#DDDDDD] text-lg', headerName: '이름', width: 150, disableReorder: true },
     {
-      type: 'department',
-      label: '지란지교패밀리',
-      departments: [
-        {
-          type: 'department',
-          label: '지란지교소프트',
-          departments: [],
-          users: [
-            { type: 'user', label: '소프트1' },
-            { type: 'user', label: '소프트2' },
-            { type: 'user', label: '소프트3' },
-            { type: 'user', label: '소프트4' },
-            { type: 'user', label: '소프트5' },
-          ],
-        },
-        {
-          type: 'department',
-          label: '지란지교데이터',
-          departments: [],
-          users: [
-            { type: 'user', label: '데이터1' },
-            { type: 'user', label: '데이터2' },
-            { type: 'user', label: '데이터3' },
-            { type: 'user', label: '데이터4' },
-            { type: 'user', label: '데이터5' },
-            { type: 'user', label: '데이터6' },
-            { type: 'user', label: '데이터7' },
-            { type: 'user', label: '데이터8' },
-          ],
-        },
-        {
-          type: 'department',
-          label: '지란지교시큐리티',
-          departments: [],
-          users: [
-            { type: 'user', label: '시큐리티1' },
-            { type: 'user', label: '시큐리티2' },
-            { type: 'user', label: '시큐리티3' },
-            { type: 'user', label: '시큐리티4' },
-          ],
-        },
-        {
-          type: 'department',
-          label: '에스에스알',
-          departments: [],
-          users: [
-            { type: 'user', label: '에스알1' },
-            { type: 'user', label: '에스알2' },
-            { type: 'user', label: '에스알3' },
-          ],
-        },
-      ],
-      users: [
-        { type: 'user', label: '테스트1' },
-        { type: 'user', label: '테스트2' },
-        { type: 'user', label: '테스트3' },
-        { type: 'user', label: '테스트4' },
-        { type: 'user', label: '테스트5' },
-        { type: 'user', label: '테스트6' },
-      ],
+      field: 'rank',
+      headerClassName: 'bg-[#DDDDDD] text-lg',
+      headerName: '이름',
+      width: 150,
+      valueGetter: (params: any) => params.title,
+    },
+    {
+      field: 'email',
+      headerClassName: 'bg-[#DDDDDD] text-lg',
+      headerName: 'ID',
+      width: 150,
+      disableReorder: true,
     },
   ]);
-  const [selectDepartment, setSelectDepartment] = useState(null);
-  const [selectUser, setSelectUser] = useState(null);
 
-  const handleItemClick = (item: any) => {
-    console.log('item', item);
+  // * 회사 클릭
+  const handleDepartmentClick = (_department: any) => {
+    setSelectDepartment(_department);
+    setSelectUser(null);
+    setRowSelectionModel([]);
   };
 
+  // * 사용자 클릭
+  const handleUserClick = (_department: any, _user: any) => {
+    setSelectDepartment(_department);
+    setSelectUser(_user);
+  };
+
+  // * 선택 사용자 DataGird 선택 Row에 추가
+  useUpdateEffect(() => {
+    if (!_.isEmpty(selectUser)) {
+      let _selectUserIndex: any = null;
+      _.map(selectDepartment?.users, (user: any, index: number) => {
+        if (user.id === selectUser.id) {
+          _selectUserIndex = index;
+        }
+      });
+
+      setRowSelectionModel([_selectUserIndex + 1]);
+    }
+  }, [selectUser]);
+
+  // * 초기 세팅
+  useEffect(() => {
+    try {
+      API_ORGANIZATION(localStorage.getItem(COMPANY_ID)).then((res: any) => {
+        setOrganization([res.data.data]);
+      });
+    } catch (e) {}
+  }, []);
+
   return (
-    <div className='flex w-full h-full gap-3'>
+    <div className='flex w-full h-full '>
       {/* 조직도 */}
-      <div className='flex flex-col w-[250px] min-w-[250px] h-full p-3 gap-3 bg-white'>
+      <div className='flex flex-col w-[250px] min-w-[250px] h-full px-3 pt-3 gap-3 bg-white'>
         {/* 조직도 제목 */}
         <span className='text-lg font-medium'>조직도</span>
         {/* 조직도 내용 */}
@@ -91,14 +90,13 @@ const DepartmentLayout = (props: any) => {
           </div>
           {/* 실제 조직도 */}
           <div className='flex w-full h-full '>
-            {/* // TODO!! Tree overflow 발생하지 않음 수정필요 */}
-            <Box component='div' sx={{ width: '100%', height: '100%', overflowY: 'auto' }} className='scrollYWrap'>
-              <SimpleTreeView>
+            <Box component='div' sx={{ width: '100%', height: '45rem', overflowY: 'auto' }} className='scrollYWrap'>
+              <SimpleTreeView sx={{ height: '100%' }}>
                 {/* 트리 순회 */}
-                {_.map(treeItems, (treeItem: any) => {
+                {_.map(organization, (treeItem: any) => {
                   // 회사별 순회
                   return (
-                    <TreeItem itemId={treeItem?.label} label={treeItem?.label} key={treeItem?.label} onClick={() => handleItemClick(treeItem)}>
+                    <TreeItem itemId={treeItem?.label} label={treeItem?.label} key={treeItem?.label} onClick={() => handleDepartmentClick(treeItem)}>
                       {/* 회사 */}
                       {_.map(treeItem?.departments, (departments: any) => {
                         return (
@@ -106,7 +104,7 @@ const DepartmentLayout = (props: any) => {
                             itemId={departments?.label}
                             label={departments?.label}
                             key={departments?.label}
-                            onClick={() => handleItemClick(departments)}
+                            onClick={() => handleDepartmentClick(departments)}
                           >
                             {/* 부서 */}
                             {_.map(departments?.departments, (department: any) => {
@@ -115,14 +113,19 @@ const DepartmentLayout = (props: any) => {
                                   itemId={department?.label}
                                   label={department?.label}
                                   key={department?.label}
-                                  onClick={() => handleItemClick(department)}
+                                  onClick={() => handleDepartmentClick(department)}
                                 ></TreeItem>
                               );
                             })}
                             {/* 부서 내 사용자 */}
                             {_.map(departments?.users, (user: any) => {
                               return (
-                                <TreeItem itemId={user?.label} label={user?.label} key={user?.label} onClick={() => handleItemClick(user)}></TreeItem>
+                                <TreeItem
+                                  itemId={user?.label}
+                                  label={user?.label}
+                                  key={user?.label}
+                                  onClick={() => handleUserClick(departments, user)}
+                                ></TreeItem>
                               );
                             })}
                           </TreeItem>
@@ -136,7 +139,7 @@ const DepartmentLayout = (props: any) => {
                             label={users?.label}
                             key={users?.label}
                             onClick={() => {
-                              handleItemClick(users);
+                              handleUserClick(treeItem, users);
                             }}
                           ></TreeItem>
                         );
@@ -150,7 +153,92 @@ const DepartmentLayout = (props: any) => {
         </div>
       </div>
       {/* 내용 */}
-      <div className='flex w-full h-full bg-white'></div>
+      <div className='flex flex-col w-full h-full pt-3 gap-5 bg-white'>
+        {/* 부서 정보 */}
+        <div className='flex flex-col w-full gap-3'>
+          {/* 부서 정보 및 부서원 추가 */}
+          <div className='flex w-full justify-between'>
+            <span className='text-2xl font-bold'>부서 정보</span>
+            <div className='flex px-10'>
+              <CustomButton variant='contained' color='secondary' size='auto'>
+                계정 추가
+              </CustomButton>
+            </div>
+          </div>
+          {/* 부서 정보 내용 */}
+          <div className='flex flex-col w-full gap-5'>
+            {/* 부서명 */}
+            <div className='flex w-full'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서명(한글)</span>
+              </div>
+              <div className='flex w-full'>
+                <span>{selectDepartment?.label} </span>
+              </div>
+            </div>
+            {/* 부서 생성일  */}
+            <div className='flex w-full'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서 생성일</span>
+              </div>
+              <div className='flex w-full'>
+                <span>
+                  {_.isEmpty(selectDepartment?.created_at)
+                    ? moment().format('YYYY-MM-DD hh:mm:ss')
+                    : moment(selectDepartment?.created_at).format('YYYY-MM-DD hh:mm:ss')}
+                </span>
+              </div>
+            </div>
+            {/* 부서 근태관리자  */}
+            <div className='flex w-full items-center'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서 근태관리자</span>
+              </div>
+              <div className='flex w-full'>
+                <CustomButton variant='contained' color='secondary' size='md'>
+                  <div className='flex w-full justify-between'>
+                    <span>근태 관리자 선택</span>
+                    <MiniOrganizationIcon width={25} height={25} />
+                  </div>
+                </CustomButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 부서원 목록  */}
+        <div className='flex flex-col w-full gap-3'>
+          {_.isEmpty(selectDepartment?.users) ? (
+            <span className='text-2xl font-bold'>부서원 없음</span>
+          ) : (
+            <>
+              <span className='text-2xl font-bold'>부서원 목록</span>
+              <div className='flex w-11/12'>
+                <DataGrid
+                  rows={selectDepartment?.users}
+                  columns={columns}
+                  // * 선택 Row
+                  onRowSelectionModelChange={(newRowSelectionModel) => {
+                    setRowSelectionModel(newRowSelectionModel);
+                  }}
+                  rowSelectionModel={rowSelectionModel}
+                  // * Row 클릭 이벤트
+                  onRowClick={(data: any) => {}}
+                  // * 페이지네이션
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 5 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 10]}
+                  // * 헤더 메뉴 비활성화
+                  disableColumnMenu
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

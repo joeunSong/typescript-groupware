@@ -1,6 +1,6 @@
-// * ex
-// export const API_LOGIN = async (username: string, password: string) => {
-//   return await axios.instance.post(`/login`, { username: username, password: password })
-// }
+import axios from '../utils/axios';
 
-export const TEST_LOGIN = () => {};
+// 관리자 로그인
+export const API_ADMIN_LOGIN = async (userName: string, password: string) => {
+  return await axios.instance.post('/api/v1/auth/login', { email: userName, password: password });
+};
