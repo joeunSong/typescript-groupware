@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { Tooltip } from '@mui/material';
 
 interface TodayWorkBarProps {
   todayWorkInfo: any;
@@ -16,6 +17,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
       const start = moment(todayWorkInfo.startTime);
       const end = todayWorkInfo.endTime ? moment(todayWorkInfo.endTime) : moment();
       const diff = moment.duration(end.diff(start)).asMinutes();
+
       setWorkTime(Math.floor(diff));
     };
 
@@ -32,22 +34,24 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
   }, [todayWorkInfo.startTime, todayWorkInfo.endTime]);
 
   //TodayWorkBar 위치 조정
+
   const startPlace = todayWorkInfo.startTime
     ? moment(todayWorkInfo.startTime).diff(moment(todayWorkInfo.startTime).clone().startOf('day'), 'minutes')
     : 0;
 
   return (
     todayWorkInfo.startTime && (
-      <div
-        className='bg-primary w-0'
-        style={{
-          marginLeft: `calc(100%/1440 * ${startPlace})`,
-          width: `calc(100%/1440 * ${workTime})`,
-          transition: 'all 0.5s ease',
-        }}
-      >
-        {workTime}분
-      </div>
+      <Tooltip title={`${workTime}분`} placement='top'>
+        <div
+          className='bg-primary w-0 h-[30px]'
+          style={{
+            marginLeft: `calc(100%/1440 * ${startPlace})`,
+            width: `calc(100%/1440 * ${workTime})`,
+            minWidth: 1,
+            //transition: 'all 0.5s ease',
+          }}
+        />
+      </Tooltip>
     )
   );
 }

@@ -5,7 +5,6 @@ import { ACCESS_TOKEN } from '../constants/constant';
 const ApiClient = () => {
   // * 기초 설정
   const defaultOptions = {
-    baseURL: process.env.LOCAL_SERVER_API_URL,
     headers: {
       'Content-Type': 'application/json',
       // "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -14,7 +13,7 @@ const ApiClient = () => {
       // origin: "http://localhost:3000",
       // Accept: "application/json",
     },
-    withCredentials: true,
+    withCredentials: false,
   };
   // * instance 생성
   const instance = axios.create(defaultOptions);

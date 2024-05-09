@@ -6,6 +6,18 @@
 .css-sijacu-MuiButtonBase-root-MuiListItemButton-root.Mui-selected {
   background-color: #c6c6c6;
 }
+
+.MuiDataGrid-cell:focus {
+  outline: none !important;
+}
+
+.MuiDataGrid-row.Mui-selected {
+  background-color: #ff1122;
+}
+
+.MuiDataGrid-filler {
+  background-color: #dddddd;
+}
 /* 폼에 들어가는 유효성 검사 글자 색 변경 */
 .text-red {
   color: red;

@@ -4,7 +4,7 @@ import { Control, FieldPath, FieldValues, RegisterOptions, useController, UseCon
 
 interface CustomButtonProps {
   onClick?: () => void;
-  children: string;
+  children: any;
   variant: 'text' | 'outlined' | 'contained';
   size: 'lg' | 'md' | 'auto';
   color: 'primary' | 'secondary';
