@@ -1,5 +1,5 @@
 // * 로그인 페이지
-const USER_LOGIN = '/user/login';
+const USER_LOGIN = '/auth/login';
 const ADMIN_LOGIN = '/adminLogin';
 // * 사용자 페이지
 const USER_DASHBOARD = '/user/dashboard';

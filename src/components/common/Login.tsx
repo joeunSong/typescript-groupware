@@ -1,35 +1,30 @@
 import React, { FormEvent, useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import ApiClient from '../../utils/axios';
 import * as ENDPOINT from '../../constants/apiEndpoints';
 import { ACCESS_TOKEN } from '../../constants/constant';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import USER_API from '../../services/user';
 
 interface LoginProps {
-  logo?: React.JSX.Element; // 사용자 로고
-  loginEndpoint: string; // api 호출 경로
-  redirectEndpoint: string; //
+  logo?: React.JSX.Element;
   role: 'admin' | 'user';
 }
 
-const Login = ({ logo, loginEndpoint, redirectEndpoint, role }: LoginProps) => {
+const Login = ({ logo, role }: LoginProps) => {
   const [isError, setIsError] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // * 로그인 로직 (동기적)
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { instance } = ApiClient;
 
     try {
       const data = new FormData(e.currentTarget);
-      // 로그인 API 호출
-      const response = await instance.get(loginEndpoint, {
-        data: {
-          email: data.get('email'),
-          password: data.get('pw'),
-        },
+
+      const response = await USER_API.login({
+        email: data.get('email') as string,
+        password: data.get('password') as string,
       });
 
       localStorage.setItem(ACCESS_TOKEN, response.data.access_token);
@@ -43,10 +38,13 @@ const Login = ({ logo, loginEndpoint, redirectEndpoint, role }: LoginProps) => {
       if (axios.isAxiosError(error)) {
         if (error.code === '401' || error.code === '403') {
           setIsError(true);
-        } else {
-          console.log('login error: ' + error);
+        }
+        // 백엔드 에러 처리 전 임시 구성
+        if (error.code === 'ERR_BAD_RESPONSE') {
+          setIsError(true);
         }
       }
+      console.log('로그인 실패: ' + error);
     }
   };
 
@@ -84,10 +82,10 @@ const Login = ({ logo, loginEndpoint, redirectEndpoint, role }: LoginProps) => {
             type='password'
             autoComplete='current-password'
             placeholder='비밀번호'
-            name='pw'
+            name='password'
             required
           />
-          <span hidden={!isError} className='text-[#ff0000] font-placeholder'>
+          <span hidden={!isError} className='text-[#ff0000] self-start'>
             아이디 또는 비밀번호가 일치하지 않습니다.
           </span>
           <Button className='text-white w-[300px] bg-primary' type='submit'>
