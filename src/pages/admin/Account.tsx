@@ -19,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { Controller, useController, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 function createData(name: string, company: string, position: string, id: string, startWork: number, startAccount: number, accountStatus: string) {
   return { name, company, position, id, startWork, startAccount, accountStatus };
@@ -93,7 +93,7 @@ const AccountPageLayout = () => {
       </TableContainer>
 
       <CustomModal isOpen={isModalOpen} onClose={HandleCloseModal} title='계정추가'>
-        <form onSubmit={handleSubmit((data) => alert(JSON.stringify(data)))}>
+        <form onSubmit={handleSubmit((data: any) => alert(JSON.stringify(data)))}>
           <div className='grid-box'>
             <div className='text-black font-body1'>
               이름&nbsp;<span className='text-red'>*</span>
@@ -179,7 +179,7 @@ const AccountPageLayout = () => {
                   format='YYYY-MM-DD'
                   showDaysOutsideCurrentMonth
                   value={value}
-                  onChange={(newValue) => setValue(newValue)}
+                  onChange={(newValue: any) => setValue(newValue)}
                 />
               </DemoContainer>
             </LocalizationProvider>

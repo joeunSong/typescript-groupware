@@ -6,11 +6,11 @@ import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { CustomButton } from '../../common/Components';
 import { MiniOrganizationIcon } from '../../common/JiranIcon';
-import { API_ORGANIZATION } from '../../../services/organzation';
 import { COMPANY_ID } from '../../../constants/constant';
 import { DataGrid, GridColumnHeaderParams, GridRowSelectionModel, useGridApiContext, useGridApiRef } from '@mui/x-data-grid';
 import { useUpdateEffect } from 'react-use';
 import React from 'react';
+import ADMIN_API from '../../../services/admin';
 
 const DepartmentLayout = (props: any) => {
   const {} = props;
@@ -70,7 +70,7 @@ const DepartmentLayout = (props: any) => {
   // * 초기 세팅
   useEffect(() => {
     try {
-      API_ORGANIZATION(localStorage.getItem(COMPANY_ID)).then((res: any) => {
+      ADMIN_API.organization(localStorage.getItem(COMPANY_ID)).then((res: any) => {
         setOrganization([res.data.data]);
       });
     } catch (e) {}
