@@ -7,7 +7,6 @@ import SendIcon from '@mui/icons-material/Send';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import WorkIcon from '@mui/icons-material/Work';
-
 import _ from 'lodash';
 import moment from 'moment';
 import ApiClient from '../../utils/axios';
@@ -62,25 +61,30 @@ const UserDefaultLayout = (props: any) => {
     profileMenu: <ProfileMenu userInfo={userInfo} />,
   };
 
-  useEffect(() => {
+  const { instance, setBaseURL } = ApiClient;
+
+  const getTodayWorkTInfo = async () => {
     //API통신을 통해서 출근 상태 및 시간 확인
     const today = moment().format('YYYY-MM-DD');
-    const getTodayWorkTInfo = async () => {
-      try {
-        const { instance } = ApiClient;
-        //const response = await ApiClient.instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
-        const response = await instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
 
-        const data = response.data;
-        const { id, startAt, endAt } = data;
-        //TODO
-        setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
+    try {
+      //const response = await ApiClient.instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
 
-        return response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      setBaseURL('http://localhost:8080/api/');
+      const response = await instance.get(`commutes/status?date=` + today);
+      const data = response.data;
+
+      const { id, startAt, endAt } = data;
+
+      //TODO
+      setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
     getTodayWorkTInfo();
   }, [onWork]);
 
