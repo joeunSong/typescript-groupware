@@ -1,6 +1,6 @@
 // * 로그인 페이지
 const USER_LOGIN = '/auth/login';
-const ADMIN_LOGIN = '/adminLogin';
+const ADMIN_LOGIN = '/auth/admin';
 // * 사용자 페이지
 const USER_DASHBOARD = '/user/dashboard';
 // * 관리자 페이지

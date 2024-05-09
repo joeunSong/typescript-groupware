@@ -7,9 +7,12 @@ interface LoginProps {
 }
 
 const USER_API = () => {
-  axios.setBaseURL(process.env.REACT_APP_USER_LOCAL_SERVER);
+  const baseURLChange = () => {
+    axios.setBaseURL(process.env.REACT_APP_USER_LOCAL_SERVER);
+  };
 
   const login = async ({ email, password }: LoginProps) => {
+    baseURLChange();
     return await axios.instance.post(ENDPOINT.USER_LOGIN, {
       email,
       password,
