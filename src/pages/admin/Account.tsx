@@ -10,9 +10,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from '@mui/material';
-import { CustomButton, CustomInput, CustomModal } from '../../components/common/Components';
+import { CustomButton, CustomInput, CustomModal, CustomSelect } from '../../components/common/Components';
 import { useState } from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -37,24 +36,43 @@ interface FormValue {
   id: string;
   password: string;
   passwordCheck: string;
-  // rank: string;
+  rank: string;
+  department: string;
+  enter_date: string;
+  auth: string;
 }
 
 /**
  * @todo api연결, 날짜 포맷
  */
 const AccountPageLayout = () => {
-  const { control, handleSubmit } = useForm<FormValue>();
+  const { control, handleSubmit, watch } = useForm<FormValue>();
   const [value, setValue] = useState<Dayjs | null>();
-  const [age, setAge] = useState('');
+  const password = watch('password', '');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const HandleOpenModal = () => setIsModalOpen(true);
   const HandleCloseModal = () => setIsModalOpen(false);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
-  };
+  const rankSelectList = [
+    { label: '대표', value: '대표' },
+    { label: '부장', value: '부장' },
+    { label: '차장', value: '차장' },
+    { label: '과장', value: '과장' },
+    { label: '대리', value: '대리' },
+    { label: '사원', value: '사원' },
+    { label: '인턴', value: '인턴' },
+  ];
+
+  const departmentSelectList = [
+    { label: '개발 부서', value: '개발 부서' },
+    { label: '기획 부서', value: '기획 부서' },
+  ];
+
+  const authSelectList = [
+    { label: '사용자', value: '사용자' },
+    { label: '관리자', value: '관리자' },
+  ];
 
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
@@ -95,82 +113,100 @@ const AccountPageLayout = () => {
       <CustomModal isOpen={isModalOpen} onClose={HandleCloseModal} title='계정추가'>
         <form onSubmit={handleSubmit((data: any) => alert(JSON.stringify(data)))}>
           <div className='grid-box'>
-            <div className='text-black font-body1'>
-              이름&nbsp;<span className='text-red'>*</span>
-            </div>
+            <div className='text-black font-body1'>이름</div>
             <CustomInput
               name='name'
               control={control}
-              rules={{ required: '필수항목을 입력해주세요.', minLength: { value: 2, message: '최소 2글자 이상 입력하세요.' } }}
+              rules={{ required: '필수 입력 항목입니다.', minLength: { value: 2, message: '최소 2자 이상이어야 합니다.' } }}
               textFieldProps={{
                 variant: 'outlined',
               }}
             />
-            <div className='text-black font-body1'>
-              아이디&nbsp;<span className='text-red'>*</span>
-            </div>
-            <div className='flex gap-2 align-center'>
+            <div className='text-black font-body1'>아이디</div>
+            <div className='flex items-center gap-2'>
               <CustomInput
                 name='id'
                 control={control}
-                rules={{ required: '필수항목을 입력해주세요.' }}
+                rules={{
+                  required: '필수 입력 항목입니다.',
+                  minLength: {
+                    value: 2,
+                    message: '최소 2자 이상이어야 합니다.',
+                  },
+                  maxLength: {
+                    value: 40,
+                    message: '최대 40자까지 입력 가능합니다.',
+                  },
+                  pattern: {
+                    value: /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/,
+                    message: '영어 소문자, 숫자, 점(.), 하이픈(-), 언더바(_)만 사용 가능합니다. (연속 사용 및 맨 앞/뒤 사용 불가)',
+                  },
+                }}
                 textFieldProps={{
                   variant: 'outlined',
                 }}
               />
               <p className='font-body1'>@jiran.com</p>
             </div>
-            <div className='text-black font-body1'>
-              비밀번호&nbsp;<span className='text-red'>*</span>
-            </div>
+            <div className='text-black font-body1'>비밀번호</div>
             <CustomInput
               name='password'
               control={control}
-              rules={{ required: '필수항목을 입력해주세요.' }}
+              rules={{
+                required: '필수 입력 항목입니다.',
+                minLength: {
+                  value: 4,
+                  message: '비밀번호는 최소 4자 이상이어야 합니다.',
+                },
+                maxLength: {
+                  value: 10,
+                  message: '비밀번호는 최대 10자까지 입력 가능합니다.',
+                },
+                pattern: {
+                  value: /^[a-z0-9]+$/,
+                  message: '비밀번호는 영어 소문자와 숫자로만 구성되어야 합니다.',
+                },
+              }}
               textFieldProps={{
                 variant: 'outlined',
               }}
             />
-            <div className='text-black font-body1'>
-              비밀번호 확인&nbsp;<span className='text-red'>*</span>
-            </div>
+            <div className='text-black font-body1'>비밀번호 확인</div>
             <CustomInput
               name='passwordCheck'
               control={control}
-              rules={{ required: '필수항목을 입력해주세요.' }}
+              rules={{
+                required: '필수 입력 항목입니다.',
+                validate: (value) => value === password || '비밀번호가 일치하지 않습니다.',
+              }}
               textFieldProps={{
                 variant: 'outlined',
               }}
             />
-            <div className='text-black font-body1'>
-              직위&nbsp;<span className='text-red'>*</span>
-            </div>
-            <FormControl sx={{ minWidth: 120 }}>
-              <Select value={age} onChange={handleChange} displayEmpty inputProps={{ 'aria-label': 'Without label' }}>
-                <MenuItem disabled value=''>
-                  부서선택
-                </MenuItem>
-                <MenuItem>대표</MenuItem>
-                <MenuItem>부장</MenuItem>
-                <MenuItem>차장</MenuItem>
-                <MenuItem>과장</MenuItem>
-                <MenuItem>대리</MenuItem>
-                <MenuItem>사원</MenuItem>
-                <MenuItem>인턴</MenuItem>
-              </Select>
-            </FormControl>
-            <div className='text-black font-body1'>
-              부서&nbsp;<span className='text-red'>*</span>
-            </div>
-            <FormControl sx={{ minWidth: 120 }}>
-              <Select value={age} onChange={handleChange} displayEmpty inputProps={{ 'aria-label': 'Without label' }}>
-                <MenuItem disabled value=''>
-                  계정 상태 선택
-                </MenuItem>
-                <MenuItem>개발 부서</MenuItem>
-                <MenuItem>기획 부서</MenuItem>
-              </Select>
-            </FormControl>
+            <div className='text-black font-body1'>직위</div>
+            <CustomSelect
+              name='rank'
+              control={control}
+              rules={{ required: '필수 선택 항목입니다.' }}
+              selectList={rankSelectList}
+              placeholder='직위 선택'
+            />
+            <div className='text-black font-body1'>부서</div>
+            <CustomSelect
+              name='department'
+              control={control}
+              rules={{ required: '필수 선택 항목입니다.' }}
+              selectList={departmentSelectList}
+              placeholder='부서 선택'
+            />
+            <div className='text-black font-body1'>권한</div>
+            <CustomSelect
+              name='auth'
+              control={control}
+              rules={{ required: '필수 선택 항목입니다.' }}
+              selectList={departmentSelectList}
+              placeholder='권한 선택'
+            />
             <div className='text-black font-body1'>입사일</div>
             <LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={{ monthShort: `M` }}>
               <DemoContainer components={['DatePicker', 'DatePicker']}>
@@ -185,7 +221,7 @@ const AccountPageLayout = () => {
             </LocalizationProvider>
           </div>
 
-          <div className='flex justify-center gap-5 mt-6'>
+          <div className='flex justify-center gap-5 mt-8'>
             <CustomButton variant='contained' size='auto' color='secondary'>
               취소
             </CustomButton>
