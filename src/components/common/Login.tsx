@@ -61,13 +61,22 @@ const Login = ({ logo, role }: LoginProps) => {
 
   return (
     <div className='flex w-full h-screen justify-center content-center'>
-      <span className='font-body1 text-primary underline underline-offset-2 absolute right-14 top-7 cursor-pointer' onClick={handleToggleLogin}>
+      <span
+        className='font-body1 text-primary underline underline-offset-2 absolute right-14 top-7 cursor-pointer'
+        onClick={handleToggleLogin}
+      >
         {role === 'admin' ? '사용자 로그인' : '관리자 로그인'}
       </span>
       <div className='flex flex-col items-center justify-center gap-9'>
         {logo}
 
-        <Box component='form' onSubmit={handleLogin} noValidate sx={{ mt: 1 }} className='flex flex-col items-center gap-[17px] m-0'>
+        <Box
+          component='form'
+          onSubmit={handleLogin}
+          noValidate
+          sx={{ mt: 1 }}
+          className='flex flex-col items-center gap-[17px] m-0'
+        >
           <h1 className='font-h1 self-start'>로그인</h1>
           <TextField
             label='아이디'
@@ -80,6 +89,9 @@ const Login = ({ logo, role }: LoginProps) => {
             autoComplete='email'
             autoFocus
           />
+          <span hidden={!isError} className='text-[#ff0000] font-placeholder self-start'>
+            아이디 또는 비밀번호가 일치하지 않습니다.
+          </span>
           <TextField
             label='비밀번호'
             variant='outlined'
@@ -91,9 +103,7 @@ const Login = ({ logo, role }: LoginProps) => {
             name='password'
             required
           />
-          <span hidden={!isError} className='text-[#ff0000] self-start'>
-            아이디 또는 비밀번호가 일치하지 않습니다.
-          </span>
+
           <Button className='text-white w-[300px] bg-primary' type='submit'>
             로그인
           </Button>
