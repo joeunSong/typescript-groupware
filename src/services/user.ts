@@ -1,5 +1,4 @@
 import axios from '../utils/axios';
-import * as ENDPOINT from '../constants/apiEndpoints';
 
 interface LoginProps {
   email: string;
@@ -13,13 +12,18 @@ const USER_API = () => {
 
   const login = async ({ email, password }: LoginProps) => {
     baseURLChange();
-    return await axios.instance.post(ENDPOINT.USER_LOGIN, {
+    return await axios.instance.post('/auth/login', {
       email,
       password,
     });
   };
 
-  return { login };
+  const profile = async () => {
+    baseURLChange();
+    return await axios.instance.get('users');
+  };
+
+  return { login, profile };
 };
 
 export default USER_API();
