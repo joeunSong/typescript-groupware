@@ -31,7 +31,7 @@ const Login = ({ logo, role }: LoginProps) => {
           email: data.get('email') as string,
           password: data.get('password') as string,
         });
-        localStorage.setItem(ACCESS_TOKEN, response.data?.token);
+        localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
         navigate(ENDPOINT.USER_DASHBOARD);
       } else {
         response = await ADMIN_API.admin_login(data.get('email') as string, data.get('password') as string);
@@ -68,7 +68,7 @@ const Login = ({ logo, role }: LoginProps) => {
         {logo}
 
         <Box component='form' onSubmit={handleLogin} noValidate sx={{ mt: 1 }} className='flex flex-col items-center gap-[17px] m-0'>
-          <h1 className='font-h1 self-start'>로그인</h1>
+          <div className='font-h1 self-start'>로그인</div>
           <TextField
             label='아이디'
             variant='outlined'
@@ -80,6 +80,9 @@ const Login = ({ logo, role }: LoginProps) => {
             autoComplete='email'
             autoFocus
           />
+          <span hidden={!isError} className='text-[#ff0000] font-placeholder self-start'>
+            아이디 또는 비밀번호가 일치하지 않습니다.
+          </span>
           <TextField
             label='비밀번호'
             variant='outlined'
@@ -91,9 +94,7 @@ const Login = ({ logo, role }: LoginProps) => {
             name='password'
             required
           />
-          <span hidden={!isError} className='text-[#ff0000] self-start'>
-            아이디 또는 비밀번호가 일치하지 않습니다.
-          </span>
+
           <Button className='text-white w-[300px] bg-primary' type='submit'>
             로그인
           </Button>

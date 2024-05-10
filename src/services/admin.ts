@@ -17,7 +17,17 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/organizations`);
   };
 
-  return { admin_login, organization };
+  const department_create = async (companyId: any, title: string) => {
+    baseURLChange();
+    return await axios.instance.post(`/companies/${companyId}/departments`, { title: title });
+  };
+
+  const department_manager_edit = async (companyId: any, departmentId: any, userId: any) => {
+    baseURLChange();
+    return await axios.instance.patch(`/companies/${companyId}/departments/${departmentId}/leader`, { user_id: userId });
+  };
+
+  return { admin_login, organization, department_create, department_manager_edit };
 };
 
 export default ADMIN_API();

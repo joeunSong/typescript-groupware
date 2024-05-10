@@ -1,8 +1,26 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  important: '#root',
-  darkMode: false, // or 'media' or 'class'
+  content: ['./src/components/**/*.{js,ts,jsx,tsx}', './src/pages/**/*.{js,ts,jsx,tsx}'],
+  // important: '#root',
+  darkMode: false, //? or 'media' or 'class'
   theme: {
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+      '3xl': '1792px',
+      '4xl': '2048px',
+      '5xl': '2300px',
+    },
+    maxWidth: {
+      '1/2': '50%',
+      '1/3': '33%',
+      '2/3': '66%',
+      '3/4': '75%',
+    },
     extend: {
       colors: {
         primary: '#FF7F00',
