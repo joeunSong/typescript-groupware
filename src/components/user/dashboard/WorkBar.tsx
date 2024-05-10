@@ -8,8 +8,8 @@ interface workBarProps {
 
 function WorkBar({ workInfo }: workBarProps) {
   // 출근 시간과 퇴근 시간
-  const startTime = moment(workInfo?.startTime);
-  const endTime = moment(workInfo?.endTime);
+  const startTime = moment(workInfo?.startAt);
+  const endTime = moment(workInfo?.endAt);
 
   // 출근부터 퇴근까지의 시간 계산
   let workTime = moment.duration(endTime.diff(startTime)).asMinutes();
@@ -19,14 +19,21 @@ function WorkBar({ workInfo }: workBarProps) {
   const startOfDay = startTime.clone().startOf('day');
   const startPlace = startTime.diff(startOfDay, 'minutes');
 
+  // 근무 시간 구하기
+  const getWorkTime = (diff: number) => {
+    if (diff >= 60) {
+      const hours = Math.floor(diff / 60);
+      const minutes = diff % 60;
+      return `${hours}시간 ${minutes}분`;
+    } else {
+      return `${diff}분`;
+    }
+  };
+
   return (
-    workInfo?.startTime &&
-    workInfo?.endTime && (
-      <Tooltip
-        title={`      
-      ${workTime}분`}
-        placement='top'
-      >
+    workInfo?.startAt &&
+    workInfo?.endAt && (
+      <Tooltip title={getWorkTime(workTime)} placement='top'>
         <div
           className='bg-primary w-0 h-[30px]'
           style={{

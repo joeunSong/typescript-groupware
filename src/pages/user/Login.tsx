@@ -1,4 +1,3 @@
-import React from 'react';
 import { default as CommonLogin } from '../../components/common/Login';
 import { JiranFullLogoIcon } from '../../components/common/JiranIcon';
 

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { CustomButton } from '../Components';
@@ -15,75 +14,72 @@ interface AttendMenuProps {
 const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWork }: AttendMenuProps) => {
   const [startTime, setStartTime] = useState<any>(todayWorkInfo?.startTime);
   const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endTime);
-  const { instance } = ApiClient;
+  const { instance, setBaseURL } = ApiClient;
 
-  const handleGoWorkClick = () => {
-    //출근 기록이 없을 경우 등록
-    if (!startTime) {
-      let curTime = moment().toISOString();
-      //console.log(curTime);
-      //출근 시간 등록 API
-      const data = {
-        startAt: curTime,
-        endAt: null,
-      };
+  const postStartTime = async () => {
+    let curTime = moment().toISOString();
+    let today = moment(curTime).format('YYYY-MM-DD');
 
-      //API 통신을 통해서 출근 시간 전송
+    //console.log(curTime);
+    //출근 시간 등록 API
+    const data = {
+      startAt: curTime,
+      date: today,
+    };
 
-      const postStartTime = async () => {
-        try {
-          const response = await instance.post('http://localhost:8080/api/commutes/in', data);
-
-          setStartTime(curTime);
-          setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
-          setOnWork(true);
-
-          // 요청이 성공하면 여기에서 응답 처리
-          return response.data; // 예를 들어, 서버에서 반환한 데이터를 반환할 수 있습니다.
-        } catch (error) {
-          // 요청이 실패하면 여기에서 에러 처리
-          console.log(error);
-        }
-      };
-
-      postStartTime();
+    setBaseURL('http://localhost:8080/api/');
+    try {
+      const response = await instance.post('commutes/in', data);
 
       setStartTime(curTime);
       setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
       setOnWork(true);
+    } catch (error) {
+      // 요청이 실패하면 여기에서 에러 처리
+      console.log(error);
+    }
+  };
+
+  const postEndTime = async () => {
+    let curTime = moment().toISOString();
+    //퇴근 시간 등록 API
+    const data = {
+      endAt: curTime,
+    };
+    setBaseURL('http://localhost:8080/api/');
+    try {
+      const response = await instance.post('commutes/' + todayWorkInfo.id + '/out', data);
+      setEndTime(curTime);
+      setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
+      setOnWork(false);
+    } catch (error) {
+      // 요청이 실패하면 여기에서 에러 처리
+      console.log(error);
+    }
+  };
+  const handleGoWorkClick = () => {
+    //출근 기록이 없을 경우 등록
+    if (!startTime) {
+      //API 통신을 통해서 출근 시간 전송
+
+      postStartTime();
+
+      // setStartTime(curTime);
+      // setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
+      // setOnWork(true);
     }
   };
 
   const handleLeaveWorkClick = () => {
     //퇴근 기록이 없을 경우 등록
     if (!endTime) {
-      let curTime = moment().toISOString();
-      //퇴근 시간 등록 API
-      const data = {
-        endAt: curTime,
-      };
       //API 통신을 통해서 퇴근 시간 전송
-      const postEndTime = async () => {
-        try {
-          const response = await instance.post('http://localhost:8080/api/commutes/' + todayWorkInfo.id + '/out', data);
-
-          setEndTime(curTime);
-          setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
-          setOnWork(false);
-          // 요청이 성공하면 여기에서 응답 처리
-          return response.data;
-        } catch (error) {
-          // 요청이 실패하면 여기에서 에러 처리
-          console.log(error);
-        }
-      };
       if (todayWorkInfo.id) {
         postEndTime();
       }
-
-      setEndTime(curTime);
-      setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
-      setOnWork(false);
+      // setEndTime(curTime);
+      // setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
+      // setOnWork(false);
     }
   };
 
@@ -113,7 +109,7 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   useEffect(() => {
     setStartTime(todayWorkInfo.startTime);
     setEndTime(todayWorkInfo.endTime);
-  }, [onWork]);
+  }, [todayWorkInfo]);
 
   return (
     <div className='flex w-full justify-center'>

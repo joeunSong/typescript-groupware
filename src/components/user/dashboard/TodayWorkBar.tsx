@@ -36,12 +36,26 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
   //TodayWorkBar 위치 조정
 
   const startPlace = todayWorkInfo.startTime
-    ? moment(todayWorkInfo.startTime).diff(moment(todayWorkInfo.startTime).clone().startOf('day'), 'minutes')
+    ? moment(moment(todayWorkInfo.startTime).toLocaleString()).diff(
+        moment(moment(todayWorkInfo.startTime).toLocaleString()).clone().startOf('day'),
+        'minutes',
+      )
     : 0;
+
+  // 근무 시간 구하기
+  const getWorkTime = (diff: number) => {
+    if (diff >= 60) {
+      const hours = Math.floor(diff / 60);
+      const minutes = diff % 60;
+      return `${hours}시간 ${minutes}분`;
+    } else {
+      return `${diff}분`;
+    }
+  };
 
   return (
     todayWorkInfo.startTime && (
-      <Tooltip title={`${workTime}분`} placement='top'>
+      <Tooltip title={getWorkTime(workTime)} placement='top'>
         <div
           className='bg-primary w-0 h-[30px]'
           style={{
