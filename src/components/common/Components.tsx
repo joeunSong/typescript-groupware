@@ -1,4 +1,19 @@
-import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, makeStyles, TextField, TextFieldProps, Theme } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  makeStyles,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  SelectProps,
+  TextField,
+  TextFieldProps,
+  Theme,
+} from '@mui/material';
 import { ReactNode } from 'react';
 import { Control, FieldPath, FieldValues, RegisterOptions, useController, UseControllerProps } from 'react-hook-form';
 
@@ -106,4 +121,77 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues, TNam
   } = useController(props);
 
   return <TextField {...textFieldProps} {...field} error={!!error} helperText={!!error && error.message} />;
+};
+
+export interface ISelectItem {
+  label: ReactNode;
+  value: string | number;
+  selected?: boolean;
+  disabled?: boolean;
+  hidden?: boolean;
+}
+
+interface CustomSelectProps<T> {
+  selectList: ISelectItem[];
+  placeholder: string;
+  onChange?: (event: SelectChangeEvent<T>) => void;
+}
+
+type TProps<T extends FieldValues> = Omit<SelectProps, 'onChange' | 'placeholder'> & CustomSelectProps<T> & TControl<T>;
+/**
+ * react-hook-form을 사용하기 위해 만든 CustomSelect
+ */
+export const CustomSelect = <T extends FieldValues>(props: TProps<T>) => {
+  const { name, rules, control, selectList, placeholder, onChange: propsOnChange } = props;
+  const {
+    field: { value, onChange, onBlur },
+    fieldState: { invalid, error },
+  } = useController({
+    name,
+    rules,
+    control,
+  });
+
+  const handleChange = (event: SelectChangeEvent<T>) => {
+    onChange(event);
+    if (propsOnChange) {
+      propsOnChange(event);
+    }
+  };
+
+  const renderValue = () => (value ? selectList.find((item) => item.value === value)?.label : placeholder);
+  return (
+    <div>
+      <FormControl sx={{ width: '100%' }}>
+        <Select value={value} renderValue={renderValue} onChange={handleChange} onBlur={onBlur} displayEmpty error={invalid}>
+          <MenuItem disabled value=''>
+            {placeholder}
+          </MenuItem>
+          {selectList.map(({ label, value, disabled }, index) => (
+            <MenuItem key={index} value={value} disabled={disabled ?? false}>
+              {label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      {invalid &&
+        error && ( // 에러가 있을 경우 에러 메시지 표시
+          <p
+            style={{
+              color: '#d32f2f',
+              fontWeight: '400',
+              fontSize: '0.75rem',
+              lineHeight: '1.66',
+              textAlign: 'left',
+              marginTop: '3px',
+              marginRight: '14px',
+              marginBottom: 0,
+              marginLeft: '14px',
+            }}
+          >
+            {error.message}
+          </p>
+        )}
+    </div>
+  );
 };
