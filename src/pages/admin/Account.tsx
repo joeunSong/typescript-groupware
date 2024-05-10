@@ -1,24 +1,13 @@
-import {
-  FormControl,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { CustomButton, CustomInput, CustomModal, CustomSelect } from '../../components/common/Components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
+import ApiClient from '../../utils/axios';
 
 function createData(name: string, company: string, position: string, id: string, startWork: number, startAccount: number, accountStatus: string) {
   return { name, company, position, id, startWork, startAccount, accountStatus };
@@ -46,10 +35,13 @@ interface FormValue {
  * @todo api연결, 날짜 포맷
  */
 const AccountPageLayout = () => {
+  const { instance, setBaseURL } = ApiClient;
+
   const { control, handleSubmit, watch } = useForm<FormValue>();
   const [value, setValue] = useState<Dayjs | null>();
   const password = watch('password', '');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [usersInfo, setUsersInfo] = useState<any>(null);
 
   const HandleOpenModal = () => setIsModalOpen(true);
   const HandleCloseModal = () => setIsModalOpen(false);
@@ -74,6 +66,23 @@ const AccountPageLayout = () => {
     { label: '관리자', value: '관리자' },
   ];
 
+  useEffect(() => {
+    const getUsersInfo = async () => {
+      try {
+        setBaseURL('http://127.0.0.1/api/');
+
+        const response = await instance.get(`v1/companies/1/users`);
+        console.log('data: ', response.data);
+        setUsersInfo(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUsersInfo();
+  }, []);
+
+  console.log('usersInfo: ', usersInfo);
+
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'>
@@ -86,26 +95,27 @@ const AccountPageLayout = () => {
           <TableHead sx={{ backgroundColor: 'secondary.main' }}>
             <TableRow>
               <TableCell align='center'>이름</TableCell>
-              <TableCell align='center'>회사</TableCell>
+              <TableCell align='center'>부서</TableCell>
               <TableCell align='center'>직위</TableCell>
               <TableCell align='center'>ID</TableCell>
+              <TableCell align='center'>권한</TableCell>
               <TableCell align='center'>입사일</TableCell>
               <TableCell align='center'>계정 생성일</TableCell>
-              <TableCell align='center'>계정 상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}>
-                <TableCell align='center'>{row.name}</TableCell>
-                <TableCell align='center'>{row.company}</TableCell>
-                <TableCell align='center'>{row.position}</TableCell>
-                <TableCell align='center'>{row.id}</TableCell>
-                <TableCell align='center'>{row.startWork}</TableCell>
-                <TableCell align='center'>{row.startAccount}</TableCell>
-                <TableCell align='center'>{row.accountStatus}</TableCell>
-              </TableRow>
-            ))}
+            {usersInfo &&
+              usersInfo.data.map((user: any) => (
+                <TableRow key={user.name} sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}>
+                  <TableCell align='center'>{user.name}</TableCell>
+                  <TableCell align='center'>{user.department_title}</TableCell>
+                  <TableCell align='center'>{user.rank_title}</TableCell>
+                  <TableCell align='center'>{user.email}</TableCell>
+                  <TableCell align='center'>{user.is_admin}</TableCell>
+                  <TableCell align='center'>{user.enter_date}</TableCell>
+                  <TableCell align='center'>{user.created_date}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -146,7 +156,7 @@ const AccountPageLayout = () => {
                   variant: 'outlined',
                 }}
               />
-              <p className='font-body1'>@jiran.com</p>
+              <p className='items-center font-body1'>@jiran.com</p>
             </div>
             <div className='text-black font-body1'>비밀번호</div>
             <CustomInput
@@ -204,7 +214,7 @@ const AccountPageLayout = () => {
               name='auth'
               control={control}
               rules={{ required: '필수 선택 항목입니다.' }}
-              selectList={departmentSelectList}
+              selectList={authSelectList}
               placeholder='권한 선택'
             />
             <div className='text-black font-body1'>입사일</div>
