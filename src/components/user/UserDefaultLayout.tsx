@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import SideBarLayout from '../common/SideBar';
 import AttendMenu from '../common/sidebar/AttendMenu';
 import ProfileMenu from '../common/sidebar/ProfileMenu';
@@ -10,9 +10,11 @@ import WorkIcon from '@mui/icons-material/Work';
 import _ from 'lodash';
 import moment from 'moment';
 import ApiClient from '../../utils/axios';
+import { Button } from '@mui/material';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
+  const navigate = useNavigate();
 
   //사용자 정보
   const [userInfo, setUserInfo] = useState<any>();
@@ -56,7 +58,13 @@ const UserDefaultLayout = (props: any) => {
   //헤더 템플릿
   const headerTemplate = {
     attendMenu: (
-      <AttendMenu userInfo={userInfo} todayWorkInfo={todayWorkInfo} setTodayWorkInfo={setTodayWorkInfo} onWork={onWork} setOnWork={setOnWork} />
+      <AttendMenu
+        userInfo={userInfo}
+        todayWorkInfo={todayWorkInfo}
+        setTodayWorkInfo={setTodayWorkInfo}
+        onWork={onWork}
+        setOnWork={setOnWork}
+      />
     ),
     profileMenu: <ProfileMenu userInfo={userInfo} />,
   };
@@ -88,20 +96,37 @@ const UserDefaultLayout = (props: any) => {
     getTodayWorkTInfo();
   }, [onWork]);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
-      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} setSelectItem={setSelectItem} />
+      <SideBarLayout
+        headerTemplate={headerTemplate}
+        items={items}
+        setItems={setItems}
+        setSelectItem={setSelectItem}
+      />
+      <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
+        로그아웃
+      </Button>
       <div className='flex flex-col w-full h-full'>
         {/* 헤더 */}
         <div className='flex p-6 px-10 bg-gray-100'>
-          <span className='text-2xl font-bold'>{_.isEmpty(selectItem) ? '근무' : selectItem?.label}</span>
+          <span className='text-2xl font-bold'>
+            {_.isEmpty(selectItem) ? '근무' : selectItem?.label}
+          </span>
         </div>
         {/* 메인 콘텐츠 */}
 
         {children?.type?.name === 'UserDashBoard' ? (
           // UserDashBoard일 경우 props전달
-          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}</div>
+          <div className='flex w-full h-full'>
+            {React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}
+          </div>
         ) : (
           children || <Outlet />
         )}
