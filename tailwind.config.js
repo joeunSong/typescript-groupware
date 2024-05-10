@@ -1,7 +1,9 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: ['./src/components/**/*.{js,ts,jsx,tsx}', './src/pages/**/*.{js,ts,jsx,tsx}'],
   // important: '#root',
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false, //? or 'media' or 'class'
   theme: {
     screens: {
       sm: '640px',

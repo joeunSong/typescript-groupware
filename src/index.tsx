@@ -15,13 +15,13 @@ import App from './App';
 const rootElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
 root.render(
-  <PrimeReactProvider>
-    <React.StrictMode>
+  <React.StrictMode>
+    <PrimeReactProvider>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={MuiTheme(rootElement)}>
           <App />
         </ThemeProvider>
       </StyledEngineProvider>
-    </React.StrictMode>
-  </PrimeReactProvider>,
+    </PrimeReactProvider>
+  </React.StrictMode>,
 );

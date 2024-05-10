@@ -7,6 +7,7 @@ import _ from 'lodash';
 // * svg
 import JiranFullLogo from '../../assets/svg/JiranFullLogo.svg';
 import miniOrganization from '../../assets/svg/miniOrganization.svg';
+import reset from '../../assets/svg/reset.svg';
 
 const render = (
   src: any,
@@ -38,3 +39,5 @@ export const JiranFullLogoIcon = (props: any) => render(JiranFullLogo, props.w, 
 
 export const MiniOrganizationIcon = (props: any) =>
   render(miniOrganization, props.w, props.h, props.width, props.height, props.className, props.onClick);
+
+export const ResetIcon = (props: any) => render(reset, props.w, props.h, props.width, props.height, props.className, props.onClick);
