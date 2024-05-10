@@ -46,10 +46,11 @@ const Login = ({ logo, role }: LoginProps) => {
           setIsError(true);
         }
         // 백엔드 에러 처리 전 임시 구성
-        if (error.code === 'ERR_BAD_RESPONSE') {
+        if (error.code === 'ERR_BAD_RESPONSE' || error.code === 'ERR_BAD_REQUEST') {
           setIsError(true);
         }
       }
+      console.log(error);
       console.log('로그인 실패: ' + error);
     }
   };
