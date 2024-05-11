@@ -114,8 +114,15 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   return (
     <div className='flex w-full justify-center'>
       {/* 근무시간 */}
-      {endTime && (
-        <div className='flex w-full h-[50px] items-center justify-center bg-white rounded-[5px] text-primary'>{`오늘 한 근무 ${getWorkTime()}`}</div>
+      {startTime && endTime && (
+        <div className='flex flex-col justify-between w-[250px] h-[95px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
+          <div className='flex justify-between items-center content-between'>
+            <span className='font-h2 text-primary'>{moment(endTime).format('MM월 DD일')}</span>
+            <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>종료</div>
+          </div>
+          <div className='font-body1'>{`${formattedTime(startTime)} - ${formattedTime(endTime)}`}</div>
+        </div>
+        // <div className='flex w-full h-[50px] items-center justify-center bg-white rounded-[5px] text-primary'>{`오늘 한 근무 ${getWorkTime()}`}</div>
       )}
       {startTime && !endTime ? (
         //출근 상태일 경우

@@ -6,6 +6,20 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import ApiClient from '../../utils/axios';
+import React from 'react';
+import AccountDetail from '../../components/admin/AccountDetail';
+import ADMIN_API from '../../services/admin';
+
+function createData(name: string, company: string, position: string, id: string, startWork: number, startAccount: number, accountStatus: string) {
+  return { name, company, position, id, startWork, startAccount, accountStatus };
+}
+
+const rows = [
+  createData('김지란', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+  createData('김지란2', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+  createData('김지란3', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+  createData('김지란4', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
+];
 
 interface FormValue {
   name: string;
@@ -33,6 +47,8 @@ const AccountPageLayout = () => {
   const password = watch('password', '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usersInfo, setUsersInfo] = useState<any>(null);
+  const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(false);
+  const [accountDetailId, setAccountDetailId] = useState<number>();
 
   const HandleOpenModal = () => setIsModalOpen(true);
   const HandleCloseModal = () => setIsModalOpen(false);
@@ -70,8 +86,13 @@ const AccountPageLayout = () => {
       }
     };
     getUsersInfo();
+    console.log('usersInfo: ', usersInfo);
   }, []);
 
+  const handleAccountDetail = (accountId: number) => {
+    setIsAccountDetailOpen(true);
+    setAccountDetailId(accountId);
+  };
   console.log('usersInfo: ', usersInfo);
 
   const postUserInfo = async (data: any) => {
@@ -122,16 +143,28 @@ const AccountPageLayout = () => {
           <TableBody>
             {usersInfo &&
               usersInfo.data.map((user: any) => (
-                <TableRow key={user.name} sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}>
-                  <TableCell align='center'>{user.name}</TableCell>
-                  <TableCell align='center'>{user.department_title}</TableCell>
-                  <TableCell align='center'>{user.rank_title}</TableCell>
-                  <TableCell align='center'>{user.email}</TableCell>
-                  <TableCell align='center'>{user.is_admin}</TableCell>
-                  <TableCell align='center'>{user.enter_date}</TableCell>
-                  <TableCell align='center'>{user.created_date}</TableCell>
-                </TableRow>
+                <>
+                  <TableRow
+                    key={user.name}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}
+                    className='cursor-pointer'
+                    onClick={() => {
+                      handleAccountDetail(user.id);
+                    }}
+                  >
+                    <TableCell align='center'>{user.name}</TableCell>
+                    <TableCell align='center'>{user.department_title}</TableCell>
+                    <TableCell align='center'>{user.rank_title}</TableCell>
+                    <TableCell align='center'>{user.email}</TableCell>
+                    <TableCell align='center'>{user.is_admin}</TableCell>
+                    <TableCell align='center'>{user.enter_date}</TableCell>
+                    <TableCell align='center'>{user.created_date}</TableCell>
+                  </TableRow>
+                </>
               ))}
+            {isAccountDetailOpen && accountDetailId && (
+              <AccountDetail accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -143,7 +176,10 @@ const AccountPageLayout = () => {
             <CustomInput
               name='name'
               control={control}
-              rules={{ required: '필수 입력 항목입니다.', minLength: { value: 2, message: '최소 2자 이상이어야 합니다.' } }}
+              rules={{
+                required: '필수 입력 항목입니다.',
+                minLength: { value: 2, message: '최소 2자 이상이어야 합니다.' },
+              }}
               textFieldProps={{
                 variant: 'outlined',
               }}

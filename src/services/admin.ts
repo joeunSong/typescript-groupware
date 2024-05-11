@@ -24,10 +24,19 @@ const ADMIN_API = () => {
 
   const department_manager_edit = async (companyId: any, departmentId: any, userId: any) => {
     baseURLChange();
-    return await axios.instance.patch(`/companies/${companyId}/departments/${departmentId}/leader`, { user_id: userId });
+    return await axios.instance.patch(
+      `/companies/${companyId}/departments/${departmentId}/leader`,
+      { user_id: userId },
+    );
   };
 
-  return { admin_login, organization, department_create, department_manager_edit };
+  // * 계정 상세 조회
+  const account_detail = async (companyId: number, userId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/users/${userId}`);
+  };
+
+  return { admin_login, organization, department_create, department_manager_edit, account_detail };
 };
 
 export default ADMIN_API();
