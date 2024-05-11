@@ -83,8 +83,7 @@ export const CustomModal = ({ isOpen, onClose, title, children }: CustomModalPro
       onClose={onClose}
       PaperProps={{
         sx: {
-          padding: '1.2rem',
-          gap: '0.5rem',
+          padding: '0 1.2rem',
           '& .custom-dialog-title': { display: 'flex', justifyContent: 'space-between', fontWeight: '600', fontSize: '1.875rem' },
         },
       }}

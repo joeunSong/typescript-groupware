@@ -23,11 +23,7 @@ const KOREAN_LABEL: StringObject = {
   enter_date: '입사일',
 };
 
-const AccountDetail = ({
-  accountId,
-  isAccountDetailOpen,
-  setIsAccountDetailOpen,
-}: AccountDetailProps) => {
+const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen }: AccountDetailProps) => {
   const [account, setAccount] = useState<Account>();
 
   useEffect(() => {
