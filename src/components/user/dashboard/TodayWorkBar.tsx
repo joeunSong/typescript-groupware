@@ -52,12 +52,15 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
       return `${diff}분`;
     }
   };
-
+  console.log(todayWorkInfo);
   return (
     todayWorkInfo.startTime && (
-      <Tooltip title={getWorkTime(workTime)} placement='top'>
+      <Tooltip
+        title={`${moment(todayWorkInfo.startTime).format('hh:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('hh:mm') : '진행중'}`}
+        placement='top'
+      >
         <div
-          className='bg-primary w-0 h-[30px]'
+          className='bg-primary w-0 h-[30px] rounded-[5px]'
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,

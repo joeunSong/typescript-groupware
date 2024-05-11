@@ -6,6 +6,9 @@ import moment from 'moment';
 import ApiClient from '../../utils/axios';
 import axios from 'axios';
 import { ACCESS_TOKEN } from '../../constants/constant';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import IconButton from '@mui/material/IconButton';
 
 interface UserDashBoardProps {
   userInfo?: any;
@@ -117,29 +120,43 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
   };
 
   return (
-    <div className='flex flex-col w-full h-full p-[10px] '>
-      <div className='mb-[10px]'>
-        <button onClick={handlePreviousWeek}>{'<'}</button>
+    <div className='flex flex-col w-full h-full p-[10px] font-body1'>
+      <div className='mb-[10px] font-body1-bold'>
+        <IconButton onClick={handlePreviousWeek}>
+          <ArrowBackIosIcon />
+        </IconButton>
+        {/* <button onClick={handlePreviousWeek}>{'<'}</button> */}
         {`${currentWeek[0]} - ${currentWeek[6]}`}
-        <button onClick={handleNextWeek}>{'>'}</button>
+        <IconButton onClick={handleNextWeek}>
+          <ArrowForwardIosIcon />
+        </IconButton>
+        {/* <button onClick={handleNextWeek}>{'>'}</button> */}
       </div>
 
       <TimelineBar />
-
-      {currentWeek.map((_day: string, idx: number) => (
-        <div key={idx} className='flex h-[70px] border-solid border-t-[1px] border-primary'>
-          <div className='w-[200px] border-solid border-r-[1px] border-primary'>
-            {workDays[idx]} {_day}
+      <div className='flex flex-col h-full'>
+        {currentWeek.map((_day: string, idx: number) => (
+          <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-primary'>
+            <div className='flex justify-between p-[10px] items-center w-[200px] border-solid border-r-[1px] border-primary font-body1-bold'>
+              {isToday(_day) ? (
+                <div className='text-primary'>{workDays[idx]} </div>
+              ) : idx === 5 || idx === 6 ? (
+                <div className='text-red'>{workDays[idx]} </div>
+              ) : (
+                <div>{workDays[idx]} </div>
+              )}{' '}
+              {_day}
+            </div>
+            <div className='flex flex-1 items-center'>
+              {isToday(_day) ? (
+                <TodayWorkBar todayWorkInfo={todayWorkInfo} />
+              ) : (
+                <WorkBar workInfo={weekWorkInfo.find((_info: any) => isSameDate(_day, _info.startAt))} />
+              )}
+            </div>
           </div>
-          <div className='flex flex-1 items-center'>
-            {isToday(_day) ? (
-              <TodayWorkBar todayWorkInfo={todayWorkInfo} />
-            ) : (
-              <WorkBar workInfo={weekWorkInfo.find((_info: any) => isSameDate(_day, _info.startAt))} />
-            )}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
