@@ -1,34 +1,21 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { CustomButton, CustomInput, CustomModal, CustomSelect } from '../../components/common/Components';
+import { CustomButton, CustomDatePicker, CustomInput, CustomModal, CustomSelect } from '../../components/common/Components';
 import { useEffect, useState } from 'react';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import ApiClient from '../../utils/axios';
 
-function createData(name: string, company: string, position: string, id: string, startWork: number, startAccount: number, accountStatus: string) {
-  return { name, company, position, id, startWork, startAccount, accountStatus };
-}
-
-const rows = [
-  createData('김지란', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
-  createData('김지란2', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
-  createData('김지란3', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
-  createData('김지란4', '지란지교 소프트', '부장', 'jiran1@jiran.com', 20240330, 20240401, '재직'),
-];
-
 interface FormValue {
   name: string;
-  id: string;
+  email: string;
   password: string;
-  passwordCheck: string;
-  rank: string;
-  department: string;
-  enter_date: string;
-  auth: string;
+  password_confirmation: string;
+  rank_title: string;
+  department_title: string;
+  is_admin: string;
+  enter_date: Date | null;
 }
 
 /**
@@ -37,8 +24,12 @@ interface FormValue {
 const AccountPageLayout = () => {
   const { instance, setBaseURL } = ApiClient;
 
-  const { control, handleSubmit, watch } = useForm<FormValue>();
-  const [value, setValue] = useState<Dayjs | null>();
+  const { control, handleSubmit, watch } = useForm<FormValue>({
+    defaultValues: {
+      enter_date: null,
+    },
+  });
+  const componyEmail = '@jiran.com';
   const password = watch('password', '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usersInfo, setUsersInfo] = useState<any>(null);
@@ -47,7 +38,7 @@ const AccountPageLayout = () => {
   const HandleCloseModal = () => setIsModalOpen(false);
 
   const rankSelectList = [
-    { label: '대표', value: '대표' },
+    // { label: '대표', value: '대표' },
     { label: '부장', value: '부장' },
     { label: '차장', value: '차장' },
     { label: '과장', value: '과장' },
@@ -62,8 +53,8 @@ const AccountPageLayout = () => {
   ];
 
   const authSelectList = [
-    { label: '사용자', value: '사용자' },
-    { label: '관리자', value: '관리자' },
+    { label: '사용자', value: '0' },
+    { label: '관리자', value: '1' },
   ];
 
   useEffect(() => {
@@ -82,6 +73,31 @@ const AccountPageLayout = () => {
   }, []);
 
   console.log('usersInfo: ', usersInfo);
+
+  const postUserInfo = async (data: any) => {
+    try {
+      setBaseURL('http://127.0.0.1/api/');
+      let sendUserData = {
+        name: data.name,
+        email: data.email + componyEmail,
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+        rank_title: data.rank_title,
+        // department_title: data.department_title,
+        department_title: 'Department1',
+        is_admin: data.is_admin,
+        enter_date: dayjs(data.enter_date).format('YYYY-MM-DD'),
+      };
+
+      console.log('sendUserData: ', sendUserData);
+      const response = await instance.post(`v1/companies/1/users`, sendUserData);
+      console.log('response: ', response);
+
+      HandleCloseModal();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
@@ -121,7 +137,7 @@ const AccountPageLayout = () => {
       </TableContainer>
 
       <CustomModal isOpen={isModalOpen} onClose={HandleCloseModal} title='계정추가'>
-        <form onSubmit={handleSubmit((data: any) => alert(JSON.stringify(data)))}>
+        <form onSubmit={handleSubmit((data: any) => postUserInfo(data))}>
           <div className='grid-box'>
             <div className='text-black font-body1'>이름</div>
             <CustomInput
@@ -135,7 +151,7 @@ const AccountPageLayout = () => {
             <div className='text-black font-body1'>아이디</div>
             <div className='flex items-center gap-2'>
               <CustomInput
-                name='id'
+                name='email'
                 control={control}
                 rules={{
                   required: '필수 입력 항목입니다.',
@@ -156,7 +172,7 @@ const AccountPageLayout = () => {
                   variant: 'outlined',
                 }}
               />
-              <p className='items-center font-body1'>@jiran.com</p>
+              <p className='items-center font-body1'>{componyEmail}</p>
             </div>
             <div className='text-black font-body1'>비밀번호</div>
             <CustomInput
@@ -179,11 +195,12 @@ const AccountPageLayout = () => {
               }}
               textFieldProps={{
                 variant: 'outlined',
+                type: 'password',
               }}
             />
             <div className='text-black font-body1'>비밀번호 확인</div>
             <CustomInput
-              name='passwordCheck'
+              name='password_confirmation'
               control={control}
               rules={{
                 required: '필수 입력 항목입니다.',
@@ -191,11 +208,12 @@ const AccountPageLayout = () => {
               }}
               textFieldProps={{
                 variant: 'outlined',
+                type: 'password',
               }}
             />
             <div className='text-black font-body1'>직위</div>
             <CustomSelect
-              name='rank'
+              name='rank_title'
               control={control}
               rules={{ required: '필수 선택 항목입니다.' }}
               selectList={rankSelectList}
@@ -203,7 +221,7 @@ const AccountPageLayout = () => {
             />
             <div className='text-black font-body1'>부서</div>
             <CustomSelect
-              name='department'
+              name='department_title'
               control={control}
               rules={{ required: '필수 선택 항목입니다.' }}
               selectList={departmentSelectList}
@@ -211,7 +229,7 @@ const AccountPageLayout = () => {
             />
             <div className='text-black font-body1'>권한</div>
             <CustomSelect
-              name='auth'
+              name='is_admin'
               control={control}
               rules={{ required: '필수 선택 항목입니다.' }}
               selectList={authSelectList}
@@ -219,20 +237,19 @@ const AccountPageLayout = () => {
             />
             <div className='text-black font-body1'>입사일</div>
             <LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={{ monthShort: `M` }}>
-              <DemoContainer components={['DatePicker', 'DatePicker']}>
-                <DatePicker
-                  label='YYYY/MM/DD'
-                  format='YYYY-MM-DD'
-                  showDaysOutsideCurrentMonth
-                  value={value}
-                  onChange={(newValue: any) => setValue(newValue)}
-                />
-              </DemoContainer>
+              <CustomDatePicker
+                name='enter_date'
+                control={control}
+                rules={{ required: '필수 선택 항목입니다.' }}
+                defaultValue={dayjs()}
+                format='YYYY-MM-DD'
+                error={false}
+              />
             </LocalizationProvider>
           </div>
 
           <div className='flex justify-center gap-5 mt-8'>
-            <CustomButton variant='contained' size='auto' color='secondary'>
+            <CustomButton variant='contained' size='auto' color='secondary' onClick={() => HandleCloseModal()}>
               취소
             </CustomButton>
             <CustomButton variant='contained' size='auto' color='primary' submit>
