@@ -14,8 +14,11 @@ import {
   TextFieldProps,
   Theme,
 } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import { ReactNode } from 'react';
-import { Control, FieldPath, FieldValues, RegisterOptions, useController, UseControllerProps } from 'react-hook-form';
+import { Control, Controller, FieldPath, FieldValues, RegisterOptions, useController, UseControllerProps } from 'react-hook-form';
 
 interface CustomButtonProps {
   onClick?: () => void;
@@ -193,5 +196,62 @@ export const CustomSelect = <T extends FieldValues>(props: TProps<T>) => {
           </p>
         )}
     </div>
+  );
+};
+
+interface CustomDatePickerProps<T> {
+  name: Extract<keyof T, string>;
+  control: any;
+  error?: boolean;
+  helperText?: string;
+  defaultValue: any;
+  onDateChange?: any;
+  label?: string;
+  format?: string;
+  rules?: any;
+}
+
+export const CustomDatePicker = <T,>({
+  name,
+  control,
+  error,
+  helperText,
+  defaultValue,
+  onDateChange,
+  label,
+  format,
+  rules,
+  ...rest
+}: CustomDatePickerProps<T>) => {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Controller
+        name={name}
+        control={control as Control<FieldValues, any>}
+        defaultValue={defaultValue}
+        rules={rules}
+        render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+          <>
+            <DatePicker
+              value={value ? dayjs(value) : null}
+              label={label}
+              format={format}
+              // showDaysOutsideCurrentMonth
+              onChange={onChange}
+              slotProps={{
+                actionBar: {
+                  actions: ['today', 'accept'],
+                },
+                textField: {
+                  error: !!error,
+                  helperText: error?.message,
+                },
+              }}
+              {...rest}
+            />
+          </>
+        )}
+      />
+    </LocalizationProvider>
   );
 };
