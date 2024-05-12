@@ -58,13 +58,7 @@ const UserDefaultLayout = (props: any) => {
   //헤더 템플릿
   const headerTemplate = {
     attendMenu: (
-      <AttendMenu
-        userInfo={userInfo}
-        todayWorkInfo={todayWorkInfo}
-        setTodayWorkInfo={setTodayWorkInfo}
-        onWork={onWork}
-        setOnWork={setOnWork}
-      />
+      <AttendMenu userInfo={userInfo} todayWorkInfo={todayWorkInfo} setTodayWorkInfo={setTodayWorkInfo} onWork={onWork} setOnWork={setOnWork} />
     ),
     profileMenu: <ProfileMenu userInfo={userInfo} />,
   };
@@ -101,32 +95,46 @@ const UserDefaultLayout = (props: any) => {
     navigate('/');
   };
 
+  // 자정에 데이터를 불러오는 함수
+  function loadDataAtMidnight() {
+    // 현재 시간을 가져옴
+    const now = moment();
+
+    // 다음 자정을 계산
+    const midnight = now.clone().endOf('day');
+
+    // 다음 자정까지의 시간 차이 계산 (밀리초 단위)
+    const timeUntilMidnight = midnight.diff(now);
+
+    // 다음 자정에 데이터를 불러오는 작업 예약
+    setTimeout(() => {
+      // 데이터를 불러오는 작업 실행
+      getTodayWorkTInfo();
+      // 다음 자정까지의 시간 차이가 있으므로 다시 함수 호출
+      loadDataAtMidnight();
+    }, timeUntilMidnight);
+  }
+
+  // 페이지가 처음 로드될 때 한 번 실행
+  loadDataAtMidnight();
+
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
-      <SideBarLayout
-        headerTemplate={headerTemplate}
-        items={items}
-        setItems={setItems}
-        setSelectItem={setSelectItem}
-      />
+      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} setSelectItem={setSelectItem} />
       <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
         로그아웃
       </Button>
       <div className='flex flex-col w-full h-full'>
         {/* 헤더 */}
         <div className='flex p-6 px-10 bg-gray-100'>
-          <span className='text-2xl font-bold'>
-            {_.isEmpty(selectItem) ? '근무' : selectItem?.label}
-          </span>
+          <span className='text-2xl font-bold'>{_.isEmpty(selectItem) ? '근무' : selectItem?.label}</span>
         </div>
         {/* 메인 콘텐츠 */}
 
         {children?.type?.name === 'UserDashBoard' ? (
           // UserDashBoard일 경우 props전달
-          <div className='flex w-full h-full'>
-            {React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}
-          </div>
+          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}</div>
         ) : (
           children || <Outlet />
         )}

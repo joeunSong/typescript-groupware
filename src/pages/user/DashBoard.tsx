@@ -9,6 +9,7 @@ import { ACCESS_TOKEN } from '../../constants/constant';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface UserDashBoardProps {
   userInfo?: any;
@@ -139,7 +140,9 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
           <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-primary'>
             <div className='flex justify-between p-[10px] items-center w-[200px] border-solid border-r-[1px] border-primary font-body1-bold'>
               {isToday(_day) ? (
-                <div className='text-primary'>{workDays[idx]} </div>
+                <div className='flex text-primary gap-[10px]'>
+                  {workDays[idx]} <CheckCircleIcon />
+                </div>
               ) : idx === 5 || idx === 6 ? (
                 <div className='text-red'>{workDays[idx]} </div>
               ) : (
