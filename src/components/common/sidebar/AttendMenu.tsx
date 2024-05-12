@@ -111,6 +111,31 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     setEndTime(todayWorkInfo.endTime);
   }, [todayWorkInfo]);
 
+  // 자정에 데이터를 불러오는 함수
+  function postDataAtMidnight() {
+    // 현재 시간을 가져옴
+    const now = moment();
+
+    // 다음 자정을 계산
+    const midnight = now.clone().endOf('day');
+
+    // 다음 자정까지의 시간 차이 계산 (밀리초 단위)
+    const timeUntilMidnight = midnight.diff(now);
+
+    // 다음 자정에 데이터를 불러오는 작업 예약
+    setTimeout(() => {
+      // 데이터를 불러오는 작업 실행
+      if (!endTime) {
+        postEndTime();
+      }
+      // 다음 자정까지의 시간 차이가 있으므로 다시 함수 호출
+      postDataAtMidnight();
+    }, timeUntilMidnight);
+  }
+
+  // 페이지가 처음 로드될 때 한 번 실행
+  postDataAtMidnight();
+
   return (
     <div className='flex w-full justify-center'>
       {/* 근무시간 */}
