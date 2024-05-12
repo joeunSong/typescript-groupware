@@ -1,11 +1,14 @@
+// * basic
+import { useState } from 'react';
+// * install libraries
+// * components
 import { Button } from 'primereact/button';
 import Modal from '../../../common/Modal';
-import { InputText } from 'primereact/inputtext';
-import { useState } from 'react';
-import ADMIN_API from '../../../../services/admin';
-import { COMPANY_ID } from '../../../../constants/constant';
 import CustomeDataTable from '../../../common/DataTable';
-import _ from 'lodash';
+// * constants
+import { COMPANY_ID } from '../../../../constants/constant';
+// * apis
+import ADMIN_API from '../../../../services/admin';
 
 const DepartmentManagerModal = (props: any) => {
   const { visible, setVisible, selectDepartment, columns, getOrganization } = props;

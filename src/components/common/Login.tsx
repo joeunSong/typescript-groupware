@@ -1,12 +1,17 @@
+// * basic
 import React, { FormEvent, useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
-import * as ENDPOINT from '../../constants/apiEndpoints';
-import { ACCESS_TOKEN, COMPANY_ID, LOGIN_AUTH, USER_ID } from '../../constants/constant';
+// * install libraries
+import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
+// * components
 import axios from 'axios';
+import { TextField, Button, Box } from '@mui/material';
+// * constants
+import * as ENDPOINT from '../../constants/apiEndpoints';
+import { ACCESS_TOKEN, COMPANY_ID, USER_ID } from '../../constants/constant';
+// * apis
 import USER_API from '../../services/user';
 import ADMIN_API from '../../services/admin';
-import _ from 'lodash';
 
 interface LoginProps {
   logo?: React.JSX.Element;

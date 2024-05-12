@@ -9,9 +9,7 @@ import { InputText } from 'primereact/inputtext';
 // * constants
 import { FilterMatchMode } from 'primereact/api';
 import { ResetIcon } from './JiranIcon';
-// * functions
 // * apis
-// * utils
 interface Props {
   data: any; // 사용하는 데이터
   columns: any; // Column 내용
@@ -134,7 +132,7 @@ const CustomeDataTable = ({
       globalFilterFields={_.isEmpty(globalFilterFields) ? [] : globalFilterFields}
       pt={_.isEmpty(pt) ? { header: { className: `p-0` } } : pt}
       // * css
-      className={`${className !== null ? className : 'w-full scrollYWrap overflow-y-auto'} `}
+      className={`${className !== null ? className : 'w-full'} `}
       // tableStyle={tableStyle !== null ? tableStyle : { width: '100%' }}
       // * select
       selection={selectData}
@@ -148,7 +146,7 @@ const CustomeDataTable = ({
             key={index}
             headerStyle={{
               whiteSpace: 'nowrap',
-              overflow: 'hidden',
+              // overflow: 'hidden',
               textOverflow: 'ellipsis',
             }}
             field={column.field}
