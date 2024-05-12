@@ -10,9 +10,12 @@ import miniOrganization from '../../assets/svg/miniOrganization.svg';
 import miniCompany from '../../assets/svg/miniCompany.svg';
 import miniFolder from '../../assets/svg/miniFolder.svg';
 import miniUserLeader from '../../assets/svg/miniUserLeader.svg';
+import miniDoubleUser from '../../assets/svg/miniDoubleUser.svg';
 import miniUser from '../../assets/svg/miniUser.svg';
 import reset from '../../assets/svg/reset.svg';
 import bottomArrow from '../../assets/svg/bottomArrow.svg';
+import plus from '../../assets/svg/plus.svg';
+import x from '../../assets/svg/x.svg';
 
 const render = (
   src: any,
@@ -46,6 +49,9 @@ export const MiniOrganizationIcon = (props: any) =>
 export const MiniCompanyIcon = (props: any) => render(miniCompany, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const MiniFolderIcon = (props: any) => render(miniFolder, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const MiniUserLeaderIcon = (props: any) => render(miniUserLeader, props.w, props.h, props.width, props.height, props.className, props.onClick);
+export const MiniDoubleUserIcon = (props: any) => render(miniDoubleUser, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const MiniUserIcon = (props: any) => render(miniUser, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const ResetIcon = (props: any) => render(reset, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const BottomArrowIcon = (props: any) => render(bottomArrow, props.w, props.h, props.width, props.height, props.className, props.onClick);
+export const PlusIcon = (props: any) => render(plus, props.w, props.h, props.width, props.height, props.className, props.onClick);
+export const XIcon = (props: any) => render(x, props.w, props.h, props.width, props.height, props.className, props.onClick);

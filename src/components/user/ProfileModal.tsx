@@ -20,12 +20,7 @@ const KOREAN_LABEL: StringObject = {
   enterDate: '입사일',
 };
 
-const ProfileModal = ({
-  isProfileModalOpen,
-  setIsProfileModalOpen,
-  profile,
-}: ProfileModalProps) => {
-
+const ProfileModal = ({ isProfileModalOpen, setIsProfileModalOpen, profile }: ProfileModalProps) => {
   const handleCloseModal = () => {
     setIsProfileModalOpen(false);
   };

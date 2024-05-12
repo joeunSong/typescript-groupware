@@ -4,6 +4,8 @@ import { Navigate, Outlet, useLocation } from 'react-router';
 import { LOGIN_AUTH } from '../constants/constant';
 import _ from 'lodash';
 
+import LoginPage from '../pages/user/Login';
+import { Route, useNavigate } from 'react-router-dom';
 /**
  * 해당 Route의 기능은
  * 사용자 페이지, 관리자 페이지 별로 접근 권한이 다른데 해당 메뉴에 접근이 가능한지 판단해주는 Route이다.
@@ -15,6 +17,7 @@ import _ from 'lodash';
 const PrivateRoute = (props: any) => {
   const { authentication } = props;
   const location = useLocation();
+  const navigate = useNavigate();
 
   /**
    * 로그인을 했는지에 대한 여부를 판단
@@ -50,8 +53,10 @@ const PrivateRoute = (props: any) => {
       return <Outlet />;
     } else {
       localStorage.clear();
-      return <Navigate to={ENDPOINT.USER_LOGIN} />;
+      navigate(ENDPOINT.USER_LOGIN);
     }
   }
+
+  return <Outlet />;
 };
 export default PrivateRoute;

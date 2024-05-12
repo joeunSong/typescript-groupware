@@ -20,7 +20,7 @@ interface Props {
   setSelectItem?: any; // 선택 아이템 set
 }
 const SideBarLayout = ({
-  width = 'w-[250px]',
+  width = 'w-[270px]',
   color = 'bg-gray-100',
   padding = 'p-4 py-6',
   icon = <JiranFullLogoIcon width={200} height={60} w={10} h={5} />,
