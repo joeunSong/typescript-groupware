@@ -40,7 +40,7 @@ const OrganzationLayout = (props: any) => {
   };
 
   return (
-    <div className='flex w-full h-full overflow-x-hidden '>
+    <div className='flex w-full h-full '>
       {/* 조직도 순회 */}
       {_.map(organization, (company: any, companyIndex: number) => {
         return (
