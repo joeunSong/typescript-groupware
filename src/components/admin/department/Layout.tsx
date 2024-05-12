@@ -15,6 +15,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import DepartmentCreateModal from './modal/DepartmentCreateModal';
 import { Button } from 'primereact/button';
 import DepartmentManagerModal from './modal/DepartmentManagerModal';
+import Organzation from '../../common/Organzation';
 
 const DepartmentLayout = (props: any) => {
   const {} = props;
@@ -28,7 +29,7 @@ const DepartmentLayout = (props: any) => {
   const [selectDepartment, setSelectDepartment]: any = useState(null);
   const [departmentLeader, setDepartmentLeader]: any = useState(null);
   const [selectUser, setSelectUser]: any = useState(null);
-  // * 선택된 Row
+  // * 선택된 테이블 Row
   const [selectRow, setSelectRow] = useState([]);
   // * comlum 정의
   const columns = [
@@ -77,6 +78,7 @@ const DepartmentLayout = (props: any) => {
 
   // * 사용자 클릭
   const handleUserClick = (_department: any, _user: any) => {
+    console.log('zz');
     setSelectDepartment(_department);
     setDepartmentLeader((prev: any) => {
       let leader = null;
@@ -108,6 +110,9 @@ const DepartmentLayout = (props: any) => {
 
   // * 근태 관리자 설정 모달 Open
   const handleDepartmentManager = () => {
+    if (_.isEmpty(selectDepartment?.users)) {
+      return;
+    }
     setManagerVisible(true);
   };
 
@@ -116,7 +121,6 @@ const DepartmentLayout = (props: any) => {
     getOrganization();
   }, []);
 
-  console.log('departmentLeader', departmentLeader);
   return (
     <>
       {/* 부서 추가 모달 */}
@@ -141,74 +145,8 @@ const DepartmentLayout = (props: any) => {
             </div>
           </div>
           {/* 조직도 내용 */}
-          <div className='flex flex-col border-solid border-2 border-gray-300 rounded-lg'>
-            {/* 실제 조직도 */}
-            <div className='flex w-full h-full '>
-              <Box component='div' sx={{ width: '100%', height: '45rem', overflowY: 'auto' }} className='scrollYWrap'>
-                <SimpleTreeView sx={{ height: '100%' }}>
-                  {/* 트리 순회 */}
-                  {_.map(organization, (treeItem: any) => {
-                    // 회사별 순회
-                    return (
-                      <TreeItem
-                        itemId={treeItem?.label}
-                        label={treeItem?.label}
-                        key={treeItem?.label}
-                        onClick={() => handleDepartmentClick(treeItem)}
-                      >
-                        {/* 회사 */}
-                        {_.map(treeItem?.departments, (departments: any) => {
-                          return (
-                            <TreeItem
-                              itemId={departments?.label}
-                              label={departments?.label}
-                              key={departments?.label}
-                              onClick={() => handleDepartmentClick(departments)}
-                            >
-                              {/* 부서 */}
-                              {_.map(departments?.departments, (department: any) => {
-                                return (
-                                  <TreeItem
-                                    itemId={department?.label}
-                                    label={department?.label}
-                                    key={department?.label}
-                                    onClick={() => handleDepartmentClick(department)}
-                                  ></TreeItem>
-                                );
-                              })}
-                              {/* 부서 내 사용자 */}
-                              {_.map(departments?.users, (user: any) => {
-                                return (
-                                  <TreeItem
-                                    itemId={user?.label}
-                                    label={user?.label}
-                                    key={user?.label}
-                                    onClick={() => handleUserClick(departments, user)}
-                                  ></TreeItem>
-                                );
-                              })}
-                            </TreeItem>
-                          );
-                        })}
-                        {/* 회사 내 사용자 */}
-                        {_.map(treeItem?.users, (users: any) => {
-                          return (
-                            <TreeItem
-                              itemId={users?.label}
-                              label={users?.label}
-                              key={users?.label}
-                              onClick={() => {
-                                handleUserClick(treeItem, users);
-                              }}
-                            ></TreeItem>
-                          );
-                        })}
-                      </TreeItem>
-                    );
-                  })}
-                </SimpleTreeView>
-              </Box>
-            </div>
+          <div className='flex w-full h-full mb-4 border-solid border-2 border-gray-300 rounded-lg'>
+            <Organzation organization={organization} handleDepartmentClick={handleDepartmentClick} handleUserClick={handleUserClick} />
           </div>
         </div>
         {/* 내용 */}
@@ -266,8 +204,9 @@ const DepartmentLayout = (props: any) => {
           </div>
           {/* 부서원 목록  */}
           <div className='flex flex-col w-full gap-3'>
+            <span className='text-[18px]'>부서원 목록</span>
             {_.isEmpty(selectDepartment?.users) ? (
-              <span className='text-2xl font-bold'>부서원 없음</span>
+              <></>
             ) : (
               <>
                 <div className='flex w-11/12'>
@@ -275,8 +214,10 @@ const DepartmentLayout = (props: any) => {
                     data={selectDepartment?.users}
                     columns={columns}
                     headerTitle={'부서원 목록'}
+                    headerTitleVisible={false}
                     selectData={selectRow}
                     setSelectData={setSelectRow}
+                    filterVisible={false}
                   />
                 </div>
               </>
