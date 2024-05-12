@@ -8,24 +8,12 @@ import CustomeDataTable from '../../../common/DataTable';
 import _ from 'lodash';
 
 const DepartmentManagerModal = (props: any) => {
-  const { visible, setVisible, selectDepartment, setDepartmentLeader, columns, getOrganization } = props;
+  const { visible, setVisible, selectDepartment, columns, getOrganization } = props;
   const [selectData, setSelectData]: any = useState(null);
   // * 부서 추가
   const handleAPI = async () => {
     try {
-      const result = ADMIN_API.department_manager_edit(localStorage.getItem(COMPANY_ID), selectData?.department_id, selectData?.id);
-
-      setDepartmentLeader((prev: any) => {
-        let leader = null;
-        _.map(selectDepartment?.users, (user: any) => {
-          if (user?.is_leader === true) {
-            leader = user;
-            return;
-          }
-        });
-        return leader;
-      });
-
+      const result = await ADMIN_API.department_manager_edit(localStorage.getItem(COMPANY_ID), selectData?.department_id, selectData?.id);
       setVisible(false);
       getOrganization();
     } catch (error: any) {}
@@ -42,7 +30,7 @@ const DepartmentManagerModal = (props: any) => {
   // * 콘텐츠 템플렛
   const contentTemplate = () => {
     return (
-      <div className='flex w-full items-center bg-white gap-5 p-5'>
+      <div className='flex w-full items-center bg-white'>
         <CustomeDataTable
           data={selectDepartment?.users}
           columns={columns}

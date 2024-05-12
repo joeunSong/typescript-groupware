@@ -22,12 +22,14 @@ const ADMIN_API = () => {
     return await axios.instance.post(`/companies/${companyId}/departments`, { title: title });
   };
 
+  const department_delete = async (companyId: any, departmentId: string) => {
+    baseURLChange();
+    return await axios.instance.delete(`/companies/${companyId}/departments/${departmentId}`);
+  };
+
   const department_manager_edit = async (companyId: any, departmentId: any, userId: any) => {
     baseURLChange();
-    return await axios.instance.patch(
-      `/companies/${companyId}/departments/${departmentId}/leader`,
-      { user_id: userId },
-    );
+    return await axios.instance.patch(`/companies/${companyId}/departments/${departmentId}/leader`, { user_id: userId });
   };
 
   // * 계정 상세 조회
@@ -36,7 +38,7 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/users/${userId}`);
   };
 
-  return { admin_login, organization, department_create, department_manager_edit, account_detail };
+  return { admin_login, organization, department_create, department_delete, department_manager_edit, account_detail };
 };
 
 export default ADMIN_API();

@@ -4,16 +4,14 @@ import { InputText } from 'primereact/inputtext';
 import { useState } from 'react';
 import ADMIN_API from '../../../../services/admin';
 import { COMPANY_ID } from '../../../../constants/constant';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
-const DepartmentCreateModal = (props: any) => {
-  const { visible, setVisible, getOrganization } = props;
-
-  const [value, setValue] = useState('');
-
-  // * 부서 추가
+const DepartmentDeleteModal = (props: any) => {
+  const { visible, setVisible, selectDepartment, getOrganization } = props;
+  // * 부서 삭제
   const handleAPI = async () => {
     try {
-      await ADMIN_API.department_create(localStorage.getItem(COMPANY_ID), value);
+      await ADMIN_API.department_delete(localStorage.getItem(COMPANY_ID), selectDepartment.id);
       setVisible(false);
       getOrganization();
     } catch (error: any) {}
@@ -22,21 +20,20 @@ const DepartmentCreateModal = (props: any) => {
   // * 헤더 템플렛
   const headerTemplate = () => {
     return (
-      <div className='flex w-full p-3'>
-        <span className='text-xl font-bold'>부서 등록</span>
+      <div className='flex flex-col w-full items-center gap-5 p-5'>
+        <div className='flex h-12 w-12 items-center justify-center rounded-full bg-red-100'>
+          <InformationCircleIcon className='h-8 w-8 text-red-600 bg-red-100'></InformationCircleIcon>
+        </div>
+        <div className='flex w-full justify-center gap-1'>
+          <span className='font-bold'>{selectDepartment?.label} </span>
+          <span>부서를 삭제하시겠습니까?</span>
+        </div>
       </div>
     );
   };
   // * 콘텐츠 템플렛
   const contentTemplate = () => {
-    return (
-      <div className='flex w-full items-center bg-white gap-5 p-5'>
-        <div className='flex w-[70px] min-w-[70px]'>
-          <span>부서 이름</span>
-        </div>
-        <InputText value={value} onChange={(e) => setValue(e.target.value)} className=' w-full ring-0 border-gray-300' />
-      </div>
-    );
+    return <></>;
   };
 
   // * 바닥 템플렛
@@ -62,4 +59,4 @@ const DepartmentCreateModal = (props: any) => {
   );
 };
 
-export default DepartmentCreateModal;
+export default DepartmentDeleteModal;

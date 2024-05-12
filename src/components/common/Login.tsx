@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
 import * as ENDPOINT from '../../constants/apiEndpoints';
-import { ACCESS_TOKEN, COMPANY_ID, USER_ID } from '../../constants/constant';
+import { ACCESS_TOKEN, COMPANY_ID, LOGIN_AUTH, USER_ID } from '../../constants/constant';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import USER_API from '../../services/user';
@@ -25,19 +25,20 @@ const Login = ({ logo, role }: LoginProps) => {
       const data = new FormData(e.currentTarget);
 
       // api 호출 후 result 저장
-      let response;
       if (role === 'user') {
         const response = await USER_API.login({
           email: data.get('email') as string,
           password: data.get('password') as string,
         });
         localStorage.setItem(ACCESS_TOKEN, response.data?.token);
+        // localStorage.setItem(LOGIN_AUTH, 'user');
         navigate(ENDPOINT.USER_DASHBOARD);
       } else {
-        response = await ADMIN_API.admin_login(data.get('email') as string, data.get('password') as string);
+        const response = await ADMIN_API.admin_login(data.get('email') as string, data.get('password') as string);
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
         localStorage.setItem(COMPANY_ID, response.data?.company_id);
         localStorage.setItem(USER_ID, response.data?.user_id);
+        // localStorage.setItem(LOGIN_AUTH, 'admin');
         navigate(ENDPOINT.ADMIN_DEPARTMENT);
       }
     } catch (error) {
