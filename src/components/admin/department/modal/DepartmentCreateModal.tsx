@@ -1,9 +1,14 @@
-import { Button } from 'primereact/button';
-import Modal from '../../../common/Modal';
-import { InputText } from 'primereact/inputtext';
+// * basic
 import { useState } from 'react';
-import ADMIN_API from '../../../../services/admin';
+//  * install libraries
+// * components
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import Modal from '../../../common/Modal';
+// * constants
 import { COMPANY_ID } from '../../../../constants/constant';
+// * apis
+import ADMIN_API from '../../../../services/admin';
 
 const DepartmentCreateModal = (props: any) => {
   const { visible, setVisible, getOrganization } = props;

@@ -1,12 +1,15 @@
+// * basic
+import { Fragment } from 'react';
+// * install libraries
 import _ from 'lodash';
+import { useNavigate } from 'react-router-dom';
+// * components
 import { JiranFullLogoIcon } from './JiranIcon';
-import { Fragment, useState } from 'react';
-
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { useNavigate } from 'react-router-dom';
+// * constants
+// * apis
 
 interface Props {
   width?: string; // 사이드바 Width

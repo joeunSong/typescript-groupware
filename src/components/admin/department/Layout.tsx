@@ -1,10 +1,14 @@
+// * basic
+import { useEffect, useState } from 'react';
+//  * install libraries
 import _ from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
-import { CustomButton } from '../../common/Components';
-import { COMPANY_ID } from '../../../constants/constant';
-import ADMIN_API from '../../../services/admin';
+// * components
 import OrganizationLayout from './organzation/Layout';
 import ContentLayout from './content/Layout';
+// * constants
+import { COMPANY_ID } from '../../../constants/constant';
+// * apis
+import ADMIN_API from '../../../services/admin';
 
 const DepartmentLayout = (props: any) => {
   const {} = props;
@@ -96,7 +100,7 @@ const DepartmentLayout = (props: any) => {
       {/* 내용 */}
       <div className='flex flex-col w-full h-full pt-3 gap-5 bg-white'>
         {/* 부서 정보 */}
-        <div className='flex flex-col w-full gap-3'>
+        <div className='flex flex-col w-full gap-3 overflow-hidden'>
           {/* 부서 정보 및 부서원 추가 */}
           <div className='flex w-full justify-between'>
             <span className='text-2xl font-bold'>부서 정보</span>

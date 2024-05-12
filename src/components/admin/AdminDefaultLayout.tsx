@@ -1,17 +1,23 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import SideBarLayout from '../common/SideBar';
+// * basic
 import { useEffect, useState } from 'react';
-import * as ENDPOINT from '../../constants/apiEndpoints';
+// * install libraries\
+import _ from 'lodash';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+// * components
+import SideBarLayout from '../common/SideBar';
+import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
-import _ from 'lodash';
-import { Button } from '@mui/material';
+// * constants
+import * as ENDPOINT from '../../constants/apiEndpoints';
+// * apis
 
 const AdminDefaultLayout = (props: any) => {
   const { children } = props;
   const navigate = useNavigate();
   const location = useLocation();
+  // * 사이드 바 선택, 사이드 바 폼
   const [selectItem, setSelectItem] = useState<any>(null);
   const [items, setItems] = useState([
     {

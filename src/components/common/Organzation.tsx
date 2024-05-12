@@ -1,7 +1,12 @@
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+// * basic
+//  * install libraries
 import _ from 'lodash';
+// * components
 import { Panel } from 'primereact/panel';
-import { MiniCompanyIcon, MiniFolderIcon, MiniUserIcon, MiniUserLeaderIcon, PlusIcon, XIcon } from './JiranIcon';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { MiniCompanyIcon, MiniFolderIcon, MiniUserIcon, MiniUserLeaderIcon } from './JiranIcon';
+// * constants
+// * apis
 
 const OrganzationLayout = (props: any) => {
   const { organization, selectDepartment, selectUser, handleDepartmentClick, handleUserClick } = props;

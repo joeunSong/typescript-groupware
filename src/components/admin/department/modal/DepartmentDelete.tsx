@@ -1,10 +1,13 @@
-import { Button } from 'primereact/button';
-import Modal from '../../../common/Modal';
-import { InputText } from 'primereact/inputtext';
-import { useState } from 'react';
-import ADMIN_API from '../../../../services/admin';
-import { COMPANY_ID } from '../../../../constants/constant';
+// * basic
+// * install libraries
+// * components
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import Modal from '../../../common/Modal';
+import { Button } from 'primereact/button';
+// * constants
+import { COMPANY_ID } from '../../../../constants/constant';
+// * apis
+import ADMIN_API from '../../../../services/admin';
 
 const DepartmentDeleteModal = (props: any) => {
   const { visible, setVisible, selectDepartment, getOrganization } = props;

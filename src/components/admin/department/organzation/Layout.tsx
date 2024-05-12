@@ -1,10 +1,15 @@
-import { PlusIcon } from '@heroicons/react/24/outline';
-import Organzation from '../../../common/Organzation';
+// * basic
 import { useState } from 'react';
+// * install libraries
+import _ from 'lodash';
+// * components
+import Organzation from '../../../common/Organzation';
+import DepartmentDeleteModal from '../modal/DepartmentDelete';
 import DepartmentCreateModal from '../modal/DepartmentCreateModal';
 import { XIcon } from '../../../common/JiranIcon';
-import DepartmentDeleteModal from '../modal/DepartmentDelete';
-import _ from 'lodash';
+import { PlusIcon } from '@heroicons/react/24/outline';
+// * constants
+// * apis
 
 const OrganizationLayout = (props: any) => {
   const { getOrganization, organization, selectDepartment, selectUser, handleDepartmentClick, handleUserClick } = props;

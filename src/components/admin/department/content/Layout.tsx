@@ -1,13 +1,16 @@
-import moment from 'moment';
-import { CustomButton } from '../../../common/Components';
-import _ from 'lodash';
-import { MiniOrganizationIcon } from '../../../common/JiranIcon';
+// * basic
 import { useEffect, useState } from 'react';
+// * install libraries
+import _ from 'lodash';
+import moment from 'moment';
+// * components
+import { CustomButton } from '../../../common/Components';
 import CustomeDataTable from '../../../common/DataTable';
-import { CustomDepartmentAuth, CustomDepartmentID, CustomDepartmentName, CustomDepartmentPostion } from './CustomColumns';
 import DepartmentManagerModal from '../modal/DepartmentManagerModal';
-import { useUpdateEffect } from 'react-use';
-import AccountDetail from '../../AccountDetail';
+import { CustomDepartmentAuth, CustomDepartmentID, CustomDepartmentName, CustomDepartmentPostion } from './CustomColumns';
+import { MiniOrganizationIcon } from '../../../common/JiranIcon';
+// * constants
+// * apis
 
 const ContentLayout = (props: any) => {
   const { getOrganization, selectDepartment, selectUser, setSelectUser, departmentLeader } = props;
@@ -77,7 +80,7 @@ const ContentLayout = (props: any) => {
         getOrganization={getOrganization}
       />
       {/* 부서 정보 내용 */}
-      <div className='flex flex-col w-full gap-5'>
+      <div className='flex flex-col w-full gap-5 overflow-hidden'>
         {/* 부서명 */}
         <div className='flex w-full'>
           <div className='flex min-w-[150px]'>
@@ -116,13 +119,13 @@ const ContentLayout = (props: any) => {
         </div>
 
         {/* 부서원 목록  */}
-        <div className='flex flex-col w-full gap-3'>
+        <div className='flex flex-col w-full h-full gap-3 overflow-hidden'>
           {_.isEmpty(selectDepartment?.users) ? (
             <></>
           ) : (
             <>
               <span className='text-[18px]'>부서원 목록</span>
-              <div className='flex w-11/12'>
+              <div className='flex w-full h-full scrollYWrap overflow-y-auto'>
                 <CustomeDataTable
                   data={selectDepartment?.users}
                   columns={columns}

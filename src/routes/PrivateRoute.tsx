@@ -1,11 +1,14 @@
-import React from 'react';
-import * as ENDPOINT from '../constants/apiEndpoints';
+// * basic
+// * install libraries
 import { Navigate, Outlet, useLocation } from 'react-router';
-import { LOGIN_AUTH } from '../constants/constant';
+import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
+// * components
+// * constants
+import * as ENDPOINT from '../constants/apiEndpoints';
+import { LOGIN_AUTH } from '../constants/constant';
+// * apis
 
-import LoginPage from '../pages/user/Login';
-import { Route, useNavigate } from 'react-router-dom';
 /**
  * 해당 Route의 기능은
  * 사용자 페이지, 관리자 페이지 별로 접근 권한이 다른데 해당 메뉴에 접근이 가능한지 판단해주는 Route이다.
