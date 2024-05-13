@@ -23,7 +23,11 @@ const KOREAN_LABEL: StringObject = {
   enter_date: '입사일',
 };
 
-const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen }: AccountDetailProps) => {
+const AccountDetail = ({
+  accountId,
+  isAccountDetailOpen,
+  setIsAccountDetailOpen,
+}: AccountDetailProps) => {
   const [account, setAccount] = useState<Account>();
 
   useEffect(() => {
@@ -50,7 +54,8 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
         <Table sx={{ minWidth: 500 }}>
           <TableBody>
             {Object.entries(_.pick(account, SHOW_DATA)).map(([key, value]) => {
-              if (key === 'isAdmin') {
+              if (key === 'is_admin') {
+                console.log('isadmin', value ? '관리자' : '사용자');
                 return CustomRow(key, value ? '관리자' : '사용자');
               } else {
                 return CustomRow(key, String(value));
@@ -63,11 +68,16 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
   );
 };
 
-const CustomRow = (label: string, content: string) => (
-  <TableRow key={label}>
-    <TableCell sx={{ border: 0, width: 80 }}>{KOREAN_LABEL[label]}</TableCell>
-    <TableCell sx={{ border: 0 }}>{content}</TableCell>
-  </TableRow>
-);
+const CustomRow = (label: string, content: string) => {
+  // console.log(label, content);
+
+  return (
+    <TableRow key={label}>
+      <TableCell sx={{ border: 0, width: 80 }}>{KOREAN_LABEL[label]}</TableCell>
+      <TableCell sx={{ border: 0 }}>{content}</TableCell>
+    </TableRow>
+  );
+};
+;
 
 export default AccountDetail;
