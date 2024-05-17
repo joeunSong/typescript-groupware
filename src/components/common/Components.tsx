@@ -95,7 +95,7 @@ export const CustomModal = ({ isOpen, onClose, title, children }: CustomModalPro
         </p>
       </DialogTitle>
       <DialogContent>
-        <div className='pt-2'>{children}</div>
+        <div>{children}</div>
       </DialogContent>
     </Dialog>
   );
