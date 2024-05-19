@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ApiClient from '../../../../utils/axios';
 import { CustomButton, CustomDatePicker, CustomInput, CustomModal, CustomSelect } from '../../../common/Components';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -16,10 +16,10 @@ const rankSelectList = [
   { label: '인턴', value: '인턴' },
 ];
 
-const departmentSelectList = [
-  { label: '개발 부서', value: '개발 부서' },
-  { label: '기획 부서', value: '기획 부서' },
-];
+// const departmentSelectList = [
+//   { label: '개발 부서', value: '개발 부서' },
+//   { label: '기획 부서', value: '기획 부서' },
+// ];
 
 const authSelectList = [
   { label: '사용자', value: '0' },
@@ -37,10 +37,16 @@ interface FormValue {
   enter_date: Date | null;
 }
 
+interface departmentType {
+  label: string;
+  value: number;
+}
+
 const CreateUserModal = (props: any) => {
   const { isModalOpen, setIsModalOpen } = props;
 
   const { instance, setBaseURL } = ApiClient;
+  const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
   const { control, handleSubmit, watch, reset } = useForm<FormValue>({
     defaultValues: {
       enter_date: null,
@@ -53,6 +59,32 @@ const CreateUserModal = (props: any) => {
     setIsModalOpen(false);
     reset();
   };
+
+  useEffect(() => {
+    const getDepartmentInfo = async () => {
+      try {
+        setBaseURL('http://127.0.0.1/api/');
+
+        const response = await instance.get(`v1/companies/1/departments`);
+        const data = response.data.data;
+        console.log('getDepartmentInfo data: ', data);
+        console.log(Array.isArray(data));
+
+        if (Array.isArray(data)) {
+          const formattedData = data.map((item: any) => ({
+            key: item.id,
+            label: item.title,
+            value: item.id,
+          }));
+          setDepartmentInfo(formattedData);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDepartmentInfo();
+    console.log('departmentInfo: ', departmentInfo);
+  }, [departmentInfo]);
 
   const postUserInfo = async (data: any) => {
     try {
@@ -170,7 +202,7 @@ const CreateUserModal = (props: any) => {
             name='department_title'
             control={control}
             rules={{ required: '필수 선택 항목입니다.' }}
-            selectList={departmentSelectList}
+            selectList={departmentInfo}
             placeholder='부서 선택'
           />
           <div className='text-black font-body1'>권한</div>
