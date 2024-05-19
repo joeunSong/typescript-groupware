@@ -21,7 +21,7 @@ import { ReactNode } from 'react';
 import { Control, Controller, FieldPath, FieldValues, RegisterOptions, useController, UseControllerProps } from 'react-hook-form';
 
 interface CustomButtonProps {
-  onClick?: () => void;
+  onClick?: (() => void) | ((event: any) => void);
   children: any;
   variant: 'text' | 'outlined' | 'contained';
   size: 'lg' | 'md' | 'auto';

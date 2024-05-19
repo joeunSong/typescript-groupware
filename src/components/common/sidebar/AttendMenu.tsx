@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { CustomButton } from '../Components';
 import ApiClient from '../../../utils/axios';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu';
+import USER_API from '../../../services/user';
 
 interface AttendMenuProps {
   userInfo?: any; //유저의 정보
@@ -16,21 +22,44 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endTime);
   const { instance, setBaseURL } = ApiClient;
 
-  const postStartTime = async () => {
+  //근태 유형
+  const [attendTypeList, setAttendTypeList] = useState(['근무', '재택근무', '외근']);
+  const [attendType, setAttendType] = useState('');
+
+  //Dropdown 조작
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleOpenMenu = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = (type: string | null) => {
+    setAnchorEl(null);
+
+    // //근태 유형 설정
+    if (type) {
+      setAttendType(type);
+      handleGoWorkClick(type);
+    }
+  };
+
+  const postStartTime = async (type: string | null) => {
     let curTime = moment().toISOString();
     let today = moment(curTime).format('YYYY-MM-DD');
 
-    //console.log(curTime);
     //출근 시간 등록 API
     const data = {
       startAt: curTime,
       date: today,
+      //attendType: attendType,
     };
 
-    setBaseURL('http://localhost:8080/api/');
+    console.log(data);
+    console.log(type);
+    //setBaseURL('http://localhost:8080/api/');
     try {
-      const response = await instance.post('commutes/in', data);
-
+      //const response = await instance.post('commutes/in', data);
+      const response = await USER_API.commute_in(data);
       setStartTime(curTime);
       setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
       setOnWork(true);
@@ -46,9 +75,14 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     const data = {
       endAt: curTime,
     };
-    setBaseURL('http://localhost:8080/api/');
+    //setBaseURL('http://localhost:8080/api/');
     try {
-      const response = await instance.post('commutes/' + todayWorkInfo.id + '/out', data);
+      //const response = await instance.post('commutes/' + todayWorkInfo.id + '/out', data);
+      const response = await USER_API.commute_out({
+        commuteId: todayWorkInfo.id,
+        endAt: curTime,
+      });
+
       setEndTime(curTime);
       setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
       setOnWork(false);
@@ -57,16 +91,12 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
       console.log(error);
     }
   };
-  const handleGoWorkClick = () => {
+  const handleGoWorkClick = (type: string | null) => {
     //출근 기록이 없을 경우 등록
     if (!startTime) {
       //API 통신을 통해서 출근 시간 전송
-
-      postStartTime();
-
-      // setStartTime(curTime);
-      // setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
-      // setOnWork(true);
+      console.log(type);
+      postStartTime(type);
     }
   };
 
@@ -77,9 +107,6 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
       if (todayWorkInfo.id) {
         postEndTime();
       }
-      // setEndTime(curTime);
-      // setTodayWorkInfo({ ...todayWorkInfo, endTime: curTime });
-      // setOnWork(false);
     }
   };
 
@@ -110,6 +137,11 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     setStartTime(todayWorkInfo.startTime);
     setEndTime(todayWorkInfo.endTime);
   }, [todayWorkInfo]);
+
+  useEffect(() => {
+    //TODO 근무 유형 리스트 받아오기
+    //getCommuteType()
+  }, []);
 
   // 자정에 데이터를 불러오는 함수
   function postDataAtMidnight() {
@@ -163,9 +195,33 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
         </div>
       ) : (
         !startTime && (
-          <CustomButton onClick={handleGoWorkClick} variant='contained' size='md' color='primary'>
-            출근하기
-          </CustomButton>
+          <>
+            {/* <CustomButton onClick={() => handleGoWorkClick(null)} variant='contained' size='md' color='primary'>
+              출근하기
+            </CustomButton> */}
+            <CustomButton onClick={handleOpenMenu} variant='contained' size='md' color='primary'>
+              출근하기
+            </CustomButton>
+            <Menu
+              className='border-[1px] border-solid border-primary'
+              id='dropdown-menu'
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => handleCloseMenu(null)}
+            >
+              {attendTypeList.map((_it) => (
+                <MenuItem
+                  className='text-primary flex items-center justify-center'
+                  sx={{
+                    width: '14.375rem',
+                  }}
+                  onClick={() => handleCloseMenu(_it)}
+                >
+                  {_it}
+                </MenuItem>
+              ))}
+            </Menu>
+          </>
         )
       )}
     </div>
