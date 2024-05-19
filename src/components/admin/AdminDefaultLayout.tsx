@@ -36,6 +36,7 @@ const AdminDefaultLayout = (props: any) => {
       items: [
         { icon: null, label: '기념일/공휴일 관리', explan: '기념일과 공휴일을 등록하고 관리할 수 있습니다.' },
         { icon: null, label: '근무 유형 관리', explan: '근무 유형을 등록하고 관리할 수 있습니다.' },
+        { path: ENDPOINT.ADMIN_WORK_APPROVE, icon: null, label: '근무 승인 관리', explan: '요청된 근무를 승인하고 관리할 수 있습니다.' },
       ],
     },
     {
@@ -82,7 +83,7 @@ const AdminDefaultLayout = (props: any) => {
       {/* 공용 사이드바 */}
       <SideBarLayout items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
 
-      <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
+      <Button className='absolute h-12 bg-wihte w-60 left-4 bottom-2' onClick={handleLogout}>
         로그아웃
       </Button>
       <div className='flex flex-col w-full h-full pb-10 pr-4 bg-gray-100'>

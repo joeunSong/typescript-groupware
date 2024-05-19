@@ -6,6 +6,7 @@ const USER_DASHBOARD = '/user/dashboard';
 // * 관리자 페이지
 const ADMIN_ACCOUNT = '/admin/account';
 const ADMIN_DEPARTMENT = '/admin/department';
+const ADMIN_WORK_APPROVE = '/admin/work/approve';
 
 export {
   // * 로그인
@@ -16,4 +17,5 @@ export {
   // * 관리자 페이지
   ADMIN_ACCOUNT,
   ADMIN_DEPARTMENT,
+  ADMIN_WORK_APPROVE,
 };
