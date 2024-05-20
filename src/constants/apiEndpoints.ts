@@ -5,6 +5,7 @@ const ADMIN_LOGIN = '/auth/admin';
 const USER_DASHBOARD = '/user/dashboard';
 const USER_MAIN = '/user/main';
 // * 관리자 페이지
+const ADMIN_DASHBOARD = '/admin/dashboard';
 const ADMIN_ACCOUNT = '/admin/account';
 const ADMIN_DEPARTMENT = '/admin/department';
 
@@ -16,6 +17,7 @@ export {
   USER_DASHBOARD,
   USER_MAIN,
   // * 관리자 페이지
+  ADMIN_DASHBOARD,
   ADMIN_ACCOUNT,
   ADMIN_DEPARTMENT,
 };

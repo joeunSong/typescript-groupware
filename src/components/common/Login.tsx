@@ -44,7 +44,7 @@ const Login = ({ logo, role }: LoginProps) => {
         localStorage.setItem(COMPANY_ID, response.data?.company_id);
         localStorage.setItem(USER_ID, response.data?.user_id);
         // localStorage.setItem(LOGIN_AUTH, 'admin');
-        navigate(ENDPOINT.ADMIN_DEPARTMENT);
+        navigate(ENDPOINT.ADMIN_DASHBOARD);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

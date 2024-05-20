@@ -9,6 +9,7 @@ import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
+import { HomeRounded } from '@mui/icons-material';
 // * constants
 import * as ENDPOINT from '../../constants/apiEndpoints';
 // * apis
@@ -20,6 +21,13 @@ const AdminDefaultLayout = (props: any) => {
   // * 사이드 바 선택, 사이드 바 폼
   const [selectItem, setSelectItem] = useState<any>(null);
   const [items, setItems] = useState([
+    {
+      icon: HomeRounded,
+      label: '홈',
+      open: false,
+      path: ENDPOINT.ADMIN_DASHBOARD,
+      items: [],
+    },
     {
       icon: SendIcon,
       label: '조직도 관리',
@@ -60,6 +68,13 @@ const AdminDefaultLayout = (props: any) => {
     if (_.isEmpty(selectItem)) {
       setItems((prevs) => {
         return _.map(prevs, (prev: any) => {
+          // 상위 항목으로 진입한 경우 선택 아이템 set
+          if (prev.path === location.pathname) {
+            setSelectItem(prev);
+            return prev;
+          }
+
+          // 하위 항목으로 진입한 경우 선택 아이템 set
           const updatedItems = _.map(prev.items, (subItem: any) => {
             if (subItem.path === location.pathname) {
               setSelectItem(subItem);
@@ -92,18 +107,22 @@ const AdminDefaultLayout = (props: any) => {
           <div className='flex p-6 bg-gray-100'>
             <span className='font-noto-sans text-[30px] font-bold'>
               {_.isEmpty(selectItem)
-                ? 'Dashboard'
-                : _.find(items, (item) => {
-                    return item.items && _.some(item.items, { label: selectItem?.label });
-                  })?.label}
+                ? null
+                : _.isEmpty(selectItem?.icon)
+                  ? _.find(items, (item) => {
+                      return item.items && _.some(item.items, { label: selectItem?.label });
+                    })?.label
+                  : selectItem?.label}
             </span>
           </div>
           {/* 소제목 */}
           <div className='flex w-full bg-white'>
-            <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
-              <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label}</span>
-              <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
-            </div>
+            {_.isEmpty(selectItem?.icon) ? (
+              <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
+                <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label}</span>
+                <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
+              </div>
+            ) : null}
           </div>
         </div>
         {/* 메인 콘텐츠 */}

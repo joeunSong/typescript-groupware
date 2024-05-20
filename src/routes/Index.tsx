@@ -11,6 +11,7 @@ import UserDashBoardPage from '../pages/user/DashBoard';
 import UserMainPage from '../pages/user/UserMain';
 
 // 관리자 페이지 정의
+import AdminDashBoardLayout from '../pages/admin/DashBoard';
 import AdminDefaultLayout from '../components/admin/AdminDefaultLayout';
 import AdminDepartmentPage from '../pages/admin/Department';
 import AdminAccountPage from '../pages/admin/Account';
@@ -25,6 +26,7 @@ const Router = () => {
     { path: ENDPOINT.USER_MAIN, layout: UserMainPage },
   ];
   const adminRoutes = [
+    { path: ENDPOINT.ADMIN_DASHBOARD, layout: AdminDashBoardLayout },
     { path: ENDPOINT.ADMIN_DEPARTMENT, layout: AdminDepartmentPage },
     { path: ENDPOINT.ADMIN_ACCOUNT, layout: AdminAccountPage },
   ];
