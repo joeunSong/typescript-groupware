@@ -13,18 +13,19 @@ interface AttendMenuProps {
   userInfo?: any; //유저의 정보
   todayWorkInfo?: any; //당일 출퇴근 정보
   setTodayWorkInfo?: any; //당일 출퇴근 정보 변경 함수
+  todayWorkInfoList: any; //당일 출퇴근 정보 리스트
+  setTodayWorkInfoList: any; //당일 출퇴근 정보 리스트 변경 함수
   onWork?: boolean; //출근 여부
   setOnWork?: any; //출근 여부 상태 변경 함수
 }
 
-const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWork }: AttendMenuProps) => {
-  const [startTime, setStartTime] = useState<any>(todayWorkInfo?.startTime);
-  const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endTime);
-  const { instance, setBaseURL } = ApiClient;
+const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, todayWorkInfoList, setTodayWorkInfoList, onWork, setOnWork }: AttendMenuProps) => {
+  const [startTime, setStartTime] = useState<any>(todayWorkInfo?.startAt);
+  const [endTime, setEndTime] = useState<any>(todayWorkInfo?.endAt);
 
   //근태 유형
-  const [attendTypeList, setAttendTypeList] = useState(['근무', '재택근무', '외근']);
-  const [attendType, setAttendType] = useState('');
+  const [attendTypeList, setAttendTypeList] = useState([]);
+  const [attendType, setAttendType] = useState<any>(null);
 
   //Dropdown 조작
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -33,17 +34,17 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseMenu = (type: string | null) => {
+  const handleCloseMenu = (type: any) => {
     setAnchorEl(null);
 
     // //근태 유형 설정
     if (type) {
       setAttendType(type);
-      handleGoWorkClick(type);
+      handleGoWorkClick(type?.id);
     }
   };
 
-  const postStartTime = async (type: string | null) => {
+  const postStartTime = async (type: string) => {
     let curTime = moment().toISOString();
     let today = moment(curTime).format('YYYY-MM-DD');
 
@@ -51,17 +52,13 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     const data = {
       startAt: curTime,
       date: today,
-      //attendType: attendType,
+      workType: type,
     };
 
-    console.log(data);
-    console.log(type);
-    //setBaseURL('http://localhost:8080/api/');
     try {
-      //const response = await instance.post('commutes/in', data);
       const response = await USER_API.commute_in(data);
       setStartTime(curTime);
-      setTodayWorkInfo({ ...todayWorkInfo, startTime: curTime });
+      setTodayWorkInfo({ ...todayWorkInfo, startAt: curTime });
       setOnWork(true);
     } catch (error) {
       // 요청이 실패하면 여기에서 에러 처리
@@ -75,9 +72,8 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
     const data = {
       endAt: curTime,
     };
-    //setBaseURL('http://localhost:8080/api/');
+
     try {
-      //const response = await instance.post('commutes/' + todayWorkInfo.id + '/out', data);
       const response = await USER_API.commute_out({
         commuteId: todayWorkInfo.id,
         endAt: curTime,
@@ -91,7 +87,20 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
       console.log(error);
     }
   };
-  const handleGoWorkClick = (type: string | null) => {
+
+  //근무 타입 목록 받아오기
+  const getCommuteType = async () => {
+    try {
+      const response = await USER_API.commute_type();
+
+      setAttendTypeList(response.data);
+    } catch (error) {
+      // 요청이 실패하면 여기에서 에러 처리
+      console.log(error);
+    }
+  };
+
+  const handleGoWorkClick = (type: string) => {
     //출근 기록이 없을 경우 등록
     if (!startTime) {
       //API 통신을 통해서 출근 시간 전송
@@ -102,7 +111,7 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
 
   const handleLeaveWorkClick = () => {
     //퇴근 기록이 없을 경우 등록
-    if (!endTime) {
+    if (todayWorkInfo && !endTime) {
       //API 통신을 통해서 퇴근 시간 전송
       if (todayWorkInfo.id) {
         postEndTime();
@@ -134,13 +143,13 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
   };
 
   useEffect(() => {
-    setStartTime(todayWorkInfo.startTime);
-    setEndTime(todayWorkInfo.endTime);
+    setStartTime(todayWorkInfo?.startAt);
+    setEndTime(todayWorkInfo?.endAt);
   }, [todayWorkInfo]);
 
   useEffect(() => {
     //TODO 근무 유형 리스트 받아오기
-    //getCommuteType()
+    getCommuteType();
   }, []);
 
   // 자정에 데이터를 불러오는 함수
@@ -185,7 +194,7 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
         //출근 상태일 경우
         <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
           <div className='flex justify-between items-center content-between'>
-            <span className='font-h2 text-primary'>근무</span>
+            <span className='font-h2 text-primary'>{todayWorkInfo?.workType?.title}</span>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>진행중</div>
           </div>
           <div className='font-body1'>{`${formattedTime(startTime)} 부터 진행중`}</div>
@@ -209,17 +218,18 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, onWork, setOnWo
               open={Boolean(anchorEl)}
               onClose={() => handleCloseMenu(null)}
             >
-              {attendTypeList.map((_it) => (
-                <MenuItem
-                  className='text-primary flex items-center justify-center'
-                  sx={{
-                    width: '14.375rem',
-                  }}
-                  onClick={() => handleCloseMenu(_it)}
-                >
-                  {_it}
-                </MenuItem>
-              ))}
+              {attendTypeList.length > 0 &&
+                attendTypeList.map((_it: any) => (
+                  <MenuItem
+                    className='text-primary flex items-center justify-center'
+                    sx={{
+                      width: '14.375rem',
+                    }}
+                    onClick={() => handleCloseMenu(_it)}
+                  >
+                    {_it?.title}
+                  </MenuItem>
+                ))}
             </Menu>
           </>
         )

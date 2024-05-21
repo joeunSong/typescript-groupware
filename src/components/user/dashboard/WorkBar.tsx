@@ -34,13 +34,14 @@ function WorkBar({ workInfo }: workBarProps) {
     workInfo?.startAt &&
     workInfo?.endAt && (
       // <Tooltip title={getWorkTime(workTime)} placement='top'>
-      <Tooltip title={`${moment(startTime).format('hh:mm')} - ${moment(endTime).format('hh:mm')}`} placement='top'>
+      <Tooltip title={`${workInfo?.workType?.title} : ${moment(startTime).format('HH:mm')} - ${moment(endTime).format('HH:mm')}`} placement='top'>
         <div
-          className='bg-primary w-0 h-[30px] rounded-[5px]'
+          className='bg-primary w-0 h-[30px] absolute'
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,
             transition: 'all 0.5s ease',
+            minWidth: 1,
           }}
         />
       </Tooltip>

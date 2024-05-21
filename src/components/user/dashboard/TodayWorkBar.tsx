@@ -14,30 +14,30 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
 
     //작업 시간 업데이트
     const updateWorkTime = () => {
-      const start = moment(todayWorkInfo.startTime);
-      const end = todayWorkInfo.endTime ? moment(todayWorkInfo.endTime) : moment();
+      const start = moment(todayWorkInfo.startAt);
+      const end = todayWorkInfo.endAt ? moment(todayWorkInfo.endAt) : moment();
       const diff = moment.duration(end.diff(start)).asMinutes();
 
       setWorkTime(Math.floor(diff));
     };
 
-    if (todayWorkInfo.startTime && !todayWorkInfo.endTime) {
+    if (todayWorkInfo.startAt && !todayWorkInfo.endAt) {
       updateWorkTime(); // 초기 작업 시간 업데이트
       intervalId = setInterval(updateWorkTime, 6000); // endTime이 없을 때만 반복
-    } else if (todayWorkInfo.endTime) {
+    } else if (todayWorkInfo.endAt) {
       updateWorkTime(); // endTime이 있을 경우 최종 작업 시간 업데이트
     }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [todayWorkInfo.startTime, todayWorkInfo.endTime]);
+  }, [todayWorkInfo.startAt, todayWorkInfo.endAt]);
 
   //TodayWorkBar 위치 조정
 
-  const startPlace = todayWorkInfo.startTime
-    ? moment(moment(todayWorkInfo.startTime).toLocaleString()).diff(
-        moment(moment(todayWorkInfo.startTime).toLocaleString()).clone().startOf('day'),
+  const startPlace = todayWorkInfo.startAt
+    ? moment(moment(todayWorkInfo.startAt).toLocaleString()).diff(
+        moment(moment(todayWorkInfo.startAt).toLocaleString()).clone().startOf('day'),
         'minutes',
       )
     : 0;
@@ -54,13 +54,13 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
   };
   console.log(todayWorkInfo);
   return (
-    todayWorkInfo.startTime && (
+    todayWorkInfo.startAt && (
       <Tooltip
-        title={`${moment(todayWorkInfo.startTime).format('hh:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('hh:mm') : '진행중'}`}
+        title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
         placement='top'
       >
         <div
-          className='bg-primary w-0 h-[30px] rounded-[5px]'
+          className='bg-primary w-0 h-[30px] absolute'
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,

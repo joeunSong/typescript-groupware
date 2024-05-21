@@ -11,6 +11,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import ApiClient from '../../utils/axios';
 import { Button } from '@mui/material';
+import USER_API from '../../services/user';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
@@ -22,12 +23,11 @@ const UserDefaultLayout = (props: any) => {
   //출근 여부
   const [onWork, setOnWork] = useState<boolean>(false);
 
+  //당일 근무 정보 리스트
+  const [todayWorkInfoList, setTodayWorkInfoList] = useState<any>([]);
+
   //당일 근무 정보
-  const [todayWorkInfo, setTodayWorkInfo] = useState<any>({
-    id: null,
-    startTime: null,
-    endTime: null,
-  });
+  const [todayWorkInfo, setTodayWorkInfo] = useState<any>(null);
 
   // 메뉴 정보
   const [selectItem, setSelectItem] = useState<any>(null);
@@ -58,34 +58,50 @@ const UserDefaultLayout = (props: any) => {
   //헤더 템플릿
   const headerTemplate = {
     attendMenu: (
-      <AttendMenu userInfo={userInfo} todayWorkInfo={todayWorkInfo} setTodayWorkInfo={setTodayWorkInfo} onWork={onWork} setOnWork={setOnWork} />
+      <AttendMenu
+        userInfo={userInfo}
+        todayWorkInfo={todayWorkInfo}
+        setTodayWorkInfo={setTodayWorkInfo}
+        todayWorkInfoList={todayWorkInfoList}
+        setTodayWorkInfoList={setTodayWorkInfoList}
+        onWork={onWork}
+        setOnWork={setOnWork}
+      />
     ),
     profileMenu: <ProfileMenu userInfo={userInfo} />,
   };
-
-  const { instance, setBaseURL } = ApiClient;
 
   const getTodayWorkTInfo = async () => {
     //API통신을 통해서 출근 상태 및 시간 확인
     const today = moment().format('YYYY-MM-DD');
 
     try {
-      //const response = await ApiClient.instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
-
-      setBaseURL('http://localhost:8080/api/');
-      const response = await instance.get(`commutes/status?date=` + today);
+      const response = await USER_API.commute_today_info(today);
       const data = response.data;
+      const len = data.length;
 
-      const { id, startAt, endAt } = data;
+      //당일 근무 리스트 설정
+      setTodayWorkInfoList(data);
+
+      if (len > 0) {
+        //최근 근무 설정
+        setTodayWorkInfo(data[len - 1]);
+      }
+
+      //console.log(data);
+
+      //const { id, startAt, endAt } = data[data.length - 1];
+      //console.log(data);
 
       //TODO
-      setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
+      //setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
 
-      return response.data;
+      //return response.data;
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getTodayWorkTInfo();
   }, [onWork]);
@@ -134,7 +150,7 @@ const UserDefaultLayout = (props: any) => {
 
         {children?.type?.name === 'UserDashBoard' ? (
           // UserDashBoard일 경우 props전달
-          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}</div>
+          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo, todayWorkInfoList }) || <Outlet />}</div>
         ) : (
           children || <Outlet />
         )}

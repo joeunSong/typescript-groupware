@@ -10,6 +10,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import USER_API from '../../services/user';
 
 interface UserDashBoardProps {
   userInfo?: any;
@@ -17,42 +18,13 @@ interface UserDashBoardProps {
   setOnWork?: any;
   todayWorkInfo?: any;
   setTodayWorkInfo?: any;
+  todayWorkInfoList?: any; //오늘근무 정보 리스트
 }
 
-const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWorkInfo }: UserDashBoardProps) => {
+const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWorkInfo, todayWorkInfoList }: UserDashBoardProps) => {
   const [currentWeek, setCurrentWeek] = useState<string[]>([]);
   const workDays = ['월', '화', '수', '목', '금', '토', '일'];
-  const [weekWorkInfo, setWeekWorkInfo] = useState<any>([
-    // {
-    //   startTime: new Date('2024-05-01 10:00:00'),
-    //   endTime: new Date('2024-05-01 11:00:00'),
-    // },
-    // {
-    //   startTime: new Date('2024-05-02 10:20:00'),
-    //   endTime: new Date('2024-05-02 10:40:00'),
-    // },
-    // {
-    //   startTime: new Date('2024-05-03 10:20:00'),
-    //   endTime: new Date('2024-05-03 10:40:00'),
-    // },
-    // {
-    //   startTime: new Date('2024-05-04 10:20:00'),
-    //   endTime: new Date('2024-05-04 10:40:00'),
-    // },
-    // {
-    //   startTime: new Date('2024-05-05 10:20:00'),
-    //   endTime: new Date('2024-05-05 10:40:00'),
-    // },
-    // {
-    //   startTime: new Date('2024-05-06 10:20:00'),
-    //   endTime: new Date('2024-05-06 10:40:00'),
-    // },
-    // {
-    //   startTime: new Date('2024-05-07 10:20:00'),
-    //   endTime: new Date('2024-05-07 10:40:00'),
-    // },
-  ]);
-  const { instance, setBaseURL } = ApiClient;
+  const [weekWorkInfo, setWeekWorkInfo] = useState<any>([]);
 
   // 해당 주의 정보를 가져오는 함수
   const getWeekDates = (date: moment.Moment) => {
@@ -74,8 +46,9 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
     let endDay = moment(`${currentWeek[6]} 23:59:59`, 'YYYY-MM-DD HH:mm:ss').toISOString();
 
     try {
-      setBaseURL('http://localhost:8080/api/');
-      const response = await instance.get('commutes?startAt=' + startDay + '&endAt=' + endDay);
+      //setBaseURL('http://localhost:8080/api/');
+      //const response = await instance.get('commutes?startAt=' + startDay + '&endAt=' + endDay);
+      const response = await USER_API.commute_log(startDay, endDay);
       const data = response.data;
       console.log(data);
       setWeekWorkInfo(data);
@@ -94,7 +67,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
     if (currentWeek[0] && currentWeek[6]) {
       getWeekWorkInfo();
     }
-  }, [currentWeek]);
+  }, [currentWeek, onWork]);
 
   // 이전 주로 이동하는 함수
   const handlePreviousWeek = () => {
@@ -147,15 +120,19 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
                 <div className='text-red'>{workDays[idx]} </div>
               ) : (
                 <div>{workDays[idx]} </div>
-              )}{' '}
+              )}
               {_day}
             </div>
-            <div className='flex flex-1 items-center'>
-              {isToday(_day) ? (
-                <TodayWorkBar todayWorkInfo={todayWorkInfo} />
-              ) : (
-                <WorkBar workInfo={weekWorkInfo.find((_info: any) => isSameDate(_day, _info.startAt))} />
-              )}
+            <div className='flex flex-1 items-center relative'>
+              {/* //해당 날짜에 해당하는 workInfo 추출 */}
+              {weekWorkInfo
+                .filter((_info: any) => isSameDate(_day, _info.startAt))
+                .map((_it: any) => {
+                  return <WorkBar workInfo={_it} />;
+                })}
+
+              {/* 퇴근 시간을 기록하지 않은 오늘 근무 */}
+              {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />}
             </div>
           </div>
         ))}
