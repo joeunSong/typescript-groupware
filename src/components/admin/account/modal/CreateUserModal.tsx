@@ -114,12 +114,12 @@ const CreateUserModal = (props: any) => {
             name='name'
             control={control}
             rules={{
-              required: '필수 입력 항목입니다.',
-              minLength: { value: 2, message: '최소 2자 이상이어야 합니다.' },
+              required: '필수항목을 입력해주세요.',
             }}
             textFieldProps={{
               variant: 'outlined',
-            }}
+              label: '이름',
+            }} //string
           />
           <div className='text-black font-body1'>아이디</div>
           <div className='flex items-center gap-2'>
@@ -127,22 +127,19 @@ const CreateUserModal = (props: any) => {
               name='email'
               control={control}
               rules={{
-                required: '필수 입력 항목입니다.',
+                required: '필수항목을 입력해주세요.',
                 minLength: {
                   value: 2,
-                  message: '최소 2자 이상이어야 합니다.',
-                },
-                maxLength: {
-                  value: 40,
-                  message: '최대 40자까지 입력 가능합니다.',
+                  message: '2글자 이상 입력해주세요',
                 },
                 pattern: {
-                  value: /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/,
-                  message: '영어 소문자, 숫자, 점(.), 하이픈(-), 언더바(_)만 사용 가능합니다. (연속 사용 및 맨 앞/뒤 사용 불가)',
+                  value: /^[a-zA-Z0-9.\-_]+$/,
+                  message: '특수문자 (.,-,_) 입력이 가능합니다.',
                 },
               }}
               textFieldProps={{
                 variant: 'outlined',
+                label: '아이디',
               }}
             />
             <p className='items-center font-body1'>{componyEmail}</p>
@@ -152,23 +149,16 @@ const CreateUserModal = (props: any) => {
             name='password'
             control={control}
             rules={{
-              required: '필수 입력 항목입니다.',
+              required: '필수항목을 입력해주세요.',
               minLength: {
                 value: 4,
-                message: '비밀번호는 최소 4자 이상이어야 합니다.',
-              },
-              maxLength: {
-                value: 10,
-                message: '비밀번호는 최대 10자까지 입력 가능합니다.',
-              },
-              pattern: {
-                value: /^[a-z0-9]+$/,
-                message: '비밀번호는 영어 소문자와 숫자로만 구성되어야 합니다.',
+                message: '4글자 이상 입력해주세요.',
               },
             }}
             textFieldProps={{
               variant: 'outlined',
               type: 'password',
+              label: '비밀번호',
             }}
           />
           <div className='text-black font-body1'>비밀번호 확인</div>
@@ -176,19 +166,20 @@ const CreateUserModal = (props: any) => {
             name='password_confirmation'
             control={control}
             rules={{
-              required: '필수 입력 항목입니다.',
+              required: '필수항목을 입력해주세요.',
               validate: (value) => value === password || '비밀번호가 일치하지 않습니다.',
             }}
             textFieldProps={{
               variant: 'outlined',
               type: 'password',
+              label: '비밀번호 확인',
             }}
           />
           <div className='text-black font-body1'>직위</div>
           <CustomSelect
             name='rank_id'
             control={control}
-            rules={{ required: '필수 선택 항목입니다.' }}
+            rules={{ required: '필수항목을 입력해주세요.' }}
             selectList={rankSelectList}
             placeholder='직위 선택'
           />
@@ -196,7 +187,7 @@ const CreateUserModal = (props: any) => {
           <CustomSelect
             name='department_id'
             control={control}
-            rules={{ required: '필수 선택 항목입니다.' }}
+            rules={{ required: '필수항목을 입력해주세요.' }}
             selectList={departmentInfo}
             placeholder='부서 선택'
           />
@@ -204,7 +195,7 @@ const CreateUserModal = (props: any) => {
           <CustomSelect
             name='is_admin'
             control={control}
-            rules={{ required: '필수 선택 항목입니다.' }}
+            rules={{ required: '필수항목을 입력해주세요.' }}
             selectList={authSelectList}
             placeholder='권한 선택'
           />
@@ -213,7 +204,7 @@ const CreateUserModal = (props: any) => {
             <CustomDatePicker
               name='enter_date'
               control={control}
-              rules={{ required: '필수 선택 항목입니다.' }}
+              rules={{ required: '필수항목을 입력해주세요.' }}
               defaultValue={dayjs()}
               format='YYYY-MM-DD'
               error={false}
