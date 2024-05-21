@@ -8,6 +8,7 @@ interface LoginProps {
 interface CommuteInProps {
   startAt: string;
   date: string;
+  workType: string;
 }
 
 interface CommuteOutProps {
@@ -33,9 +34,9 @@ const USER_API = () => {
     return await axios.instance.get('users');
   };
 
-  const commute_in = async ({ startAt, date }: CommuteInProps) => {
+  const commute_in = async ({ startAt, date, workType }: CommuteInProps) => {
     baseURLChange();
-    return await axios.instance.post('/commutes/in', { startAt, date });
+    return await axios.instance.post('/commutes/in', { startAt, date, workType });
   };
 
   const commute_out = async ({ commuteId, endAt }: CommuteOutProps) => {
@@ -43,12 +44,22 @@ const USER_API = () => {
     return await axios.instance.post(`/commutes/${commuteId}/out`, { endAt });
   };
 
-  const commute_info = async () => {
+  const commute_today_info = async (today: string) => {
     baseURLChange();
-    return await axios.instance.get('', {});
+    return await axios.instance.get('commutes/status?date=' + today);
   };
 
-  return { login, profile, commute_in, commute_out };
+  const commute_log = async (startDay: string, endDay: string) => {
+    baseURLChange();
+    return await axios.instance.get('commutes?startAt=' + startDay + '&endAt=' + endDay);
+  };
+
+  const commute_type = async () => {
+    baseURLChange();
+    return await axios.instance.get('/commutes/work-type');
+  };
+
+  return { login, profile, commute_in, commute_out, commute_today_info, commute_log, commute_type };
 };
 
 export default USER_API();
