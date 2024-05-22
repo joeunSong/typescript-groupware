@@ -8,6 +8,8 @@ import AdminLoginPage from '../pages/admin/Login';
 // 사용자 페이지 정의
 import UserDefaultLayout from '../components/user/UserDefaultLayout';
 import UserDashBoardPage from '../pages/user/DashBoard';
+import UserMainPage from '../pages/user/UserMain';
+
 // 관리자 페이지 정의
 import AdminDefaultLayout from '../components/admin/AdminDefaultLayout';
 import AdminDepartmentPage from '../pages/admin/Department';
@@ -18,7 +20,10 @@ import _ from 'lodash';
 
 // TODO 페이지 넘어갈때 y overflow 발생하는거 확인하고 추후 해결
 const Router = () => {
-  const userRoutes = [{ path: ENDPOINT.USER_DASHBOARD, layout: UserDashBoardPage }];
+  const userRoutes = [
+    { path: ENDPOINT.USER_DASHBOARD, layout: UserDashBoardPage },
+    { path: ENDPOINT.USER_MAIN, layout: UserMainPage },
+  ];
   const adminRoutes = [
     { path: ENDPOINT.ADMIN_DEPARTMENT, layout: AdminDepartmentPage },
     { path: ENDPOINT.ADMIN_ACCOUNT, layout: AdminAccountPage },
