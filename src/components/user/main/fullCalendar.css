@@ -1,0 +1,110 @@
+.fc-toolbar-title {
+  font-size: 1.2rem !important;
+}
+
+/* 일요일 날짜 빨간색 */
+.fc-day-sun a {
+  color: red;
+  text-decoration: none;
+}
+
+/* 토요일 날짜 파란색 */
+.fc-day-sat a {
+  color: blue;
+  text-decoration: none;
+}
+
+.fc-button {
+  background-color: orange !important;
+  border: none !important;
+}
+
+.fc-day-today {
+  background-color: rgb(248, 205, 120) !important;
+}
+
+/* // 캘린더 전체 사이즈 조정 */
+.fc {
+  width: 100%;
+}
+
+/* // toolbar container */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin: 0;
+  padding: 0 40px;
+  background-color: orange;
+  height: 63px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 29px;
+  color: white;
+  border-radius: 20px 20px 0px 0px;
+}
+/* 
+  // toolbar 버튼 */
+.fc .fc-button-primary {
+  background-color: transparent;
+  border: none;
+
+  span {
+    font-weight: 500;
+    font-size: 28px;
+  }
+
+  :hover {
+    background-color: transparent;
+  }
+}
+
+/* // 요일 부분 */
+.fc-theme-standard th {
+  height: 32px;
+  padding-top: 3.5px;
+  background: #e5edff;
+  border: 1px solid #dddee0;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: #7b7b7b;
+}
+
+/* // 오늘 날짜 배경색 */
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: #fff8bd;
+  color: #ffffff;
+}
+/* 
+  // 날짜별 그리드 */
+.fc .fc-daygrid-day-frame {
+  padding: 10px;
+}
+
+/* // 날짜  ex) 2일 */
+.fc .fc-daygrid-day-top {
+  flex-direction: row;
+  margin-bottom: 3px;
+}
+
+/* // 각 이벤트 요소 */
+.fc-event {
+  cursor: pointer;
+  padding: 5px 8px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+}
+.holiday-date {
+  color: red !important; /* Change date text color to red */
+}
+
+.holiday-event {
+  color: white; /* Change event text color to red */
+  background-color: red;
+  width: 100%;
+}
+
+/* Optionally, you can also style the background or other properties */
+.holiday-event .fc-event-title {
+  color: red;
+}
