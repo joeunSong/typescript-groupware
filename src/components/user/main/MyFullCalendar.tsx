@@ -8,7 +8,13 @@ import USER_API from '../../../services/user';
 import { EventContentArg } from '@fullcalendar/core';
 import { useHoliday } from '../../../hooks/useHoliday';
 
-const MyFullCalendar = () => {
+interface MyFullCalendarProps {
+  onWork?: boolean;
+  todayWorkInfo?: any;
+  todayWorkInfoList?: any; //오늘근무 정보 리스트
+}
+
+const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCalendarProps) => {
   const today = moment();
   const calendarRef = useRef<any>(null);
 
@@ -83,7 +89,7 @@ const MyFullCalendar = () => {
   useEffect(() => {
     //현재 달에 대한 정보 받아오기
     getMonthWorkInfo(currentMonth.start, currentMonth.end);
-  }, [currentMonth]);
+  }, [currentMonth, onWork]);
 
   //console.log(holidayList);
 
