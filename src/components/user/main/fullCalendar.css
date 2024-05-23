@@ -93,6 +93,7 @@
   border-radius: 4px;
   font-weight: 500;
   font-size: 14px;
+  width: 100% !important;
 }
 .holiday-date {
   color: red !important; /* Change date text color to red */
@@ -107,4 +108,10 @@
 /* Optionally, you can also style the background or other properties */
 .holiday-event .fc-event-title {
   color: red;
+}
+
+.work-event {
+  color: white; /* Change event text color to red */
+  background-color: blue;
+  width: 100%;
 }

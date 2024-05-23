@@ -23,12 +23,9 @@ const MyFullCalendar = () => {
     end: today.endOf('month').endOf('day').toISOString(),
   });
 
-  // 날짜 클릭 시 모달 열기
-  const handleDateClick = (arg: any) => {};
-
   //다음 달 클릭시
   function handleNextMonth() {
-    const calendarApi = calendarRef.current!.getApi();
+    const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
       //달력 이동
       calendarApi.next();
@@ -40,7 +37,7 @@ const MyFullCalendar = () => {
 
   //이전 달 클릭시
   function handlePrevMonth() {
-    const calendarApi = calendarRef.current!.getApi();
+    const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
       calendarApi.prev();
       handleCurrentMonth();
@@ -69,7 +66,7 @@ const MyFullCalendar = () => {
       const data = response.data;
 
       setMonthWorkInfo(data);
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -88,7 +85,7 @@ const MyFullCalendar = () => {
     getMonthWorkInfo(currentMonth.start, currentMonth.end);
   }, [currentMonth]);
 
-  console.log(holidayList);
+  //console.log(holidayList);
 
   return (
     <div className='w-full h-full'>
@@ -97,7 +94,7 @@ const MyFullCalendar = () => {
         locale='kr'
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView='dayGridMonth'
-        dateClick={handleDateClick}
+        // dateClick={handleDateClick}
         //커스텀 버튼 생성
         customButtons={{
           customNext: {
@@ -131,14 +128,15 @@ const MyFullCalendar = () => {
               date: _it?.startAt,
               extendedProps: {
                 workType: _it?.workType?.title,
+                workInfo: _it,
               },
             };
           }),
           //공휴일 리스트
           ...holidayList.map((_it: any) => {
             return {
-              title: _it.name,
-              date: _it.date,
+              title: _it?.name,
+              date: _it?.date,
               extendedProps: {
                 isHoliday: true,
               },
@@ -153,11 +151,19 @@ const MyFullCalendar = () => {
 };
 
 const renderEventContent = (eventInfo: EventContentArg) => {
-  return (
-    <div className={`fc-event ${eventInfo.event.extendedProps.isHoliday ? 'holiday-event' : ''}`}>
-      <div>{eventInfo.event.extendedProps?.type}</div>
-      <div>{eventInfo.event.extendedProps?.workType}</div>
-      {eventInfo.event.title}
+  if (!eventInfo.event) return null;
+  const isHoliday = eventInfo.event?.extendedProps?.isHoliday;
+
+  return isHoliday ? (
+    <div className={`fc-event holiday-event`}>
+      <div>{eventInfo.event?.extendedProps?.workType}</div>
+      {eventInfo.event?.title}
+    </div>
+  ) : (
+    //해당 컴포넌트 클릭 시 모달 열리게 설정
+    <div className={`fc-event work-event`} onClick={() => console.log(eventInfo.event.extendedProps?.workInfo)}>
+      <div>{eventInfo.event?.extendedProps?.workType}</div>
+      {eventInfo.event?.title}
     </div>
   );
 };
