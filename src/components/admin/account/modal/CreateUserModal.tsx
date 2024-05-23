@@ -6,21 +6,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
-const rankSelectList = [
-  { label: '대표', value: 8 },
-  { label: '부장', value: 6 },
-  { label: '차장', value: 5 },
-  { label: '과장', value: 4 },
-  { label: '대리', value: 1 },
-  { label: '사원', value: 3 },
-  { label: '인턴', value: 2 },
-];
-
-const authSelectList = [
-  { label: '사용자', value: '0' },
-  { label: '관리자', value: '1' },
-];
-
 interface FormValue {
   name: string;
   email: string;
@@ -38,7 +23,7 @@ interface departmentType {
 }
 
 const CreateUserModal = (props: any) => {
-  const { isModalOpen, setIsModalOpen } = props;
+  const { isModalOpen, setIsModalOpen, rankSelectList, authSelectList } = props;
 
   const { instance, setBaseURL } = ApiClient;
   const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);

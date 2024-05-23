@@ -106,12 +106,14 @@ interface TControl<T extends FieldValues> {
 
 interface MuiProps {
   textFieldProps?: TextFieldProps;
+  value?: string;
 }
 /**
  * react-hook-form을 사용하기 위해 만든 customInput
  */
 export const CustomInput = <TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>({
   textFieldProps, // textField를 위한 prop들, mui에서 import 해온다.
+  value,
   ...props
 }: MuiProps & UseControllerProps<TFieldValues, TName>) => {
   const {
@@ -119,7 +121,7 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues, TNam
     fieldState: { error },
   } = useController(props);
 
-  return <TextField {...textFieldProps} {...field} error={!!error} helperText={!!error && error.message} />;
+  return <TextField {...textFieldProps} {...field} value={value} error={!!error} helperText={!!error && error.message} />;
 };
 
 export interface ISelectItem {
@@ -132,8 +134,9 @@ export interface ISelectItem {
 
 interface CustomSelectProps<T> {
   selectList: ISelectItem[];
-  placeholder: string;
+  placeholder?: string;
   onChange?: (event: SelectChangeEvent<T>) => void;
+  getValue?: string;
 }
 
 type TProps<T extends FieldValues> = Omit<SelectProps, 'onChange' | 'placeholder'> & CustomSelectProps<T> & TControl<T>;
@@ -141,7 +144,7 @@ type TProps<T extends FieldValues> = Omit<SelectProps, 'onChange' | 'placeholder
  * react-hook-form을 사용하기 위해 만든 CustomSelect
  */
 export const CustomSelect = <T extends FieldValues>(props: TProps<T>) => {
-  const { name, rules, control, selectList, placeholder, onChange: propsOnChange } = props;
+  const { name, rules, control, selectList, placeholder, onChange: propsOnChange, getValue } = props;
   const {
     field: { value, onChange, onBlur },
     fieldState: { invalid, error },
@@ -150,15 +153,16 @@ export const CustomSelect = <T extends FieldValues>(props: TProps<T>) => {
     rules,
     control,
   });
-
   const handleChange = (event: SelectChangeEvent<T>) => {
     onChange(event);
     if (propsOnChange) {
       propsOnChange(event);
     }
   };
-
-  const renderValue = () => (value ? selectList.find((item) => item.value === value)?.label : placeholder);
+const renderValue = () => {
+  if(getValue) return getValue
+  return(value ? selectList.find((item) => item.value === value)?.label : placeholder)
+};
   return (
     <div>
       <FormControl sx={{ width: '100%' }}>
@@ -205,6 +209,7 @@ interface CustomDatePickerProps<T> {
   label?: string;
   format?: string;
   rules?: any;
+  getValue?: string;
 }
 
 export const CustomDatePicker = <T,>({
@@ -217,8 +222,10 @@ export const CustomDatePicker = <T,>({
   label,
   format,
   rules,
+  getValue,
   ...rest
 }: CustomDatePickerProps<T>) => {
+  const val = getValue? getValue : null
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Controller
@@ -229,7 +236,7 @@ export const CustomDatePicker = <T,>({
         render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
           <>
             <DatePicker
-              value={value ? dayjs(value) : null}
+              value={value ? dayjs(value) : dayjs(val)}
               label={label}
               format={format}
               // showDaysOutsideCurrentMonth
