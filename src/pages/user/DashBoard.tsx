@@ -139,11 +139,11 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
               {weekWorkInfo
                 .filter((_info: any) => isSameDate(_day, _info.startAt))
                 .map((_it: any) => {
-                  return <WorkBar workInfo={_it} />;
+                  return isToday(_day) ? <TodayWorkBar todayWorkInfo={_it} /> : <WorkBar workInfo={_it} />;
                 })}
 
               {/* 퇴근 시간을 기록하지 않은 오늘 근무 */}
-              {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />}
+              {/* {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />} */}
             </div>
           </div>
         ))}

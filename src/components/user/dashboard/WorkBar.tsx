@@ -34,9 +34,14 @@ function WorkBar({ workInfo }: workBarProps) {
     workInfo?.startAt &&
     workInfo?.endAt && (
       // <Tooltip title={getWorkTime(workTime)} placement='top'>
-      <Tooltip title={`${workInfo?.workType?.title} : ${moment(startTime).format('HH:mm')} - ${moment(endTime).format('HH:mm')}`} placement='top'>
+      // <Tooltip title={`${workInfo?.workType?.title} : ${moment(startTime).format('HH:mm')} - ${moment(endTime).format('HH:mm')}`} placement='top'>
+      <Tooltip
+        title={`${workInfo?.workType?.title} : ${moment(startTime).format('HH:mm')} - ${workInfo.isNormal ? moment(endTime).format('HH:mm') : '퇴근 미등록'}`}
+        placement='top'
+      >
         <div
-          className='bg-primary w-0 h-[30px] absolute'
+          className={`${workInfo.isNormal ? 'bg-primary' : 'bg-red-500'} w-0 h-[30px] absolute`}
+          // className={`bg-red-500 w-0 h-[30px] absolute`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,
