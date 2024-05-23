@@ -3,14 +3,12 @@ import TimelineBar from '../../components/user/dashboard/TimelineBar';
 import TodayWorkBar from '../../components/user/dashboard/TodayWorkBar';
 import WorkBar from '../../components/user/dashboard/WorkBar';
 import moment from 'moment';
-import ApiClient from '../../utils/axios';
-import axios from 'axios';
-import { ACCESS_TOKEN } from '../../constants/constant';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import USER_API from '../../services/user';
+import { useHoliday } from '../../hooks/useHoliday';
 
 interface UserDashBoardProps {
   userInfo?: any;
@@ -25,6 +23,9 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
   const [currentWeek, setCurrentWeek] = useState<string[]>([]);
   const workDays = ['월', '화', '수', '목', '금', '토', '일'];
   const [weekWorkInfo, setWeekWorkInfo] = useState<any>([]);
+
+  const { getHolidayList } = useHoliday();
+  const holidayList = getHolidayList();
 
   // 해당 주의 정보를 가져오는 함수
   const getWeekDates = (date: moment.Moment) => {
@@ -93,6 +94,12 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
     return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
   };
 
+  //공휴일인지 판단
+  const isHoliday = (day: string) => {
+    const holiday = holidayList.find((holiday) => moment(holiday.date).isSame(day, 'date'));
+    return holiday?.name;
+  };
+
   return (
     <div className='flex flex-col w-full h-full p-[10px] font-body1'>
       <div className='mb-[10px] font-body1-bold'>
@@ -116,23 +123,27 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
                 <div className='flex text-primary gap-[10px]'>
                   {workDays[idx]} <CheckCircleIcon />
                 </div>
-              ) : idx === 5 || idx === 6 ? (
+              ) : idx === 5 || idx === 6 || isHoliday(_day) ? (
                 <div className='text-red'>{workDays[idx]} </div>
               ) : (
                 <div>{workDays[idx]} </div>
               )}
-              {_day}
+              <div>
+                {_day}
+                {/* 공휴일 표시 */}
+                <div className='text-red'>{isHoliday(_day)}</div>
+              </div>
             </div>
             <div className='flex flex-1 items-center relative'>
               {/* //해당 날짜에 해당하는 workInfo 추출 */}
               {weekWorkInfo
                 .filter((_info: any) => isSameDate(_day, _info.startAt))
                 .map((_it: any) => {
-                  return <WorkBar workInfo={_it} />;
+                  return isToday(_day) ? <TodayWorkBar todayWorkInfo={_it} /> : <WorkBar workInfo={_it} />;
                 })}
 
               {/* 퇴근 시간을 기록하지 않은 오늘 근무 */}
-              {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />}
+              {/* {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />} */}
             </div>
           </div>
         ))}

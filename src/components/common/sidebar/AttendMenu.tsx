@@ -111,7 +111,8 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, todayWorkInfoLi
 
   const handleLeaveWorkClick = () => {
     //퇴근 기록이 없을 경우 등록
-    if (todayWorkInfo && !endTime) {
+    // if (todayWorkInfo && !endTime) {
+    if (todayWorkInfo && !todayWorkInfo.isNormal) {
       //API 통신을 통해서 퇴근 시간 전송
       if (todayWorkInfo.id) {
         postEndTime();
@@ -175,12 +176,13 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, todayWorkInfoLi
   }
 
   // 페이지가 처음 로드될 때 한 번 실행
-  postDataAtMidnight();
+  //postDataAtMidnight();
 
   return (
     <div className='flex w-full justify-center'>
       {/* 근무시간 */}
-      {startTime && endTime && (
+      {/* {startTime && endTime && ( */}
+      {startTime && todayWorkInfo.isNormal && (
         <div className='flex flex-col justify-between w-[250px] h-[95px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
           <div className='flex justify-between items-center content-between'>
             <span className='font-h2 text-primary'>{moment(endTime).format('MM월 DD일')}</span>
@@ -190,7 +192,8 @@ const AttendMenu = ({ userInfo, todayWorkInfo, setTodayWorkInfo, todayWorkInfoLi
         </div>
         // <div className='flex w-full h-[50px] items-center justify-center bg-white rounded-[5px] text-primary'>{`오늘 한 근무 ${getWorkTime()}`}</div>
       )}
-      {startTime && !endTime ? (
+      {/* {startTime && !endTime ? ( */}
+      {startTime && !todayWorkInfo.isNormal ? (
         //출근 상태일 경우
         <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
           <div className='flex justify-between items-center content-between'>
