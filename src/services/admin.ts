@@ -38,13 +38,19 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/departments`);
   }
 
+  // * 사용자 조회
+  const users = async (companyId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/users`);
+  }
+
   // * 계정 상세 조회
   const account_detail = async (companyId: number, userId: number) => {
     baseURLChange();
     return await axios.instance.get(`/companies/${companyId}/users/${userId}`);
   };
 
-  return { admin_login, organization, department_create, department_delete, department_manager_edit, department, account_detail };
+  return { admin_login, organization, department_create, department_delete, department_manager_edit, department, account_detail, users };
 };
 
 export default ADMIN_API();

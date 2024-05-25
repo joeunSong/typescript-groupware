@@ -1,7 +1,8 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { CustomButton } from '../../components/common/Components';
 import { useEffect, useState } from 'react';
-import ApiClient from '../../utils/axios';
+import ADMIN_API from '../../services/admin';
+import { COMPANY_ID } from '../../constants/constant';
 import React from 'react';
 import AccountDetail from '../../components/admin/AccountDetail';
 import CreateUserModal from '../../components/admin/account/modal/CreateUserModal';
@@ -23,8 +24,6 @@ const authSelectList = [
 ];
 
 const AccountPageLayout = () => {
-  const { instance, setBaseURL } = ApiClient;
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usersInfo, setUsersInfo] = useState<any>(null);
   const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(1);
@@ -35,9 +34,9 @@ const AccountPageLayout = () => {
   useEffect(() => {
     const getUsersInfo = async () => {
       try {
-        setBaseURL('http://127.0.0.1/api/');
-
-        const response = await instance.get(`v1/companies/1/users`);
+        const companyId = Number(localStorage.getItem(COMPANY_ID));
+        const response = await ADMIN_API.users(companyId);
+        
         console.log('data: ', response.data);
         setUsersInfo(response.data);
       } catch (error) {
