@@ -15,13 +15,15 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
     //작업 시간 업데이트
     const updateWorkTime = () => {
       const start = moment(todayWorkInfo.startAt);
-      const end = todayWorkInfo.endAt ? moment(todayWorkInfo.endAt) : moment();
+      //const end = todayWorkInfo.endAt ? moment(todayWorkInfo.endAt) : moment();
+      const end = todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt) : moment();
       const diff = moment.duration(end.diff(start)).asMinutes();
 
       setWorkTime(Math.floor(diff));
     };
 
-    if (todayWorkInfo.startAt && !todayWorkInfo.endAt) {
+    //if (todayWorkInfo.startAt && !todayWorkInfo.endAt) {
+    if (todayWorkInfo.startAt && !todayWorkInfo.isNormal) {
       updateWorkTime(); // 초기 작업 시간 업데이트
       intervalId = setInterval(updateWorkTime, 6000); // endTime이 없을 때만 반복
     } else if (todayWorkInfo.endAt) {
@@ -52,11 +54,12 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
       return `${diff}분`;
     }
   };
-  console.log(todayWorkInfo);
+
   return (
     todayWorkInfo.startAt && (
       <Tooltip
-        title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
+        //title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
+        title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
         placement='top'
       >
         <div
