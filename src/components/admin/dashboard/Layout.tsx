@@ -8,6 +8,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { useUpdateEffect } from 'react-use';
 import PieChartLayout from './charts/PieChart';
 import Top5Layout from './charts/Top5';
+import { InformationIcon } from '../../common/JiranIcon';
 
 const DashBoardLayout = (props: any) => {
   // * 회사 데이터
@@ -74,7 +75,6 @@ const DashBoardLayout = (props: any) => {
     api();
   }, []);
 
-  console.log('rankData', rankData);
   return (
     <div className='flex flex-col w-full h-full bg-white p-3 gap-14'>
       {/* 차트 */}
@@ -82,7 +82,8 @@ const DashBoardLayout = (props: any) => {
         {/* 부서별 평균 근무 시간 (Bar) */}
         <div className='flex flex-col w-2/3 gap-2'>
           <div className='flex w-full h-14 items-center gap-2'>
-            <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold px-2'>부서별 평균 근무 시간(5개월)</span>
+            <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold pl-2'>부서별 평균 근무 시간(5개월)</span>
+            <InformationIcon width={25} height={25} />
           </div>
           <div className='flex flex-col w-full border-solid border-[3px] border-gray-200 rounded-3xl p-5'>
             <BarChartLayout originData={barData} departmentLabels={departmentLabels} />

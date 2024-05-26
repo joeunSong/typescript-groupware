@@ -6,6 +6,7 @@
 
 import _ from 'lodash';
 import { RANK_LABELS } from '../../../../constants/constant';
+import { InformationIcon } from '../../../common/JiranIcon';
 
 const Top5Layout = (props: any) => {
   const { originData } = props;
@@ -17,14 +18,15 @@ const Top5Layout = (props: any) => {
         return (
           <div className='flex flex-col w-full gap-3' key={index}>
             {/* 제목 */}
-            <div className={`flex w-full items-center px-3`}>
+            <div className={`flex w-full items-center px-3 gap-2`}>
               <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold'>{_label}</span>
+              <InformationIcon width={25} height={25} />
             </div>
-            <div className='flex flex-col w-full justify-center border-solid border-[3px] border-gray-200  rounded-3xl p-2'>
-              <div className='flex w-full p-2 border-solid border-b-[1px] border-gray-300 gap-2'>
+            <div className='flex flex-col w-full justify-center border-solid border-[3px] border-gray-200 rounded-3xl p-2 text-center'>
+              <div className='flex w-full p-2 border-solid border-b-[1px] border-gray-300 gap-2 '>
                 {/* 순위 */}
-                <div className='flex w-1/4 justify-center'>
-                  <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm text-[#718EBF]'>NO</span>
+                <div className='flex w-1/4 justify-center '>
+                  <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm text-[#718EBF] '>NO</span>
                 </div>
                 {/* 이름 */}
                 <div className='flex w-1/4 justify-center'>
