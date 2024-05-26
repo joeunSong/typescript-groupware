@@ -16,6 +16,8 @@ import reset from '../../assets/svg/reset.svg';
 import bottomArrow from '../../assets/svg/bottomArrow.svg';
 import plus from '../../assets/svg/plus.svg';
 import x from '../../assets/svg/x.svg';
+import home from '../../assets/svg/home.svg';
+import information from '../../assets/svg/information.svg';
 
 const render = (
   src: any,
@@ -55,3 +57,5 @@ export const ResetIcon = (props: any) => render(reset, props.w, props.h, props.w
 export const BottomArrowIcon = (props: any) => render(bottomArrow, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const PlusIcon = (props: any) => render(plus, props.w, props.h, props.width, props.height, props.className, props.onClick);
 export const XIcon = (props: any) => render(x, props.w, props.h, props.width, props.height, props.className, props.onClick);
+export const HomeIcon = (props: any) => render(home, props.w, props.h, props.width, props.height, props.className, props.onClick);
+export const InformationIcon = (props: any) => render(information, props.w, props.h, props.width, props.height, props.className, props.onClick);

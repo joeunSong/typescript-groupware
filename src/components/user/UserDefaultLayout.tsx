@@ -12,6 +12,7 @@ import moment from 'moment';
 import ApiClient from '../../utils/axios';
 import { Button } from '@mui/material';
 import USER_API from '../../services/user';
+import * as ENDPOINT from '../../constants/apiEndpoints';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
@@ -19,44 +20,28 @@ const UserDefaultLayout = (props: any) => {
 
   //사용자 정보
   const [userInfo, setUserInfo] = useState<any>();
-
   //출근 여부
   const [onWork, setOnWork] = useState<boolean>(false);
-
   //당일 근무 정보 리스트
   const [todayWorkInfoList, setTodayWorkInfoList] = useState<any>([]);
-
   //당일 근무 정보
   const [todayWorkInfo, setTodayWorkInfo] = useState<any>(null);
-
   // 메뉴 정보
   const [selectItem, setSelectItem] = useState<any>(null);
-  const [items, setItems] = useState([
+  const [items, setItems] = useState<any>([
     {
       icon: WorkIcon,
       label: '근무',
-      // open: false,
+      open: false,
       // items: [
       //   { icon: DraftsIcon, label: '근무', url: '/user/dashboard' },
       //   { icon: DraftsIcon, label: '근무 승인', url: '/user/work/approval' },
       // ],
     },
-
-    // {
-    //   icon: InboxIcon,
-    //   label: '휴가',
-    //   open: false,
-    //   items: [
-    //     { icon: DraftsIcon, label: '휴가 신청', url: '/user/vacation/request' },
-    //     { icon: DraftsIcon, label: '휴가 기록', url: '/user/vacation/records' },
-    //     { icon: DraftsIcon, label: '휴가 현황', url: '/user/vacation/status' },
-    //     { icon: DraftsIcon, label: '휴가 승인', url: '/user/vacation/approval' },
-    //   ],
-    // },
   ]);
 
   //헤더 템플릿
-  const headerTemplate = {
+  const [headerTemplate, setHeaderTemplate] = useState({
     attendMenu: (
       <AttendMenu
         userInfo={userInfo}
@@ -69,7 +54,7 @@ const UserDefaultLayout = (props: any) => {
       />
     ),
     profileMenu: <ProfileMenu userInfo={userInfo} />,
-  };
+  });
 
   const getTodayWorkTInfo = async () => {
     //API통신을 통해서 출근 상태 및 시간 확인
@@ -102,9 +87,54 @@ const UserDefaultLayout = (props: any) => {
     }
   };
 
+  const getUserInfo = async () => {
+    try {
+      const response = await USER_API.profile();
+      setUserInfo(response.data);
+    } catch (error) {
+      // 요청이 실패하면 여기에서 에러 처리
+      console.log(error);
+    }
+  };
+
+  // * 권한에 따른 사이드바 항목 Set
+  useEffect(() => {
+    if (!_.isEmpty(userInfo)) {
+      // 근태관리자
+      if (userInfo?.isLeader) {
+        setItems([
+          {
+            icon: WorkIcon,
+            label: '근무 관리',
+            open: false,
+            items: [
+              { icon: DraftsIcon, label: '근무', url: ENDPOINT.USER_DASHBOARD },
+              { icon: DraftsIcon, label: '근무 승인', url: ENDPOINT.USER_WORK_APPROVAL },
+            ],
+          },
+        ]);
+      } else {
+        setItems([
+          {
+            icon: WorkIcon,
+            label: '근무',
+            open: false,
+            url: ENDPOINT.USER_DASHBOARD,
+            items: [],
+          },
+        ]);
+      }
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     getTodayWorkTInfo();
   }, [onWork]);
+
+  // * 사용자 프로필 조회
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -134,10 +164,11 @@ const UserDefaultLayout = (props: any) => {
   // 페이지가 처음 로드될 때 한 번 실행
   loadDataAtMidnight();
 
+  console.log('selectItem', selectItem);
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
-      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} setSelectItem={setSelectItem} />
+      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
       <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
         로그아웃
       </Button>

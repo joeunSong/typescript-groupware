@@ -134,6 +134,7 @@ const ContentLayout = (props: any) => {
                   selectData={selectUser}
                   setSelectData={setSelectUser}
                   filterVisible={false}
+                  paginatorVisible={false}
                 />
               </div>
             </>
