@@ -82,11 +82,19 @@ const SideBarLayout = ({
       <div className='flex w-full felx h-auto overflow-y-auto scrollYWrap'>
         <List className='w-full' component='nav' disablePadding>
           {_.map(items, (item: any, index: number) => {
+            console.log('item?.label === selectItem?.label', item?.label);
+            console.log('item?.label === selectItem?.label', selectItem);
             return (
               <Fragment key={index}>
                 <ListItemButton
+                  selected={item?.label === selectItem?.label}
                   // TODO label이 겹치치 않는다는 생각으로 만듦 추후 수정을 해야할 듯?
                   onClick={() => {
+                    // 하위 항목이 없는데 path가 있는 경우
+                    if (_.isEmpty(item?.items) && item?.open === false) {
+                      handleMovePage(item);
+                    }
+
                     if (_.isEmpty(item?.items)) {
                       handleSelectItem(item);
                     } else {
