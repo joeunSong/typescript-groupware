@@ -41,7 +41,7 @@ const DashBoardLayout = (props: any) => {
   useEffect(() => {
     const api = async () => {
       try {
-        // 필요한 API 정의
+        // 필요한 API 정의 (조직도, 부서 평균 근무 시간, 부서 근무 타입, 부서별 특정 데이터 랭킹)
         const organizationAPI = ADMIN_API.organization(localStorage.getItem(COMPANY_ID));
         const statisticsDepartmentAPI = ADMIN_API.statistics_department(localStorage.getItem(COMPANY_ID));
         const statisticsDepartmentWorkTypeAPI = ADMIN_API.statistics_department_workType(localStorage.getItem(COMPANY_ID), 'company', 0);
@@ -54,9 +54,11 @@ const DashBoardLayout = (props: any) => {
           statisticsDepartmentWorkTypeAPI,
           statisticsRankingAPI,
         ]);
+        // 부서 데이터 가공
         const _departments: any = _.map(organization.data.data?.departments, (department: any) => {
           return { company_id: department?.company_id, department_id: department?.id, label: department?.label };
         });
+        // 부서 제목 데이터 가공
         const _departmentLabels: any = _.map(organization.data.data?.departments, (department: any) => {
           return department?.label;
         });
