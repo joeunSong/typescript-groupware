@@ -63,14 +63,23 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
         placement='top'
       >
         <div
-          className='bg-primary w-0 h-[30px] absolute'
+          className='bg-primary w-0 h-[50px] absolute rounded-[5px]'
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,
             minWidth: 1,
             //transition: 'all 0.5s ease',
           }}
-        />
+        >
+          {workTime >= 120 && (
+            <div className='p-[5px] text-[12px] text-white'>
+              <div>{todayWorkInfo.workType?.title}</div>
+              <div>
+                {`${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
+              </div>
+            </div>
+          )}
+        </div>
       </Tooltip>
     )
   );
