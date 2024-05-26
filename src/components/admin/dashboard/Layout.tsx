@@ -21,47 +21,7 @@ const DashBoardLayout = (props: any) => {
   const [barData, setBarData] = useState([]);
   const [pieData, setPieData] = useState([]);
   // * 랭크 데이터
-  const [rankData, setRankData] = useState<any>([
-    // 52 초과시 value red
-    {
-      type: 'overtimeWork',
-      color: CHART_COLORS[0],
-      title: '근무 시간',
-      ranking: [
-        { ranking: 1, label: '김준석', departmentLabel: '1개발 부서', value: 70 },
-        { ranking: 2, label: '유남균', departmentLabel: '2개발 부서', value: 64 },
-        { ranking: 3, label: '박윤환', departmentLabel: '1개발 부서', value: 51 },
-        { ranking: 4, label: '송조은', departmentLabel: '2개발 부서', value: 32 },
-        { ranking: 5, label: '황채림', departmentLabel: '1개발 부서', value: 28 },
-      ],
-    },
-    // 3 초과시 value red
-    {
-      type: 'late',
-      color: CHART_COLORS[1],
-      title: '지각 데이터',
-      ranking: [
-        { ranking: 1, label: '김준석', departmentLabel: '3개발 부서', value: 5 },
-        { ranking: 2, label: '송조은', departmentLabel: '1개발 부서', value: 4 },
-        { ranking: 3, label: '황채림', departmentLabel: '2개발 부서', value: 3 },
-        { ranking: 4, label: '유남균', departmentLabel: '3개발 부서', value: 2 },
-        { ranking: 5, label: '박윤환', departmentLabel: '5개발 부서', value: 1 },
-      ],
-    },
-    // 3 초과시 value red
-    {
-      type: 'weirdWork',
-      color: CHART_COLORS[2],
-      title: '이상근무 데이터',
-      ranking: [
-        { ranking: 1, label: '유남균', departmentLabel: '7개발 부서', value: 20 },
-        { ranking: 2, label: '김준석', departmentLabel: '1개발 부서', value: 10 },
-        { ranking: 3, label: '황채림', departmentLabel: '2개발 부서', value: 5 },
-        { ranking: 4, label: '송조은', departmentLabel: '4개발 부서', value: 3 },
-        { ranking: 5, label: '박윤환', departmentLabel: '6개발 부서', value: 1 },
-      ],
-    },
-  ]);
+  const [rankData, setRankData] = useState<any>([]);
 
   // * DropDown 아이템 템플릿
   const dropdownItemTemplate = (data: any) => {

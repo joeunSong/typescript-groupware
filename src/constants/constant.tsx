@@ -5,11 +5,12 @@ export const USER_ID = 'user_id';
 export const LOGIN_AUTH = 'login_auth';
 
 // * Chart
-export const BAR_CHART_BORDER = 5;
+export const BAR_CHART_BORDER = 12;
+export const RANK_LABELS: any = { top_hour: '근무시간', top_late: '지각 데이터', top_not_normal: '이상근무 데이터' };
 export const CHART_COLORS = [
-  '#a2d1f6',
-  '#f6a2d1',
-  '#ffb5c4',
+  '#1A16F3',
+  '#FCAA0B',
+  '#343C6A',
   '#ffd1a8',
   '#ffe6b1',
   '#c4ffb5',
