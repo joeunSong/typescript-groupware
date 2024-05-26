@@ -126,14 +126,14 @@ const PieChartLayout = (props: any) => {
         data={data}
         options={pieOptions}
         plugins={[ChartDataLabels]}
-        className={'flex min-h-[100px] justify-center'}
+        className='w-full md:w-30rem'
         width={'35vh'}
         height={'35vh'}
       />
     );
   }, [pieRef, data]);
 
-  return <div className='flex '>{pie}</div>;
+  return <div className='flex w-full justify-center'>{pie}</div>;
 };
 
 export default PieChartLayout;

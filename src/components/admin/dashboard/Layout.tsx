@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Dropdown } from 'primereact/dropdown';
 import { useUpdateEffect } from 'react-use';
 import PieChartLayout from './charts/PieChart';
+import Top5Layout from './charts/Top5';
 
 const DashBoardLayout = (props: any) => {
   // * 회사 데이터
@@ -79,15 +80,17 @@ const DashBoardLayout = (props: any) => {
       {/* 차트 */}
       <div className='flex w-full gap-10'>
         {/* 부서별 평균 근무 시간 (Bar) */}
-        <div className='flex flex-col w-full gap-2'>
-          <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold px-2'>부서별 평균 근무 시간(5개월)</span>
+        <div className='flex flex-col w-2/3 gap-2'>
+          <div className='flex w-full h-14 items-center gap-2'>
+            <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold px-2'>부서별 평균 근무 시간(5개월)</span>
+          </div>
           <div className='flex flex-col w-full border-solid border-[3px] border-gray-200 rounded-3xl p-5'>
             <BarChartLayout originData={barData} departmentLabels={departmentLabels} />
           </div>
         </div>
         {/* 부서별 한달 근무 유형 (Pie) */}
-        <div className='flex flex-col w-full gap-2'>
-          <div className='flex w-full items-center gap-2'>
+        <div className='flex flex-col w-1/3 gap-2'>
+          <div className='flex w-full h-14 items-center gap-2'>
             <Dropdown
               value={selectDepartment || null}
               onChange={(e: any) => {
@@ -105,83 +108,14 @@ const DashBoardLayout = (props: any) => {
             />
             <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold px-2'>근무 현황</span>
           </div>
-          <div className='flex flex-col w-full border-solid border-[3px] border-gray-200 rounded-3xl p-5'>
+          <div className='flex flex-col w-full items-center justify-center border-solid border-[3px] border-gray-200 rounded-3xl p-5'>
             <PieChartLayout originData={pieData} />
           </div>
         </div>
       </div>
       {/* TOP 5 */}
       <div className='flex w-full gap-10 px-5'>
-        {_.map(Object.keys(rankData), (rankKey: any, index: number) => {
-          const _label = RANK_LABELS[rankKey];
-          const _data = rankData[rankKey];
-          return (
-            <div className='flex flex-col w-full gap-3' key={index}>
-              {/* 제목 */}
-              <div className={`flex w-full items-center px-3`}>
-                <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold'>{_label}</span>
-              </div>
-              <div className='flex flex-col w-full justify-center border-solid border-[3px] border-gray-200  rounded-3xl p-2'>
-                <div className='flex w-full p-2 border-solid border-b-[1px] border-gray-300 gap-2'>
-                  {/* 순위 */}
-                  <div className='flex w-1/4 justify-center'>
-                    <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm text-[#718EBF]'>NO</span>
-                  </div>
-                  {/* 이름 */}
-                  <div className='flex w-1/4 justify-center'>
-                    <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm text-[#718EBF]'>이름</span>
-                  </div>
-                  {/* 부서 이름 */}
-                  <div className='flex w-1/4 justify-center'>
-                    <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm text-[#718EBF]'>부서</span>
-                  </div>
-                  {/* 값 */}
-                  <div className='flex w-1/4 justify-center'>
-                    <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm text-[#718EBF]'>
-                      {_label === '근무시간' ? '시간' : '횟수'}
-                    </span>
-                  </div>
-                </div>
-                {/* 랭킹 */}
-                {_.map(_data, (ranking: any, rankingIndex: number) => {
-                  return (
-                    <div className='flex w-full p-2 gap-2' key={rankingIndex}>
-                      {/* 순위 */}
-                      <div className='flex w-1/4 justify-center'>
-                        <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm'>0{ranking?.ranking}.</span>
-                      </div>
-                      {/* 이름 */}
-                      <div className='flex w-1/4 justify-center'>
-                        <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm'>{ranking?.name}</span>
-                      </div>
-                      {/* 부서 이름 */}
-                      <div className='flex w-1/4 justify-center'>
-                        <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm'>{ranking?.department_title}</span>
-                      </div>
-                      {/* 값 */}
-                      <div className='flex w-1/4 justify-center'>
-                        <span
-                          className={`block whitespace-nowrap overflow-hidden overflow-ellipsis text-sm
-                          ${_.has(ranking, 'hours') ? (ranking?.hours > 52 ? 'text-[#FE5C73]' : null) : null}
-                          ${_.has(ranking, 'late_count') ? (ranking?.late_count > 3 ? 'text-[#FE5C73]' : null) : null}
-                          ${_.has(ranking, 'not_normal_count') ? (ranking?.not_normal_count > 3 ? 'text-[#FE5C73]' : null) : null}`}
-                        >
-                          {_.has(ranking, 'hours')
-                            ? ranking?.hours + '시간'
-                            : _.has(ranking, 'late_count')
-                              ? ranking?.late_count + '회'
-                              : _.has(ranking, 'not_normal_count')
-                                ? ranking?.not_normal_count + '회'
-                                : null}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+        <Top5Layout originData={rankData} />
       </div>
     </div>
   );

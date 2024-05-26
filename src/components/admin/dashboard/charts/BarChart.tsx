@@ -158,8 +158,9 @@ const BarChartLayout = (props: any) => {
         data={data}
         options={barOptions}
         plugins={[ChartDataLabels]}
-        className='flex w-full min-h-[400px] items-center justify-center'
-        height={'20vh'}
+        className='w-full h-full '
+        // className='flex w-full min-h-[400px] items-center justify-center'
+        height={'35vh'}
         width={'100%'}
       />
     );
