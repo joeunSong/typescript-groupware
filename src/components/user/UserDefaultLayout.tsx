@@ -105,7 +105,7 @@ const UserDefaultLayout = (props: any) => {
         setItems([
           {
             icon: WorkIcon,
-            label: '근무',
+            label: '근무 관리',
             open: false,
             items: [
               { icon: DraftsIcon, label: '근무', url: ENDPOINT.USER_DASHBOARD },
@@ -164,10 +164,11 @@ const UserDefaultLayout = (props: any) => {
   // 페이지가 처음 로드될 때 한 번 실행
   loadDataAtMidnight();
 
+  console.log('selectItem', selectItem);
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
-      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} setSelectItem={setSelectItem} />
+      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
       <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
         로그아웃
       </Button>

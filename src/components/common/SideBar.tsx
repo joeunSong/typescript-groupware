@@ -82,6 +82,8 @@ const SideBarLayout = ({
       <div className='flex w-full felx h-auto overflow-y-auto scrollYWrap'>
         <List className='w-full' component='nav' disablePadding>
           {_.map(items, (item: any, index: number) => {
+            console.log('item?.label === selectItem?.label', item?.label);
+            console.log('item?.label === selectItem?.label', selectItem);
             return (
               <Fragment key={index}>
                 <ListItemButton

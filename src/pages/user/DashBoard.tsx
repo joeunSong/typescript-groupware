@@ -43,8 +43,8 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
 
   //TODO :일주일 근무 정보 받아오기
   const getWeekWorkInfo = async () => {
-    let startDay = moment(`${currentWeek[0]} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').toISOString();
-    let endDay = moment(`${currentWeek[6]} 23:59:59`, 'YYYY-MM-DD HH:mm:ss').toISOString();
+    let startDay = moment(currentWeek[0]).startOf('day').toISOString();
+    let endDay = moment(currentWeek[6]).endOf('day').toISOString();
 
     try {
       //setBaseURL('http://localhost:8080/api/');
