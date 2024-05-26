@@ -46,15 +46,6 @@ const AdminDefaultLayout = (props: any) => {
         { icon: null, label: '근무 유형 관리', explan: '근무 유형을 등록하고 관리할 수 있습니다.' },
       ],
     },
-    {
-      icon: InboxIcon,
-      label: '휴가 관리',
-      open: false,
-      items: [
-        { icon: null, label: '휴가 신청 조회', explan: '휴가 신청을 관리할 수 있습니다.' },
-        { icon: null, label: '휴가 유형 관리', explan: '휴가 유형을 등록하고 관리할 수 있습니다.' },
-      ],
-    },
   ]);
 
   // * 관리자 로그아웃
