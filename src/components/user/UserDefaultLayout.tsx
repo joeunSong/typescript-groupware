@@ -179,7 +179,7 @@ const UserDefaultLayout = (props: any) => {
         </div>
         {/* 메인 콘텐츠 */}
 
-        {children?.type?.name === 'UserDashBoard' ? (
+        {children?.type?.name === 'UserDashBoard' || 'UserMain' ? (
           // UserDashBoard일 경우 props전달
           <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo, todayWorkInfoList }) || <Outlet />}</div>
         ) : (
