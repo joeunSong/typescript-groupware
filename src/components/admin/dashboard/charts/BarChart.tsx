@@ -1,12 +1,12 @@
-import { BAR_CHART_BORDER } from '../../../../constants/constant';
+import { BAR_CHART_BORDER, CHART_COLORS } from '../../../../constants/constant';
 import CustomChartLayout from '../../../common/CustomChart';
 import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const BarChartLayout = (props: any) => {
-  const { originData, originForm, selectLabel, indexAxis } = props;
-
+  const { originData, departmentLabels, indexAxis } = props;
   //* Bar ref
   const barRef: any = useRef(null);
   // * data
@@ -16,6 +16,7 @@ const BarChartLayout = (props: any) => {
   const barOptions = {
     indexAxis: indexAxis,
     maintainAspectRatio: false,
+    animation: {},
     scales: {
       x: {
         border: {
@@ -28,8 +29,8 @@ const BarChartLayout = (props: any) => {
         },
       },
       y: {
+        display: false,
         reverse: indexAxis === 'y' ? true : false,
-
         border: {
           display: false,
         },
@@ -47,27 +48,27 @@ const BarChartLayout = (props: any) => {
     },
     plugins: {
       title: {
-        display: true,
-        text: originForm?.title,
+        display: false,
         position: 'top',
         color: '#202020',
         font: {
-          family: 'Comic Sans MS',
+          family: 'Noto Sans KR',
           size: 20,
           weight: 'bold',
           lineHeight: 1.2,
         },
       },
       legend: {
-        display: false,
+        display: true,
         position: 'top',
-        align: 'center',
+        align: 'end',
         labels: {
-          boxWidth: 5,
-          boxHeight: 5,
-          padding: 24,
-          pointStyle: 'circle',
+          boxWidth: 15,
+          //   boxHeight: 5,
+          // padding: 50,
+          pointStyle: 'rectRounded',
           usePointStyle: true,
+          useBorderRadius: 5,
         },
       },
       tooltip: {
@@ -82,17 +83,22 @@ const BarChartLayout = (props: any) => {
         usePointStyle: true,
         callbacks: {
           title: (context: any) => {
-            if (selectLabel === 'weekly') {
-              return [
-                moment(originData?.[context[0].dataIndex].start_at).format('YYYY-MM-DD'),
-                '~' + moment(originData?.[context[0].dataIndex].end_at).format('YYYY-MM-DD'),
-              ];
-            }
             return context[0].label;
           },
           label: (context: any) => {
-            return ' ' + context.dataset.label + ' : ' + context.formattedValue;
+            return ' ' + context.dataset.label + ' : ' + context.formattedValue + 'h';
           },
+        },
+      },
+      datalabels: {
+        formatter: (value: any) => {
+          return value + 'h';
+        },
+        font: {
+          family: 'Noto Sans KR',
+          size: 13,
+          // weight: 'bold',
+          lineHeight: 0,
         },
       },
       colors: {
@@ -104,46 +110,42 @@ const BarChartLayout = (props: any) => {
 
   // * 데이터 폼
   useEffect(() => {
-    let form: any = {
-      name: [originForm?.label],
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: [],
-          borderRadius: BAR_CHART_BORDER,
-          label: originForm?.label,
+    // 5개월 전부터 현재까지의 월을 포함하는 배열 생성
+    const months = _.map(Array(5), function (_, i) {
+      const month = moment().subtract(i, 'months');
+      return month.format('YY.MM');
+    }).reverse();
+
+    const datasets = _.map(departmentLabels, (department: any) => {
+      return {
+        label: department,
+        data: [],
+        datalabels: {
+          align: 'end',
+          anchor: 'end',
         },
-      ],
+        backgroundColor: [],
+        borderRadius: BAR_CHART_BORDER,
+        borderSkipped: false,
+      };
+    });
+
+    let form: any = {
+      name: departmentLabels,
+      labels: months,
+      datasets: datasets,
     };
 
     // 폼에 데이터 추가하기
     _.map(originData, (data: any) => {
-      // labels추가
-      switch (selectLabel) {
-        case 'daily':
-          form.labels.push(moment(data.start_at).format('YYYY-MM-DD (dd)'));
-          break;
-        case 'weekly':
-          form.labels.push(moment(data.start_at).format('YYYY-MM-DD'));
-          break;
-        case 'monthly':
-          form.labels.push(moment(data.start_at).format('YYYY-MM'));
-          break;
-        case 'yearly':
-          const _date = moment(data.start_at).format('YYYY') + '년';
-          form.labels.push(_date);
-          break;
-      }
-
       // dataset 순회하며 데이터및 색상 추가
       _.map(form.datasets, (dataset: any, index: any) => {
-        // 데이터 추가
-        dataset.data.push(data[originForm?.type]);
-        // 색상 추가
-        dataset.backgroundColor.push(originForm?.color);
+        // 데이터, 색상 추가
+        dataset.data.push(data.commutes[index]?.avg_hours);
+        dataset.backgroundColor.push(CHART_COLORS[index]);
       });
     });
+
     setData(form);
   }, [originData]);
 
@@ -155,8 +157,10 @@ const BarChartLayout = (props: any) => {
         type='bar'
         data={data}
         options={barOptions}
+        plugins={[ChartDataLabels]}
         className='flex w-full min-h-[400px] items-center justify-center'
         height={'20vh'}
+        width={'100%'}
       />
     );
   }, [barRef, data]);
