@@ -35,7 +35,23 @@ const DashBoardLayout = (props: any) => {
   };
 
   // * 근무 현황 업데이트시 Pie API 새로 호출
-  useUpdateEffect(() => {}, [selectDepartment]);
+  useUpdateEffect(() => {
+    const pieApi = async () => {
+      // 필요한 API 정의 (부서 근무 타입)
+      const statisticsDepartmentWorkTypeAPI = ADMIN_API.statistics_department_workType(
+        localStorage.getItem(COMPANY_ID),
+        selectDepartment?.department_id === null ? 'company' : 'department',
+        selectDepartment?.department_id === null ? 0 : selectDepartment?.department_id,
+      );
+
+      // API 호출 및 데이터 가공
+      const [statisticsDepartmentWorkType] = await Promise.all([statisticsDepartmentWorkTypeAPI]);
+
+      // 데이터 저장
+      setPieData(statisticsDepartmentWorkType.data.data);
+    };
+    pieApi();
+  }, [selectDepartment]);
 
   // * 초기화
   useEffect(() => {
