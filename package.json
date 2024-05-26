@@ -19,6 +19,7 @@
     "@types/lodash": "^4.17.0",
     "@types/node": "^16.18.96",
     "autoprefixer": "^9.8.8",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "dayjs": "^1.11.11",
     "postcss": "^8.1.4",
     "primeicons": "^7.0.0",

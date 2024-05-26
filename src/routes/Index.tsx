@@ -8,9 +8,11 @@ import AdminLoginPage from '../pages/admin/Login';
 // 사용자 페이지 정의
 import UserDefaultLayout from '../components/user/UserDefaultLayout';
 import UserDashBoardPage from '../pages/user/DashBoard';
+import UserApprovalPage from '../pages/user/Approval';
 import UserMainPage from '../pages/user/UserMain';
 
 // 관리자 페이지 정의
+import AdminDashBoardLayout from '../pages/admin/DashBoard';
 import AdminDefaultLayout from '../components/admin/AdminDefaultLayout';
 import AdminDepartmentPage from '../pages/admin/Department';
 import AdminAccountPage from '../pages/admin/Account';
@@ -23,8 +25,10 @@ const Router = () => {
   const userRoutes = [
     { path: ENDPOINT.USER_DASHBOARD, layout: UserDashBoardPage },
     { path: ENDPOINT.USER_MAIN, layout: UserMainPage },
+    { path: ENDPOINT.USER_WORK_APPROVAL, layout: UserApprovalPage },
   ];
   const adminRoutes = [
+    { path: ENDPOINT.ADMIN_DASHBOARD, layout: AdminDashBoardLayout },
     { path: ENDPOINT.ADMIN_DEPARTMENT, layout: AdminDepartmentPage },
     { path: ENDPOINT.ADMIN_ACCOUNT, layout: AdminAccountPage },
   ];
