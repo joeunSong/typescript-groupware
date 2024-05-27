@@ -40,7 +40,7 @@ function WorkBar({ workInfo }: workBarProps) {
         placement='top'
       >
         <div
-          className={`${workInfo.isNormal ? 'bg-primary' : 'bg-red-500'} w-0 h-[30px] absolute`}
+          className={`${workInfo.isNormal ? 'bg-primary' : 'bg-red-500'} w-0 h-[50px] absolute rounded-[5px]`}
           // className={`bg-red-500 w-0 h-[30px] absolute`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
@@ -48,7 +48,16 @@ function WorkBar({ workInfo }: workBarProps) {
             transition: 'all 0.5s ease',
             minWidth: 1,
           }}
-        />
+        >
+          {workTime >= 120 && (
+            <div className='p-[5px] text-[12px] text-white'>
+              <div>{workInfo.workType?.title}</div>
+              <div>
+                {`${moment(workInfo.startAt).format('HH:mm')} - ${workInfo.isNormal ? moment(workInfo.endAt).format('HH:mm') : '퇴근 미등록'}`}
+              </div>
+            </div>
+          )}
+        </div>
       </Tooltip>
     )
   );

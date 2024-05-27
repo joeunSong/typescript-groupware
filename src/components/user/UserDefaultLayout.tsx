@@ -1,10 +1,11 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SideBarLayout from '../common/SideBar';
 import AttendMenu from '../common/sidebar/AttendMenu';
 import ProfileMenu from '../common/sidebar/ProfileMenu';
 import React, { useEffect, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import { Home } from '@mui/icons-material';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import WorkIcon from '@mui/icons-material/Work';
 import _ from 'lodash';
@@ -17,6 +18,7 @@ import * as ENDPOINT from '../../constants/apiEndpoints';
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
   const navigate = useNavigate();
+  const location = useLocation();
 
   //사용자 정보
   const [userInfo, setUserInfo] = useState<any>();
@@ -104,6 +106,13 @@ const UserDefaultLayout = (props: any) => {
       if (userInfo?.isLeader) {
         setItems([
           {
+            icon: Home,
+            label: '홈',
+            open: false,
+            url: ENDPOINT.USER_MAIN,
+            items: [],
+          },
+          {
             icon: WorkIcon,
             label: '근무 관리',
             open: false,
@@ -116,6 +125,13 @@ const UserDefaultLayout = (props: any) => {
       } else {
         setItems([
           {
+            icon: Home,
+            label: '홈',
+            open: false,
+            url: ENDPOINT.USER_MAIN,
+            items: [],
+          },
+          {
             icon: WorkIcon,
             label: '근무',
             open: false,
@@ -126,6 +142,35 @@ const UserDefaultLayout = (props: any) => {
       }
     }
   }, [userInfo]);
+
+  // * url로 접속한 경우 뎁스 open
+  useEffect(() => {
+    if (_.isEmpty(selectItem)) {
+      setItems((prevs: any) => {
+        return _.map(prevs, (prev: any) => {
+          // 상위 항목으로 진입한 경우 선택 아이템 set
+          if (prev.url === location.pathname) {
+            setSelectItem(prev);
+            return prev;
+          }
+
+          // 하위 항목으로 진입한 경우 선택 아이템 set
+          const updatedItems = _.map(prev.items, (subItem: any) => {
+            if (subItem.url === location.pathname) {
+              setSelectItem(subItem);
+              return { ...subItem, open: true };
+            }
+            return subItem;
+          });
+
+          if (_.some(updatedItems, { url: location.pathname })) {
+            return { ...prev, open: true, items: updatedItems };
+          }
+          return prev;
+        });
+      });
+    }
+  }, [items]);
 
   useEffect(() => {
     getTodayWorkTInfo();
