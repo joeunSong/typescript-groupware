@@ -37,7 +37,8 @@ const Login = ({ logo, role }: LoginProps) => {
         });
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
         // localStorage.setItem(LOGIN_AUTH, 'user');
-        navigate(ENDPOINT.USER_DASHBOARD);
+        //navigate(ENDPOINT.USER_DASHBOARD);
+        navigate(ENDPOINT.USER_MAIN);
       } else {
         const response = await ADMIN_API.admin_login(data.get('email') as string, data.get('password') as string);
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
