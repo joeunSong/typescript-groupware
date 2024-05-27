@@ -65,5 +65,5 @@ deploy_project:
   only:
     - tags
   tags:
-    - jiran_new_server
+    - jiran_new_2024_2_server
   when: manual
