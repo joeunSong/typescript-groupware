@@ -1,0 +1,68 @@
+## 프로젝트 빌드 용
+image: alpine:latest
+
+stages:
+  - testcode
+  - static_analysis
+  - build
+  - deploy
+
+testcode:
+  stage: testcode
+  image: alpine:latest
+  script:
+    - echo "please execute testcode in this stage"
+  only:
+    - tags
+  when: manual
+
+static_analysis:
+  stage: static_analysis
+  image: alpine:latest
+  script:
+    - echo "please execute static analysis in this stage"
+  only:
+    - tags
+  when: manual
+
+
+build_project:
+  stage: build
+  image: alpine:latest
+  # before_script:
+  #   # Docker
+  #   - apk add --update docker openrc
+  #   - docker login -u $REGISTRY_TOKEN -p $REGISTRY_TOKEN_PW $CI_REGISTRY
+
+  # script:
+  #   - IMAGE_NAME=$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+  #   - docker build --no-cache -t $IMAGE_NAME --file ./Dockerfile .
+  #   - docker push $IMAGE_NAME
+  #   - docker rmi -f $IMAGE_NAME
+
+  only:
+    - tags
+  when: manual
+
+
+deploy_project:
+  stage: deploy
+  image: alpine:latest
+  # before_script:
+    # - docker login -u $REGISTRY_TOKEN -p $REGISTRY_TOKEN_PW $CI_REGISTRY
+
+  script:
+    # - IMAGE_NAME=$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+    # - docker pull $IMAGE_NAME
+    # - docker tag $IMAGE_NAME jiran_new_frontend:latest
+    # - /bin/bash -c "cd /data/jrnew/frontend/production && docker-compose down && docker-compose up -d"
+    - cd /ubuntu/front/
+    - git tag -l | xargs -n 1 git tag -d
+    - git fetch --tags
+    - git reset --hard $CI_COMMIT_TAG
+
+  only:
+    - tags
+  tags:
+    - jiran_new_server
+  when: manual
