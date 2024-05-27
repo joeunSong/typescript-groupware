@@ -126,6 +126,8 @@
   font-size: 14px;
   width: 100% !important;
   overflow: hidden !important;
+  background-color: white !important;
+  border: none !important;
 }
 
 /* 공휴일 */
@@ -135,7 +137,7 @@
 
 .holiday-event {
   color: white; /* Change event text color to red */
-  background-color: var(--fc-holiday-event-bg);
+  background-color: var(--fc-holiday-event-bg) !important;
   width: 100%;
 }
 
