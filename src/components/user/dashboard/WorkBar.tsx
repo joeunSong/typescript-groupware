@@ -53,7 +53,7 @@ function WorkBar({ workInfo }: workBarProps) {
             <div className='p-[5px] text-[12px] text-white'>
               <div>{workInfo.workType?.title}</div>
               <div>
-                {`${moment(workInfo.startAt).format('HH:mm')} - ${workInfo.isNormal ? moment(workInfo.endTime).format('HH:mm') : '퇴근 미등록'}`}
+                {`${moment(workInfo.startAt).format('HH:mm')} - ${workInfo.isNormal ? moment(workInfo.endAt).format('HH:mm') : '퇴근 미등록'}`}
               </div>
             </div>
           )}

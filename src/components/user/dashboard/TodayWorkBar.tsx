@@ -59,7 +59,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
     todayWorkInfo.startAt && (
       <Tooltip
         //title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
-        title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
+        title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
         placement='top'
       >
         <div
@@ -75,7 +75,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
             <div className='p-[5px] text-[12px] text-white'>
               <div>{todayWorkInfo.workType?.title}</div>
               <div>
-                {`${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
+                {`${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
               </div>
             </div>
           )}
