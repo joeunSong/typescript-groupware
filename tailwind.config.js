@@ -30,6 +30,9 @@ module.exports = {
         'noto-sans-kr': ['"Noto Sans KR"', 'sans-serif'],
         'noto-sans': ['"Noto Sans"', 'sans-serif'],
       },
+      zIndex: {
+        1400: '1400',
+      },
     },
   },
   variants: {

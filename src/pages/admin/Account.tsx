@@ -7,6 +7,7 @@ import React from 'react';
 import AccountDetail from '../../components/admin/AccountDetail';
 import CreateUserModal from '../../components/admin/account/modal/CreateUserModal';
 import ModifyUserModal from '../../components/admin/account/modal/ModifyUserModal';
+import DeleteUserModal from '../../components/admin/account/modal/DeleteUserModal';
 
 const rankSelectList = [
   { label: '대표', value: 8 },
@@ -36,7 +37,7 @@ const AccountPageLayout = () => {
       try {
         const companyId = Number(localStorage.getItem(COMPANY_ID));
         const response = await ADMIN_API.users(companyId);
-        
+
         console.log('data: ', response.data);
         setUsersInfo(response.data);
       } catch (error) {
@@ -95,26 +96,24 @@ const AccountPageLayout = () => {
                   </TableRow>
                 </>
               ))}
-            {isAccountDetailOpen === 1 && accountDetailId && (
-              <AccountDetail
-                accountId={accountDetailId}
-                isAccountDetailOpen={isAccountDetailOpen}
-                setIsAccountDetailOpen={setIsAccountDetailOpen}
-              />
-            )}
-            {isAccountDetailOpen === 2 && accountDetailId && (
-              <ModifyUserModal
-                accountId={accountDetailId}
-                isAccountDetailOpen={isAccountDetailOpen}
-                setIsAccountDetailOpen={setIsAccountDetailOpen}
-                rankSelectList={rankSelectList}
-                authSelectList={authSelectList}
-              />
-            )}
           </TableBody>
         </Table>
       </TableContainer>
-
+      {isAccountDetailOpen === 1 && accountDetailId && (
+        <AccountDetail accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
+      )}
+      {isAccountDetailOpen === 2 && accountDetailId && (
+        <ModifyUserModal
+          accountId={accountDetailId}
+          isAccountDetailOpen={isAccountDetailOpen}
+          setIsAccountDetailOpen={setIsAccountDetailOpen}
+          rankSelectList={rankSelectList}
+          authSelectList={authSelectList}
+        />
+      )}
+      {isAccountDetailOpen === 3 && accountDetailId && (
+        <DeleteUserModal accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
+      )}
       <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
     </div>
   );
