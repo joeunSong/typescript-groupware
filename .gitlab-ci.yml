@@ -1,5 +1,5 @@
 ## 프로젝트 빌드 용
-image: alpine:latest
+# image: alpine:latest
 
 stages:
   - testcode
@@ -9,7 +9,7 @@ stages:
 
 testcode:
   stage: testcode
-  image: alpine:latest
+  # image: alpine:latest
   script:
     - echo "please execute testcode in this stage"
   only:
@@ -18,7 +18,7 @@ testcode:
 
 static_analysis:
   stage: static_analysis
-  image: alpine:latest
+  # image: alpine:latest
   script:
     - echo "please execute static analysis in this stage"
   only:
@@ -28,7 +28,7 @@ static_analysis:
 
 build_project:
   stage: build
-  image: alpine:latest
+  # image: alpine:latest
   # before_script:
   #   # Docker
   #   - apk add --update docker openrc
@@ -47,7 +47,7 @@ build_project:
 
 deploy_project:
   stage: deploy
-  image: alpine:latest
+  # image: alpine:latest
   # before_script:
     # - docker login -u $REGISTRY_TOKEN -p $REGISTRY_TOKEN_PW $CI_REGISTRY
 
