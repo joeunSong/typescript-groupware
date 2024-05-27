@@ -149,7 +149,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
           ...monthWorkInfo.map((_it: any) => {
             return {
               title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
-              date: _it?.startAt,
+              date: moment(_it?.date).format('YYYY-MM-DD'),
               extendedProps: {
                 workType: _it?.workType?.title,
                 workInfo: _it,
@@ -160,7 +160,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
           ...holidayList.map((_it: any) => {
             return {
               title: _it?.name,
-              date: _it?.date,
+              date: moment(_it?.date).format('YYYY-MM-DD'),
               extendedProps: {
                 isHoliday: true,
               },
@@ -175,9 +175,10 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
 };
 
 const renderEventContent = (eventInfo: EventContentArg) => {
-  if (!eventInfo.event) return null;
+  if (!eventInfo || !eventInfo.event) return null;
+
   const isHoliday = eventInfo.event?.extendedProps?.isHoliday;
-  const workInfo = eventInfo.event.extendedProps?.workInfo;
+  const workInfo = eventInfo?.event?.extendedProps?.workInfo;
 
   const isToday = (day: string) => {
     const currentDate = moment().format('YYYY-MM-DD');
@@ -189,7 +190,7 @@ const renderEventContent = (eventInfo: EventContentArg) => {
   }
 
   return isHoliday ? (
-    <div className={`fc-event holiday-event`}>
+    <div className={`holiday-event`}>
       <div>{eventInfo.event?.extendedProps?.workType}</div>
       {eventInfo.event?.title}
     </div>
@@ -197,7 +198,7 @@ const renderEventContent = (eventInfo: EventContentArg) => {
     workInfo && (
       <>
         {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`fc-event work-event`} onClick={() => console.log(workInfo)}>
+        <div className={`work-event`} onClick={() => console.log(workInfo)}>
           {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
           {/* <div className='flex justify-end'>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
