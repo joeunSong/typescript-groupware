@@ -14,7 +14,7 @@ const ApiClient = () => {
       // origin: "http://localhost:3000",
       // Accept: "application/json",
     },
-    withCredentials: false,
+    withCredentials: true,
   };
   // * instance 생성
   const instance = axios.create(defaultOptions);
