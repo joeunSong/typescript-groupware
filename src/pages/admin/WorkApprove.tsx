@@ -1,23 +1,43 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import React from 'react';
-
-function createData(
-  name: number,
-  company: string,
-  position: string,
-  id: string,
-  startWork: string,
-  startAccount: string,
-  accountStatus: string,
-  a: string,
-  b: string,
-) {
-  return { name, company, position, id, startWork, startAccount, accountStatus, a, b };
-}
-
-const rows = [createData(30, '화요일', '개발 부서', '대리', '김지란', '출근', '지각', '9:00', '18:00')];
+import React, { useEffect, useState } from 'react';
+import { COMPANY_ID } from '../../constants/constant';
+import ADMIN_API from '../../services/admin';
+import DetailModal from '../../components/admin/workApprove/modal/DetailModal';
 
 const AdminWorkApprovePage = () => {
+  const [commutes, setCommutes] = useState();
+  const [isCommuteDetailOpen, setIsCommuteDetailOpen] = useState(false);
+  const [commuteDetailId, setCommuteDetailId] = useState<number>();
+
+  useEffect(() => {
+    const getCommutes = async () => {
+      try {
+        const companyId = Number(localStorage.getItem(COMPANY_ID));
+        const result = await ADMIN_API.getCommutes(companyId);
+        console.log(result);
+
+        setCommutes(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCommutes();
+    console.log('commutes: ', commutes);
+  });
+
+  const getDayOfWeek = (date: Date) => {
+    const week = ['일', '월', '화', '수', '목', '금', '토'];
+
+    const dayOfWeek = week[new Date(date).getDay()];
+
+    return dayOfWeek;
+  };
+
+  const handleAccountDetail = (commuteDetailId: number) => {
+    setIsCommuteDetailOpen(true);
+    setCommuteDetailId(commuteDetailId);
+  };
+
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'>
@@ -30,51 +50,59 @@ const AdminWorkApprovePage = () => {
           <TableHead sx={{ backgroundColor: 'secondary.main' }}>
             <TableRow>
               <TableCell align='center'>근무일</TableCell>
-              <TableCell align='center'>요일</TableCell>
-              <TableCell align='center'>부서</TableCell>
-              <TableCell align='center'>직위</TableCell>
               <TableCell align='center'>이름</TableCell>
-              <TableCell align='center'>
-                구분
-                <br />
-                (출근/결근)
-              </TableCell>
-              <TableCell align='center'>
-                상태
-                <br />
-                (지각/초과근무/정상)
-              </TableCell>
-              {/* <TableCell align='center'>근무유형\n(고민)</TableCell> */}
+              <TableCell align='center'>부서</TableCell>
+              <TableCell align='center'>근무유형</TableCell>
               <TableCell align='center'>출근시간</TableCell>
               <TableCell align='center'>퇴근시간</TableCell>
+              <TableCell align='center'>근태구분</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((user: any) => (
-              <>
-                <TableRow
-                  key={user.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}
-                  className='cursor-pointer'
-                  // onClick={() => {
-                  //   handleAccountDetail(user.id);
-                  // }}
-                >
-                  <TableCell align='center'>{user.name}</TableCell>
-                  <TableCell align='center'>{user.company}</TableCell>
-                  <TableCell align='center'>{user.position}</TableCell>
-                  <TableCell align='center'>{user.id}</TableCell>
-                  <TableCell align='center'>{user.startWork}</TableCell>
-                  <TableCell align='center'>{user.startAccount}</TableCell>
-                  <TableCell align='center'>{user.accountStatus}</TableCell>
-                  <TableCell align='center'>{user.a}</TableCell>
-                  <TableCell align='center'>{user.b}</TableCell>
-                </TableRow>
-              </>
-            ))}
-            {/* {isAccountDetailOpen && accountDetailId && (
-              <AccountDetail accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
-            )} */}
+            {/* {commutes &&
+              commutes.map((commute: any) => {
+                const start_at = new Date(commutes.start_at);
+                const end_at = new Date(commutes.end_at);
+
+                const formattedStartTime = new Intl.DateTimeFormat('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }).format(start_at);
+                const formattedEndTime = new Intl.DateTimeFormat('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }).format(end_at);
+
+                return (
+                  <>
+                    <TableRow
+                      key={commute.user_name}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}
+                      className='cursor-pointer'
+                      // onClick={() => {
+                      //   handleAccountDetail(commute.user_id);
+                      // }}
+                    >
+                      <TableCell align='center'>{`${commute.date}(${getDayOfWeek(commute.date)})`}</TableCell>
+                      <TableCell align='center'>{commute.user_name}</TableCell>
+                      <TableCell align='center'>{commute.department_title}</TableCell>
+                      <TableCell align='center'>{commute.work_type_title}</TableCell>
+                      <TableCell align='center'>{formattedStartTime}</TableCell>
+                      <TableCell align='center'>{formattedEndTime}</TableCell>
+                      <TableCell align='center'>{commute.status}</TableCell>
+                    </TableRow>
+                  </>
+                );
+              })} */}
+            {isCommuteDetailOpen && commuteDetailId && (
+              <DetailModal
+                commuteDetailId={commuteDetailId}
+                isCommuteDetailOpen={isCommuteDetailOpen}
+                setIsCommuteDetailOpen={setIsCommuteDetailOpen}
+              />
+            )}
           </TableBody>
         </Table>
       </TableContainer>

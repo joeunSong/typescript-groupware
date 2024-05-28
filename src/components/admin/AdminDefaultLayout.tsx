@@ -36,7 +36,7 @@ const AdminDefaultLayout = (props: any) => {
       items: [
         { icon: null, label: '기념일/공휴일 관리', explan: '기념일과 공휴일을 등록하고 관리할 수 있습니다.' },
         { icon: null, label: '근무 유형 관리', explan: '근무 유형을 등록하고 관리할 수 있습니다.' },
-        { path: ENDPOINT.ADMIN_WORK_APPROVE, icon: null, label: '근무 승인 관리', explan: '요청된 근무를 승인하고 관리할 수 있습니다.' },
+        { path: ENDPOINT.ADMIN_WORK_APPROVE, icon: null, label: '근태 조회', explan: '회사 전체 출근한 사용자의 정보를 조회' },
       ],
     },
     {
