@@ -8,6 +8,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import USER_API from '../../../services/user';
+import { useHoliday } from '../../../hooks/useHoliday';
+import { checkAttendTime } from '../../../utils/dateUtil';
 
 interface AttendMenuProps {
   userInfo?: any; //유저의 정보
@@ -30,6 +32,12 @@ const AttendMenu = ({ userInfo, todayWorkInfoList, setTodayWorkInfoList, onWork,
 
   //Dropdown 조작
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const [isAttendTime, setIsAttendTime] = useState<boolean>(true);
+
+  //공휴일 파악
+  const { getHolidayList } = useHoliday();
+  const holidayList = getHolidayList();
 
   const handleOpenMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -170,8 +178,14 @@ const AttendMenu = ({ userInfo, todayWorkInfoList, setTodayWorkInfoList, onWork,
     getCommuteType();
   }, []);
 
+  useEffect(() => {
+    //근무 가능 여부 받아오기
+    const flag = checkAttendTime(holidayList);
+    setIsAttendTime(flag);
+  }, [holidayList]);
+
   // 자정에 데이터를 불러오는 함수
-  function postDataAtMidnight() {
+  function loadDataAtMidnight() {
     // 현재 시간을 가져옴
     const now = moment();
 
@@ -184,67 +198,74 @@ const AttendMenu = ({ userInfo, todayWorkInfoList, setTodayWorkInfoList, onWork,
     // 다음 자정에 데이터를 불러오는 작업 예약
     setTimeout(() => {
       // 데이터를 불러오는 작업 실행
-      if (!todayWorkInfo.endAt) {
-        postEndTime();
-      }
+      getTodayWorkTInfo();
       // 다음 자정까지의 시간 차이가 있으므로 다시 함수 호출
-      postDataAtMidnight();
+      loadDataAtMidnight();
     }, timeUntilMidnight);
   }
 
   // 페이지가 처음 로드될 때 한 번 실행
-  //postDataAtMidnight();
+  loadDataAtMidnight();
+
   return (
     <div className='flex flex-col w-full justify-center'>
-      {todayWorkInfo?.startAt ? (
-        todayWorkInfo?.isNormal ? (
-          // 근무 내역
-          <div className='flex flex-col justify-between w-[250px] h-[95px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
-            <div className='flex justify-between items-center content-between'>
-              <span className='font-h2 text-primary'>{moment(todayWorkInfo?.endAt).format('MM월 DD일')}</span>
-              <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>종료</div>
+      {isAttendTime ? (
+        todayWorkInfo?.startAt ? (
+          todayWorkInfo?.isNormal ? (
+            // 근무 내역
+            <div className='flex flex-col justify-between w-[250px] h-[95px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
+              <div className='flex justify-between items-center content-between'>
+                <span className='font-h2 text-primary'>{moment(todayWorkInfo?.endAt).format('MM월 DD일')}</span>
+                <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>종료</div>
+              </div>
+              <div className='font-body1'>{`${formattedTime(todayWorkInfo?.startAt)} - ${formattedTime(todayWorkInfo?.endAt)}`}</div>
             </div>
-            <div className='font-body1'>{`${formattedTime(todayWorkInfo?.startAt)} - ${formattedTime(todayWorkInfo?.endAt)}`}</div>
-          </div>
+          ) : (
+            // 퇴근 버튼
+            <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
+              <div className='flex justify-between items-center content-between'>
+                <span className='font-h2 text-primary'>{todayWorkInfo?.workType?.title}</span>
+                <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>진행중</div>
+              </div>
+              <div className='font-body1'>{`${formattedTime(todayWorkInfo?.startAt)} 부터 진행중`}</div>
+              <CustomButton onClick={handleLeaveWorkClick} variant='contained' size='md' color='primary'>
+                퇴근하기
+              </CustomButton>
+            </div>
+          )
         ) : (
-          // 퇴근 버튼
-          <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
-            <div className='flex justify-between items-center content-between'>
-              <span className='font-h2 text-primary'>{todayWorkInfo?.workType?.title}</span>
-              <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>진행중</div>
-            </div>
-            <div className='font-body1'>{`${formattedTime(todayWorkInfo?.startAt)} 부터 진행중`}</div>
-            <CustomButton onClick={handleLeaveWorkClick} variant='contained' size='md' color='primary'>
-              퇴근하기
+          <>
+            {/*  출근 버튼 */}
+            <CustomButton onClick={handleOpenMenu} variant='contained' size='md' color='primary'>
+              출근하기
             </CustomButton>
-          </div>
+            <Menu
+              className='border-[1px] border-solid border-primary'
+              id='dropdown-menu'
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => handleCloseMenu(null)}
+            >
+              {attendTypeList.length > 0 &&
+                attendTypeList.map((_it: any) => (
+                  <MenuItem
+                    className='text-primary flex items-center justify-center'
+                    sx={{
+                      width: '14.375rem',
+                    }}
+                    onClick={() => handleCloseMenu(_it)}
+                  >
+                    {_it?.title}
+                  </MenuItem>
+                ))}
+            </Menu>
+          </>
         )
       ) : (
         <>
-          {/*  출근 버튼 */}
-          <CustomButton onClick={handleOpenMenu} variant='contained' size='md' color='primary'>
-            출근하기
-          </CustomButton>
-          <Menu
-            className='border-[1px] border-solid border-primary'
-            id='dropdown-menu'
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => handleCloseMenu(null)}
-          >
-            {attendTypeList.length > 0 &&
-              attendTypeList.map((_it: any) => (
-                <MenuItem
-                  className='text-primary flex items-center justify-center'
-                  sx={{
-                    width: '14.375rem',
-                  }}
-                  onClick={() => handleCloseMenu(_it)}
-                >
-                  {_it?.title}
-                </MenuItem>
-              ))}
-          </Menu>
+          {/* <div className='flex flex-col justify-between w-[250px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
+            <span className=' text-primary'>근무가능한 시간이 아닙니다</span>
+          </div> */}
         </>
       )}
     </div>
