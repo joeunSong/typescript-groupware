@@ -5,6 +5,7 @@ import { ACCESS_TOKEN } from '../constants/constant';
 const ApiClient = () => {
   // * 기초 설정
   const defaultOptions = {
+    baseURL: process.env.REACT_APP_ADMIN_LOCAL_SERVER,
     headers: {
       'Content-Type': 'application/json',
       // "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
