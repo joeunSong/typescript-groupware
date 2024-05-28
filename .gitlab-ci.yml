@@ -51,6 +51,9 @@ deploy_project:
   # image: alpine:latest
   before_script:
     # - docker login -u $REGISTRY_TOKEN -p $REGISTRY_TOKEN_PW $CI_REGISTRY
+  - git config --local user.name "jr_new_2024_pull_token"
+  - git config --local user.email "isaac9711@jiran.com"
+  - git config --local credential.helper "store --file=/www/front/.git-credentials"
   - git config --global --add safe.directory /www/front
 
   script:
