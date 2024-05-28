@@ -57,7 +57,7 @@ deploy_project:
     # - docker pull $IMAGE_NAME
     # - docker tag $IMAGE_NAME jiran_new_frontend:latest
     # - /bin/bash -c "cd /data/jrnew/frontend/production && docker-compose down && docker-compose up -d"
-    - cd /ubuntu/front/
+    - cd /home/ubuntu/front/
     - git tag -l | xargs -n 1 git tag -d
     - git fetch --tags
     - git reset --hard $CI_COMMIT_TAG
