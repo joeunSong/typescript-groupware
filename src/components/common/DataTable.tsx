@@ -149,6 +149,7 @@ const CustomeDataTable = ({
               // overflow: 'hidden',
               textOverflow: 'ellipsis',
             }}
+            pt={column.pt}
             field={column.field}
             header={column.header}
             sortable={column.sortable}

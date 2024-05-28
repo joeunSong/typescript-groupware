@@ -54,7 +54,31 @@ const USER_API = () => {
     return await axios.instance.get('/commutes/pendings/' + id);
   };
 
-  return { login, profile, commute_in, commute_out, commute_today_info, commute_log, commute_type, commute_edit, is_editable };
+  // * 근태 신청 조회
+  const commute_pendings = async () => {
+    baseURLChange();
+    return await axios.instance.get('/commutes/pendings');
+  };
+
+  // * 근태 신청 상세 조회
+  const commute_pending_detail = async (pendingId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/commutes/pendings/${pendingId}`);
+  };
+
+  return {
+    login,
+    profile,
+    commute_in,
+    commute_out,
+    commute_today_info,
+    commute_log,
+    commute_type,
+    commute_edit,
+    is_editable,
+    commute_pendings,
+    commute_pending_detail,
+  };
 };
 
 export default USER_API();
