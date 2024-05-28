@@ -8,6 +8,8 @@ import USER_API from '../../../services/user';
 import { EventContentArg } from '@fullcalendar/core';
 import { useHoliday } from '../../../hooks/useHoliday';
 import findWorkStatus from '../../../utils/findWorkStatus';
+import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
+import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 
 interface MyFullCalendarProps {
   onWork?: boolean;
@@ -18,6 +20,8 @@ interface MyFullCalendarProps {
 const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCalendarProps) => {
   const today = moment();
   const calendarRef = useRef<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   //공휴일 받아오기
   const { getHolidayList } = useHoliday();
@@ -109,6 +113,72 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
 
   //console.log(holidayList);
 
+
+  
+const renderEventContent = (eventInfo: EventContentArg) => {
+  if (!eventInfo || !eventInfo.event) return null;
+
+
+  const isHoliday = eventInfo.event?.extendedProps?.isHoliday;
+  const workInfo = eventInfo?.event?.extendedProps?.workInfo;
+
+  const isToday = (day: string) => {
+    const currentDate = moment().format('YYYY-MM-DD');
+    return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
+  };
+
+  function formatTime(time: string) {
+    return moment(time).format('HH:mm');
+  }
+
+  const handleModalOpen = async () => {
+    if (workInfo.isNormal) {
+      try {
+        // 조정 요청 가능한지 조회
+        const response = await USER_API.is_editable(workInfo.id);
+
+        if (response.data.status !== 'PENDING') {
+          setIsEditable(true);
+        } else {
+          setIsEditable(false);
+        }
+        setIsModalOpen(true);
+      } catch (error) {
+        alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
+        setIsModalOpen(false);
+      }
+    }
+  };
+
+  return isHoliday ? (
+    <div className={`holiday-event`}>
+      <div>{eventInfo.event?.extendedProps?.workType}</div>
+      {eventInfo.event?.title}
+    </div>
+  ) : (
+    workInfo && (
+      <>
+        {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
+        <div className={`work-event`} onClick={handleModalOpen}>
+          {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
+          {/* <div className='flex justify-end'>
+            <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
+          </div> */}
+
+          <div>{`출근 : ${formatTime(workInfo?.startAt)}`}</div>
+          <div>{`퇴근 : ${workInfo?.isNormal ? formatTime(workInfo?.endAt) : isToday(workInfo.date) ? '근무중' : '-'}`}</div>
+          {/* {eventInfo.event?.title} */}
+        </div>
+        {isModalOpen &&
+          (isEditable ? (
+            <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={workInfo} />
+          ) : (
+            <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          ))}
+      </>
+    )
+  );
+};
   return (
     <div className='w-full h-full font-noto-sans'>
       {/* <button onClick={handlePrevMonth}>Prev</button>
@@ -174,42 +244,4 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
   );
 };
 
-const renderEventContent = (eventInfo: EventContentArg) => {
-  if (!eventInfo || !eventInfo.event) return null;
-
-  const isHoliday = eventInfo.event?.extendedProps?.isHoliday;
-  const workInfo = eventInfo?.event?.extendedProps?.workInfo;
-
-  const isToday = (day: string) => {
-    const currentDate = moment().format('YYYY-MM-DD');
-    return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
-  };
-
-  function formatTime(time: string) {
-    return moment(time).format('HH:mm');
-  }
-
-  return isHoliday ? (
-    <div className={`holiday-event`}>
-      <div>{eventInfo.event?.extendedProps?.workType}</div>
-      {eventInfo.event?.title}
-    </div>
-  ) : (
-    workInfo && (
-      <>
-        {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event`} onClick={() => console.log(workInfo)}>
-          {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
-          {/* <div className='flex justify-end'>
-            <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
-          </div> */}
-
-          <div>{`출근 : ${formatTime(workInfo?.startAt)}`}</div>
-          <div>{`퇴근 : ${workInfo?.isNormal ? formatTime(workInfo?.endAt) : isToday(workInfo.date) ? '근무중' : '-'}`}</div>
-          {/* {eventInfo.event?.title} */}
-        </div>
-      </>
-    )
-  );
-};
 export default MyFullCalendar;
