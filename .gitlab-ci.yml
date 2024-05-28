@@ -66,5 +66,5 @@ deploy_project:
   only:
     - tags
   tags:
-    - jiran_new-2-2024
+    - jiran_new-2-2024_front
   when: manual
