@@ -106,7 +106,7 @@ const DepartmentLayout = (props: any) => {
           <div className='flex w-full items-center justify-between'>
             <span className='text-2xl font-bold'>부서 정보</span>
             <div className='flex px-10'>
-              <Button className='bg-primary border-solid botder-[1px] border-primary ring-0'>사용자 추가</Button>
+              <button className='px-4 py-2 bg-primary border-solid botder-[1px] border-primary rounded-md text-white'>사용자 추가</button>
             </div>
           </div>
           <ContentLayout

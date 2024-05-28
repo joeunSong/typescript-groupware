@@ -60,6 +60,23 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/statistics/rankings`, {});
   };
 
+  // * 근무 시스템 조회
+  const worksystem = async (companyId: any) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/worksystems`, {});
+  };
+
+  // * 근무 시스템 수정
+  const edit_worksystem = async (companyId: any, workStartAt: any, workEndAt: any, BreakStartAt: any, BreakEndAt: any) => {
+    baseURLChange();
+    return await axios.instance.patch(`/companies/${companyId}/worksystems`, {
+      work_start_at: workStartAt,
+      work_end_at: workEndAt,
+      break_start_at: BreakStartAt,
+      break_end_at: BreakEndAt,
+    });
+  };
+
   return {
     admin_login,
     organization,
@@ -70,6 +87,8 @@ const ADMIN_API = () => {
     statistics_department,
     statistics_department_workType,
     statistics_ranking,
+    worksystem,
+    edit_worksystem,
   };
 };
 

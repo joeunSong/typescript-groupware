@@ -16,6 +16,7 @@ import AdminDashBoardLayout from '../pages/admin/DashBoard';
 import AdminDefaultLayout from '../components/admin/AdminDefaultLayout';
 import AdminDepartmentPage from '../pages/admin/Department';
 import AdminAccountPage from '../pages/admin/Account';
+import AdminWorkTimePage from '../pages/admin/WorkTime';
 // 처리 로직 컴포넌트 정의
 import PrivateRoute from './PrivateRoute';
 import _ from 'lodash';
@@ -31,6 +32,7 @@ const Router = () => {
     { path: ENDPOINT.ADMIN_DASHBOARD, layout: AdminDashBoardLayout },
     { path: ENDPOINT.ADMIN_DEPARTMENT, layout: AdminDepartmentPage },
     { path: ENDPOINT.ADMIN_ACCOUNT, layout: AdminAccountPage },
+    { path: ENDPOINT.ADMIN_WORKTIME, layout: AdminWorkTimePage },
   ];
   return (
     <div className='w-full h-screen overflow-hidden'>
