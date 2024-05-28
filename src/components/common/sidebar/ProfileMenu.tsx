@@ -39,11 +39,15 @@ const ProfileMenu = ({}: ProfileMenuProps) => {
   }, []);
 
   return (
-    <div onClick={handleMovePage} className='flex w-full p-[10px] pl-[25px] gap-[10px] items-center cursor-pointer'>
-      <Avatar src={userInfo?.src || ''} sx={{ width: 36, height: 36 }} />
-      <span className='font-h2'>{userInfo?.name || '김지란'}</span>
-      <ProfileModal isProfileModalOpen={isProfileModalOpen} setIsProfileModalOpen={setIsProfileModalOpen} profile={userInfo} />
-    </div>
+    <>
+      <div onClick={handleMovePage} className='flex w-full p-[10px] pl-[25px] gap-[10px] items-center cursor-pointer'>
+        <Avatar src={userInfo?.src || ''} sx={{ width: 36, height: 36 }} />
+        <span className='font-h2'>{userInfo?.name || '김지란'}</span>
+      </div>
+      {isProfileModalOpen && (
+        <ProfileModal isProfileModalOpen={isProfileModalOpen} setIsProfileModalOpen={setIsProfileModalOpen} profile={userInfo} />
+      )}
+    </>
   );
 };
 

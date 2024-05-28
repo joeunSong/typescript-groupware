@@ -1,3 +1,5 @@
+import { StringObject } from '../types/interface';
+
 // * Global
 export const ACCESS_TOKEN = 'access_token';
 export const COMPANY_ID = 'company_id';
@@ -29,3 +31,10 @@ export const CHART_COLORS = [
   '#b8a8ff',
   '#ffacd7',
 ];
+
+// * WorkType
+export const WORKTYPE_ID = {
+  근무: '1',
+  외근: '2',
+  '재택 근무': '3',
+} as StringObject;

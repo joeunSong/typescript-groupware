@@ -6,19 +6,19 @@ import moment from 'moment';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import USER_API from '../../services/user';
 import { useHoliday } from '../../hooks/useHoliday';
 import findWorkStatus from '../../utils/findWorkStatus';
 import { isSameDate, isToday } from '../../utils/dateUtil';
+import { DayWork } from '../../types/interface';
 
 interface UserDashBoardProps {
   userInfo?: any;
   onWork?: boolean;
   setOnWork?: any;
-  todayWorkInfo?: any;
-  setTodayWorkInfo?: any;
   todayWorkInfoList?: any; //오늘근무 정보 리스트
+  todayWorkInfo: DayWork;
+  setTodayWorkInfo?: React.Dispatch<DayWork>;
 }
 
 const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWorkInfo, todayWorkInfoList }: UserDashBoardProps) => {
@@ -51,8 +51,6 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
     let endDay = moment(currentWeek[6]).endOf('day').toISOString();
 
     try {
-      //setBaseURL('http://localhost:8080/api/');
-      //const response = await instance.get('commutes?startAt=' + startDay + '&endAt=' + endDay);
       const response = await USER_API.commute_log(startDay, endDay);
       const data = response.data;
       console.log(data);
