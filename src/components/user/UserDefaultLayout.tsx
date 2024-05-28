@@ -111,10 +111,10 @@ const UserDefaultLayout = (props: any) => {
           },
           {
             icon: WorkIcon,
-            label: '근무 관리',
+            label: '근무',
             open: false,
             items: [
-              { icon: DraftsIcon, label: '근무', url: ENDPOINT.USER_DASHBOARD },
+              { icon: DraftsIcon, label: '근무 조회', url: ENDPOINT.USER_DASHBOARD },
               { icon: DraftsIcon, label: '근무 승인', url: ENDPOINT.USER_WORK_APPROVAL },
             ],
           },
