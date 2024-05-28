@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Tooltip } from '@mui/material';
+import USER_API from '../../../services/user';
+import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
+import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
+import { WorkRecord } from '../../../types/interface';
 
 interface TodayWorkBarProps {
-  todayWorkInfo: any;
+  todayWorkInfo: WorkRecord;
 }
 
 function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
   const [workTime, setWorkTime] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -55,21 +61,40 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
     }
   };
 
-  return (
-    todayWorkInfo.startAt && (
+  const handleModalOpen = async () => {
+    if (todayWorkInfo.isNormal) {
+      try {
+        // 조정 요청 가능한지 조회
+        const response = await USER_API.is_editable(todayWorkInfo.id);
+
+        if (response.data.status !== 'PENDING') {
+          setIsEditable(true);
+        } else {
+          setIsEditable(false);
+        }
+        setIsModalOpen(true);
+      } catch (error) {
+        alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
+        setIsModalOpen(false);
+      }
+    }
+  };
+  return todayWorkInfo.startAt ? (
+    <>
       <Tooltip
         //title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
         title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
         placement='top'
       >
         <div
-          className='bg-primary w-0 h-[50px] absolute rounded-[5px]'
+          className={`bg-primary w-0 h-[50px] absolute rounded-[5px] ${todayWorkInfo.isNormal ? 'cursor-pointer' : ''}`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,
             minWidth: 1,
             //transition: 'all 0.5s ease',
           }}
+          onClick={handleModalOpen}
         >
           {workTime >= 120 && (
             <div className='p-[5px] text-[12px] text-white'>
@@ -81,7 +106,15 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
           )}
         </div>
       </Tooltip>
-    )
+      {isModalOpen &&
+        (isEditable ? (
+          <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={todayWorkInfo} />
+        ) : (
+          <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        ))}
+    </>
+  ) : (
+    <></>
   );
 }
 

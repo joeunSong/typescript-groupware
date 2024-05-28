@@ -21,6 +21,7 @@
     "autoprefixer": "^9.8.8",
     "chartjs-plugin-datalabels": "^2.2.0",
     "dayjs": "^1.11.11",
+    "dayjs-plugin-utc": "^0.1.2",
     "postcss": "^8.1.4",
     "primeicons": "^7.0.0",
     "primereact": "^10.6.5",

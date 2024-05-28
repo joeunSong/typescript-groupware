@@ -1,27 +1,12 @@
+import { StringObject } from './../types/interface';
 import axios from '../utils/axios';
-
-interface LoginProps {
-  email: string;
-  password: string;
-}
-
-interface CommuteInProps {
-  startAt: string;
-  date: string;
-  workType: string;
-}
-
-interface CommuteOutProps {
-  commuteId: string;
-  endAt: string;
-}
 
 const USER_API = () => {
   const baseURLChange = () => {
     axios.setBaseURL(process.env.REACT_APP_USER_LOCAL_SERVER);
   };
 
-  const login = async ({ email, password }: LoginProps) => {
+  const login = async ({ email, password }: StringObject) => {
     baseURLChange();
     return await axios.instance.post('/auth/login', {
       email,
@@ -34,12 +19,12 @@ const USER_API = () => {
     return await axios.instance.get('users');
   };
 
-  const commute_in = async ({ startAt, date, workType }: CommuteInProps) => {
+  const commute_in = async ({ startAt, date, workType }: StringObject) => {
     baseURLChange();
     return await axios.instance.post('/commutes/in', { startAt, date, workType });
   };
 
-  const commute_out = async ({ commuteId, endAt }: CommuteOutProps) => {
+  const commute_out = async ({ commuteId, endAt }: StringObject) => {
     baseURLChange();
     return await axios.instance.post(`/commutes/${commuteId}/out`, { endAt });
   };
@@ -59,7 +44,17 @@ const USER_API = () => {
     return await axios.instance.get('/commutes/work-type');
   };
 
-  return { login, profile, commute_in, commute_out, commute_today_info, commute_log, commute_type };
+  const commute_edit = async ({ id, startAt, endAt, workTypeId }: StringObject) => {
+    baseURLChange();
+    return await axios.instance.put('/commutes/' + id, { startAt, endAt, workTypeId });
+  };
+
+  const is_editable = async (id: number) => {
+    baseURLChange();
+    return await axios.instance.get('/commutes/pendings/' + id);
+  };
+
+  return { login, profile, commute_in, commute_out, commute_today_info, commute_log, commute_type, commute_edit, is_editable };
 };
 
 export default USER_API();

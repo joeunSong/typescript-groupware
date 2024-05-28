@@ -3,7 +3,7 @@ import { CustomModal } from '../common/Components';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import ADMIN_API from '../../services/admin';
 import { COMPANY_ID } from '../../constants/constant';
-import { Account, StringObject } from '../../types/interface';
+import { User, StringObject } from '../../types/interface';
 import _ from 'lodash';
 
 interface AccountDetailProps {
@@ -23,12 +23,8 @@ const KOREAN_LABEL: StringObject = {
   enter_date: '입사일',
 };
 
-const AccountDetail = ({
-  accountId,
-  isAccountDetailOpen,
-  setIsAccountDetailOpen,
-}: AccountDetailProps) => {
-  const [account, setAccount] = useState<Account>();
+const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen }: AccountDetailProps) => {
+  const [account, setAccount] = useState<User>();
 
   useEffect(() => {
     const getAccountDetail = async () => {
