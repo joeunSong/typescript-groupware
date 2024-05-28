@@ -49,8 +49,9 @@ build_project:
 deploy_project:
   stage: deploy
   # image: alpine:latest
-  # before_script:
+  before_script:
     # - docker login -u $REGISTRY_TOKEN -p $REGISTRY_TOKEN_PW $CI_REGISTRY
+  - git config --global --add safe.directory /www/front
 
   script:
     # - IMAGE_NAME=$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
