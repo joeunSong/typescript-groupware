@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CustomModal } from '../common/Components';
+import { CustomButton, CustomModal } from '../common/Components';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import ADMIN_API from '../../services/admin';
 import { COMPANY_ID } from '../../constants/constant';
@@ -8,8 +8,8 @@ import _ from 'lodash';
 
 interface AccountDetailProps {
   accountId: number;
-  isAccountDetailOpen: boolean;
-  setIsAccountDetailOpen: React.Dispatch<boolean>;
+  isAccountDetailOpen: number;
+  setIsAccountDetailOpen: React.Dispatch<number>;
 }
 
 // api 구성에 따른 필터링 요소(임시)
@@ -41,26 +41,36 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
   }, [accountId]);
 
   const handleCloseModal = () => {
-    setIsAccountDetailOpen(false);
+    setIsAccountDetailOpen(0);
   };
 
   return (
-    <CustomModal isOpen={isAccountDetailOpen} onClose={handleCloseModal} title='계정 상세'>
-      <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
-        <Table sx={{ minWidth: 500 }}>
-          <TableBody>
-            {Object.entries(_.pick(account, SHOW_DATA)).map(([key, value]) => {
-              if (key === 'is_admin') {
-                console.log('isadmin', value ? '관리자' : '사용자');
-                return CustomRow(key, value ? '관리자' : '사용자');
-              } else {
-                return CustomRow(key, String(value));
-              }
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </CustomModal>
+    <>
+      <CustomModal isOpen={isAccountDetailOpen === 1} onClose={handleCloseModal} title='계정 상세'>
+        <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
+          <Table sx={{ minWidth: 500 }}>
+            <TableBody>
+              {Object.entries(_.pick(account, SHOW_DATA)).map(([key, value]) => {
+                if (key === 'is_admin') {
+                  console.log('isadmin', value ? '관리자' : '사용자');
+                  return CustomRow(key, value ? '관리자' : '사용자');
+                } else {
+                  return CustomRow(key, String(value));
+                }
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div className='flex justify-center gap-5 mt-8'>
+          <CustomButton variant='contained' size='auto' color='secondary' onClick={() => setIsAccountDetailOpen(3)}>
+            삭제
+          </CustomButton>
+          <CustomButton variant='contained' size='auto' color='primary' onClick={() => setIsAccountDetailOpen(2)}>
+            수정
+          </CustomButton>
+        </div>
+      </CustomModal>
+    </>
   );
 };
 
@@ -74,6 +84,4 @@ const CustomRow = (label: string, content: string) => {
     </TableRow>
   );
 };
-;
-
 export default AccountDetail;

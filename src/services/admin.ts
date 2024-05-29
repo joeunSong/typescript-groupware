@@ -34,6 +34,36 @@ const ADMIN_API = () => {
     return await axios.instance.patch(`/companies/${companyId}/departments/${departmentId}/leader`, { user_id: userId });
   };
 
+  // * 부서 조회
+  const department = async (companyId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/departments`);
+  };
+
+  // * 사용자 조회
+  const users = async (companyId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/users`);
+  };
+
+  // * 사용자 수정
+  const user_edit = async (companyId: number, userId: number, data: any) => {
+    baseURLChange();
+    return await axios.instance.patch(`/companies/${companyId}/users/${userId}`, data);
+  };
+
+  // * 사용자 생성
+  const user_create = async (companyId: number, data: any) => {
+    baseURLChange();
+    return await axios.instance.post(`/companies/${companyId}/users`, data);
+  };
+
+  // * 사용자 생성
+  const user_delete = async (companyId: number, userId: number) => {
+    baseURLChange();
+    return await axios.instance.delete(`/companies/${companyId}/users/${userId}`);
+  };
+
   // * 계정 상세 조회
   const account_detail = async (companyId: number, userId: number) => {
     baseURLChange();
@@ -95,7 +125,12 @@ const ADMIN_API = () => {
     department_create,
     department_delete,
     department_manager_edit,
+    department,
     account_detail,
+    users,
+    user_edit,
+    user_create,
+    user_delete,
     getCommutes,
     getCommutes_detail,
     statistics_department,
