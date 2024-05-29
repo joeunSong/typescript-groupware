@@ -10,6 +10,7 @@ import { useHoliday } from '../../../hooks/useHoliday';
 import findWorkStatus from '../../../utils/findWorkStatus';
 import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
+import { isSameDate, isToday } from '../../../utils/dateUtil';
 
 interface MyFullCalendarProps {
   onWork?: boolean;
@@ -20,8 +21,6 @@ interface MyFullCalendarProps {
 const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCalendarProps) => {
   const today = moment();
   const calendarRef = useRef<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditable, setIsEditable] = useState(true);
 
   //공휴일 받아오기
   const { getHolidayList } = useHoliday();
@@ -84,17 +83,8 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
   };
 
   function dayCellContent(info: any) {
-    // Check if the date is a holiday
-
     const isHoliday = holidayList.find((holiday) => moment(holiday.date).isSame(info.date, 'date'));
-
-    const isSameDate = (day: string, day2: any) => {
-      const currentDate = moment(day2).format('YYYY-MM-DD');
-      //console.log(moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day'));
-      return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
-    };
-
-    const workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.date, info.date));
+    const workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
 
     return (
       <div className='fc-daygrid-day-custom flex flex-1 items-center justify-between'>
@@ -113,72 +103,29 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
 
   //console.log(holidayList);
 
+  const renderEventContent = (eventInfo: EventContentArg) => {
+    if (!eventInfo || !eventInfo.event) return null;
 
-  
-const renderEventContent = (eventInfo: EventContentArg) => {
-  if (!eventInfo || !eventInfo.event) return null;
+    const isHoliday = eventInfo.event?.extendedProps?.isHoliday;
+    const workInfo = eventInfo?.event?.extendedProps?.workInfo;
 
-
-  const isHoliday = eventInfo.event?.extendedProps?.isHoliday;
-  const workInfo = eventInfo?.event?.extendedProps?.workInfo;
-
-  const isToday = (day: string) => {
-    const currentDate = moment().format('YYYY-MM-DD');
-    return moment(day, 'YYYY.MM.DD').isSame(currentDate, 'day');
-  };
-
-  function formatTime(time: string) {
-    return moment(time).format('HH:mm');
-  }
-
-  const handleModalOpen = async () => {
-    if (workInfo.isNormal) {
-      try {
-        // 조정 요청 가능한지 조회
-        const response = await USER_API.is_editable(workInfo.id);
-
-        if (response.data.status !== 'PENDING') {
-          setIsEditable(true);
-        } else {
-          setIsEditable(false);
-        }
-        setIsModalOpen(true);
-      } catch (error) {
-        alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
-        setIsModalOpen(false);
-      }
+    function formatTime(time: string) {
+      return moment(time).format('HH:mm');
     }
+
+    return (
+      <>
+        {workInfo && <WorkInfoEvent workInfo={workInfo} />}
+        {isHoliday && (
+          <div className={`holiday-event`}>
+            <div>{eventInfo.event?.extendedProps?.workType}</div>
+            {eventInfo.event?.title}
+          </div>
+        )}
+      </>
+    );
   };
 
-  return isHoliday ? (
-    <div className={`holiday-event`}>
-      <div>{eventInfo.event?.extendedProps?.workType}</div>
-      {eventInfo.event?.title}
-    </div>
-  ) : (
-    workInfo && (
-      <>
-        {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event`} onClick={handleModalOpen}>
-          {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
-          {/* <div className='flex justify-end'>
-            <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
-          </div> */}
-
-          <div>{`출근 : ${formatTime(workInfo?.startAt)}`}</div>
-          <div>{`퇴근 : ${workInfo?.isNormal ? formatTime(workInfo?.endAt) : isToday(workInfo.date) ? '근무중' : '-'}`}</div>
-          {/* {eventInfo.event?.title} */}
-        </div>
-        {isModalOpen &&
-          (isEditable ? (
-            <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={workInfo} />
-          ) : (
-            <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-          ))}
-      </>
-    )
-  );
-};
   return (
     <div className='w-full h-full font-noto-sans'>
       {/* <button onClick={handlePrevMonth}>Prev</button>
@@ -215,17 +162,6 @@ const renderEventContent = (eventInfo: EventContentArg) => {
 
         //이벤트 정보 커스텀
         events={[
-          //근태정보 리스트
-          ...monthWorkInfo.map((_it: any) => {
-            return {
-              title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
-              date: moment(_it?.date).format('YYYY-MM-DD'),
-              extendedProps: {
-                workType: _it?.workType?.title,
-                workInfo: _it,
-              },
-            };
-          }),
           //공휴일 리스트
           ...holidayList.map((_it: any) => {
             return {
@@ -233,6 +169,17 @@ const renderEventContent = (eventInfo: EventContentArg) => {
               date: moment(_it?.date).format('YYYY-MM-DD'),
               extendedProps: {
                 isHoliday: true,
+              },
+            };
+          }),
+          //근태정보 리스트
+          ...monthWorkInfo.map((_it: any) => {
+            return {
+              title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
+              date: moment(_it?.startAt).format('YYYY-MM-DD'),
+              extendedProps: {
+                workType: _it?.workType?.title,
+                workInfo: _it,
               },
             };
           }),
@@ -245,3 +192,58 @@ const renderEventContent = (eventInfo: EventContentArg) => {
 };
 
 export default MyFullCalendar;
+
+const WorkInfoEvent = ({ workInfo }: any) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
+
+  const handleModalOpen = async () => {
+    //당일 근무 중일 경우 조정 불가
+    if (isToday(workInfo.startAt) && !workInfo.isNormal) {
+      return;
+    }
+
+    try {
+      // 조정 요청 가능한지 조회
+      const response = await USER_API.is_editable(workInfo.id);
+
+      if (response.data.status !== 'PENDING') {
+        setIsEditable(true);
+      } else {
+        setIsEditable(false);
+      }
+      setIsModalOpen(true);
+    } catch (error) {
+      alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
+      setIsModalOpen(false);
+    }
+  };
+
+  function formatTime(time: string) {
+    return moment(time).format('HH:mm');
+  }
+
+  return (
+    workInfo && (
+      <>
+        {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
+        <div className={`work-event`} onClick={handleModalOpen}>
+          {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
+          {/* <div className='flex justify-end'>
+            <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
+          </div> */}
+
+          <div>{`출근 : ${formatTime(workInfo?.startAt)}`}</div>
+          <div>{`퇴근 : ${workInfo?.isNormal ? formatTime(workInfo?.endAt) : isToday(workInfo.date) ? '근무중' : '-'}`}</div>
+          {/* {eventInfo.event?.title} */}
+        </div>
+        {isModalOpen &&
+          (isEditable ? (
+            <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={workInfo} />
+          ) : (
+            <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          ))}
+      </>
+    )
+  );
+};

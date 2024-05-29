@@ -213,7 +213,7 @@ const AttendMenu = ({ userInfo, todayWorkInfoList, setTodayWorkInfoList, onWork,
         todayWorkInfo?.startAt ? (
           todayWorkInfo?.isNormal ? (
             // 근무 내역
-            <div className='flex flex-col justify-between w-[250px] h-[95px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
+            <div className='flex flex-col justify-between  h-[95px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
               <div className='flex justify-between items-center content-between'>
                 <span className='font-h2 text-primary'>{moment(todayWorkInfo?.endAt).format('MM월 DD일')}</span>
                 <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>종료</div>
@@ -222,15 +222,17 @@ const AttendMenu = ({ userInfo, todayWorkInfoList, setTodayWorkInfoList, onWork,
             </div>
           ) : (
             // 퇴근 버튼
-            <div className='flex flex-col justify-between w-[250px] h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
+            <div className='flex flex-col justify-between h-[153px] p-[10px] rounded-[5px] bg-white border-[1px] border-solid border-primary'>
               <div className='flex justify-between items-center content-between'>
                 <span className='font-h2 text-primary'>{todayWorkInfo?.workType?.title}</span>
                 <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>진행중</div>
               </div>
               <div className='font-body1'>{`${formattedTime(todayWorkInfo?.startAt)} 부터 진행중`}</div>
-              <CustomButton onClick={handleLeaveWorkClick} variant='contained' size='md' color='primary'>
-                퇴근하기
-              </CustomButton>
+              <div className='flex items-center'>
+                <CustomButton onClick={handleLeaveWorkClick} variant='contained' size='md' color='primary'>
+                  퇴근하기
+                </CustomButton>
+              </div>
             </div>
           )
         ) : (
