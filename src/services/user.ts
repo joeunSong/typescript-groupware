@@ -66,6 +66,16 @@ const USER_API = () => {
     return await axios.instance.get(`/commutes/pendings/${pendingId}`);
   };
 
+  const edit_approved = async (id: number) => {
+    baseURLChange();
+    return await axios.instance.put(`/commutes/${id}/approval`, { status: 'ALLOW' });
+  };
+
+  const edit_rejected = async (id: number) => {
+    baseURLChange();
+    return await axios.instance.put(`/commutes/${id}/approval`, { status: 'REJECT' });
+  };
+
   return {
     login,
     profile,
@@ -78,6 +88,8 @@ const USER_API = () => {
     is_editable,
     commute_pendings,
     commute_pending_detail,
+    edit_approved,
+    edit_rejected,
   };
 };
 

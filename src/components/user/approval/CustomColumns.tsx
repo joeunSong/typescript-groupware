@@ -1,5 +1,6 @@
 import moment from 'moment';
 import 'moment/locale/ko';
+import findWorkStatus from '../../../utils/findWorkStatus';
 
 export const CustomStartAt = (rowData: any, tableData: any) => {
   return (
@@ -74,7 +75,7 @@ export const CustomCommuteAboveWork = (rowData: any, tableData: any) => {
       title={rowData.id}
       className={`flex w-full items-center h-[50px] p-[16px] border-solid ${tableData.rowIndex === 0 ? 'border-t-[1px]' : ''} border-b-[1px] border-gray-200`}
     >
-      <span className='text-base truncate'>{moment(rowData?.commute?.endAt).format('hh:mm')}</span>
+      <span className='text-base truncate'>{findWorkStatus(rowData)}</span>
     </div>
   );
 };

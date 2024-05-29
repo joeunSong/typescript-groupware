@@ -3,7 +3,7 @@ import { CustomButton, CustomModal } from '../../common/Components';
 import { FormControl, SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { KSTtoMMDD, period } from '../../../utils/dateFormatter';
-import WorkTimeSelect from './WorkTypeSelect';
+import WorkTypeSelect from './WorkTypeSelect';
 import CommuteTimePicker from './CommuteTimePicker';
 import { WorkRecord } from '../../../types/interface';
 import USER_API from '../../../services/user';
@@ -35,8 +35,8 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
 
   const handleSubmit = async () => {
     try {
-      dayjs.extend(utc); 
-
+      dayjs.extend(utc);
+      console.log('workForm in handleSubmit', workForm);
       const response = await USER_API.commute_edit({
         id: String(work.id),
         startAt: dayjs.utc(workForm.startAt).format(),
@@ -54,6 +54,7 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
       console.log(error);
     }
   };
+  console.log('workForm: ', workForm);
 
   return (
     <CustomModal isOpen={isModalOpen} onClose={handleModalClose} title='근무 기록 조정'>
@@ -65,13 +66,14 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
           </div>
         </div>
         <FormControl className='gap-2'>
-          <WorkTimeSelect value={workForm.type} onChange={(e: SelectChangeEvent) => setWorkForm({ ...workForm, type: e.target.value })} />
+          <WorkTypeSelect value={workForm.type} onChange={(e: SelectChangeEvent) => setWorkForm({ ...workForm, type: e.target.value })} />
 
           <div className='flex space-x-2'>
             <CommuteTimePicker
               startAt={workForm.startAt}
               startOnChange={(newValue: Dayjs) => {
                 setWorkForm((prev) => {
+                  console.log('setWorkForm worked');
                   return { ...prev, startAt: newValue };
                 });
               }}
