@@ -15,15 +15,15 @@ const AdminWorkApprovePage = () => {
       try {
         const companyId = Number(localStorage.getItem(COMPANY_ID));
         const result = await ADMIN_API.getCommutes(companyId);
-        console.log(result);
+        // console.log(result);
 
-        setCommutes(result.data);
+        setCommutes(result.data.data);
       } catch (error) {
         console.log(error);
       }
     };
     getCommutes();
-    console.log('commutes: ', commutes);
+    // console.log('commutes: ', commutes);
   });
 
   const getDayOfWeek = (date: Date) => {
@@ -57,9 +57,9 @@ const AdminWorkApprovePage = () => {
           </TableHead>
           <TableBody>
             {commutes &&
-              commutes.data.map((commute: any) => {
-                const start_at = moment(commutes.data.start_at);
-                const end_at = moment(commutes.data.end_at);
+              commutes.map((commute: any) => {
+                const start_at = moment(commutes.start_at);
+                const end_at = moment(commutes.end_at);
 
                 const formattedStartTime = start_at.format('HH:mm');
                 const formattedEndTime = end_at.format('HH:mm');
@@ -67,11 +67,11 @@ const AdminWorkApprovePage = () => {
                 return (
                   <>
                     <TableRow
-                      key={commute.user_name}
+                      key={commute.id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}
                       className='cursor-pointer'
                       onClick={() => {
-                        handleAccountDetail(commute.user_id);
+                        handleAccountDetail(commute.id);
                       }}
                     >
                       <TableCell align='center'>{`${commute.date}(${getDayOfWeek(commute.date)})`}</TableCell>

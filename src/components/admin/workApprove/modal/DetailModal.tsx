@@ -1,32 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import ADMIN_API from '../../../../services/admin';
+import { COMPANY_ID } from '../../../../constants/constant';
 import { CustomModal } from '../../../common/Components';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import _ from 'lodash';
+import moment from 'moment';
 
 interface AccountDetailProps {
   commuteDetailId: number;
   isCommuteDetailOpen: boolean;
   setIsCommuteDetailOpen: React.Dispatch<boolean>;
 }
-// // api 구성에 따른 필터링 요소(임시)
-// const SHOW_DATA = ['name', 'email', 'rank_title', 'department_title', 'is_admin', 'enter_date'];
-// const KOREAN_LABEL: StringObject = {
-//   name: '이름',
-//   email: '아이디',
-//   rank_title: '직위',
-//   department_title: '부서',
-//   is_admin: '권한',
-//   enter_date: '입사일',
-// };
+
+const SHOW_DATA = ['user_name', 'email', 'department_title', 'rank_title', 'title', 'status', 'start_at', 'end_at'];
+const KOREAN_LABEL: any = {
+  user_name: '이름',
+  user_email: '아이디',
+  department_title: '부서',
+  rank_title: '직위',
+  title: '근무유형',
+  status: '근태구분',
+  start_at: '출근시간',
+  end_at: '퇴근시간',
+};
 
 const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailOpen }: AccountDetailProps) => {
-  const [commute, setCommute] = useState();
+  const [commute, setCommute] = useState<any>();
 
   useEffect(() => {
     const getCommuteDetail = async () => {
       try {
-        // const companyId = Number(localStorage.getItem(COMPANY_ID));
-        // const result = await ADMIN_API.account_detail(companyId, commuteDetailId);
-        // setCommute(result.data.data);
+        const companyId = Number(localStorage.getItem(COMPANY_ID));
+        const result = await ADMIN_API.getCommutes_detail(companyId, commuteDetailId);
+        setCommute(result.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -43,13 +49,19 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
       <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
         <Table sx={{ minWidth: 500 }}>
           <TableBody>
-            {/* {Object.entries(_.pick(commute, SHOW_DATA)).map(([key, value]) => {
-              if (key === 'is_admin') {
-                return CustomRow(key, value ? '관리자' : '사용자');
+            {Object.entries(_.pick(commute, SHOW_DATA)).map(([key, value]) => {
+              // console.log('outer: ', key, value);
+              console.log('commute: ', commute.work_type.title);
+
+              if (key === 'start_at' || key === 'end_at') {
+                const timeValue = moment(value);
+                return [CustomRow(key, timeValue.format('HH:mm:ss'))];
+              } else if (key === 'rank_title') {
+                return [CustomRow(key, String(value)), CustomRow('title', commute.work_type.title)];
               } else {
-                return CustomRow(key, String(value));
+                return [CustomRow(key, String(value))];
               }
-            })} */}
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -62,7 +74,7 @@ const CustomRow = (label: string, content: string) => {
 
   return (
     <TableRow key={label}>
-      {/* <TableCell sx={{ border: 0, width: 80 }}>{KOREAN_LABEL[label]}</TableCell> */}
+      <TableCell sx={{ border: 0, width: 100 }}>{KOREAN_LABEL[label]}</TableCell>
       <TableCell sx={{ border: 0 }}>{content}</TableCell>
     </TableRow>
   );

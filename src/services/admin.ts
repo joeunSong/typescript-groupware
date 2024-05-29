@@ -44,7 +44,22 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/commutes`);
   };
 
-  return { admin_login, organization, department_create, department_delete, department_manager_edit, account_detail, getCommutes };
+  // * 근무 상세 조회
+  const getCommutes_detail = async (companyId: number, userId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/commutes/${userId}`);
+  };
+
+  return {
+    admin_login,
+    organization,
+    department_create,
+    department_delete,
+    department_manager_edit,
+    account_detail,
+    getCommutes,
+    getCommutes_detail,
+  };
 };
 
 export default ADMIN_API();
