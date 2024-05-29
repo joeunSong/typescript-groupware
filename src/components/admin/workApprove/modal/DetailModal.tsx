@@ -12,7 +12,7 @@ interface AccountDetailProps {
   setIsCommuteDetailOpen: React.Dispatch<boolean>;
 }
 
-const SHOW_DATA = ['user_name', 'email', 'department_title', 'rank_title', 'title', 'status', 'start_at', 'end_at'];
+const SHOW_DATA = ['user_name', 'user_email', 'department_title', 'rank_title', 'title', 'status', 'start_at', 'end_at'];
 const KOREAN_LABEL: any = {
   user_name: '이름',
   user_email: '아이디',
@@ -50,9 +50,6 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
         <Table sx={{ minWidth: 500 }}>
           <TableBody>
             {Object.entries(_.pick(commute, SHOW_DATA)).map(([key, value]) => {
-              // console.log('outer: ', key, value);
-              console.log('commute: ', commute.work_type.title);
-
               if (key === 'start_at' || key === 'end_at') {
                 const timeValue = moment(value);
                 return [CustomRow(key, timeValue.format('HH:mm:ss'))];
@@ -71,7 +68,6 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
 
 const CustomRow = (label: string, content: string) => {
   // console.log(label, content);
-
   return (
     <TableRow key={label}>
       <TableCell sx={{ border: 0, width: 100 }}>{KOREAN_LABEL[label]}</TableCell>
