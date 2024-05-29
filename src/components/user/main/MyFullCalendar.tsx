@@ -33,6 +33,14 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     end: today.endOf('month').endOf('day').toISOString(),
   });
 
+  function handleTodayButtonClick() {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.today();
+      handleCurrentMonth();
+    }
+  }
+
   //다음 달 클릭시
   function handleNextMonth() {
     const calendarApi = calendarRef.current?.getApi();
@@ -86,11 +94,31 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     const isHoliday = holidayList.find((holiday) => moment(holiday.date).isSame(info.date, 'date'));
     const workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
 
+    info.dayNumberText = info.dayNumberText.replace('일', '');
+
     return (
-      <div className='fc-daygrid-day-custom flex flex-1 items-center justify-between'>
-        <div className={`flex fc-daygrid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
-        {workInfo && (
-          <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
+      <div className='fc-daygrid-day-custom flex flex-1 items-center justify-between truncate '>
+        {isHoliday ? (
+          <>
+            <div className='flex bg-[#fcaa0b] w-full text-white p-[5px] items-center'>
+              {info.dayNumberText}
+              <span className='m-auto'> {isHoliday.name}</span>
+              {workInfo && (
+                <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>
+                  {findWorkStatus(workInfo)}
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={`flex fc-daygrid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
+            {workInfo && (
+              <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>
+                {findWorkStatus(workInfo)}
+              </div>
+            )}
+          </>
         )}
       </div>
     );
@@ -116,78 +144,121 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     return (
       <>
         {workInfo && <WorkInfoEvent workInfo={workInfo} />}
-        {isHoliday && (
+        {/* {isHoliday && (
           <div className={`holiday-event`}>
             <div>{eventInfo.event?.extendedProps?.workType}</div>
             {eventInfo.event?.title}
           </div>
-        )}
+        )} */}
       </>
     );
   };
 
-  return (
-    <div className='w-full h-full font-noto-sans'>
-      {/* <button onClick={handlePrevMonth}>Prev</button>
-      <button onClick={handleNextMonth}>Next</button> */}
-      <FullCalendar
-        ref={calendarRef}
-        locale='kr'
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView='dayGridMonth'
-        // dateClick={handleDateClick}
-        //커스텀 버튼 생성
-        customButtons={{
-          customNext: {
-            text: '>',
-            click: function () {
-              handleNextMonth();
-            },
-          },
-          customPrev: {
-            text: '<',
-            click: function () {
-              handlePrevMonth();
-            },
-          },
-        }}
-        headerToolbar={{
-          start: 'customPrev',
-          center: 'title',
-          end: 'customNext',
-        }}
-        // firstDay={1}
-        height={'80vh'}
-        // aspectRatio={1.8}
+  const workStateList = [
+    {
+      name: '정상',
+      cnt: 3,
+      color: '#307D2E',
+    },
+    {
+      name: '지각',
+      cnt: 3,
+      color: '#FFC451',
+    },
+    {
+      name: '이상',
+      cnt: 3,
+      color: '#FF0000',
+    },
+    {
+      name: '초과',
+      cnt: 3,
+      color: '#432E7D',
+    },
+  ];
 
-        //이벤트 정보 커스텀
-        events={[
-          //공휴일 리스트
-          ...holidayList.map((_it: any) => {
-            return {
-              title: _it?.name,
-              date: moment(_it?.date).format('YYYY-MM-DD'),
-              extendedProps: {
-                isHoliday: true,
+  return (
+    <>
+      <div className='w-full h-full font-noto-sans'>
+        <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px]'>
+          <span className='cursor-pointer' onClick={handlePrevMonth}>
+            {'<'}
+          </span>
+          <div>{moment(currentMonth.start).format('M') + '월'}</div>
+          <span className='cursor-pointer' onClick={handleNextMonth}>
+            {'>'}
+          </span>
+
+          <button onClick={handleTodayButtonClick}>Today</button>
+        </div>
+
+        <div className='flex w-full h-[80px] rounded-[10px] border border-solid border-[#C7C7C7] gap-[10%]'>
+          {workStateList.map((_it) => (
+            <div className='p-[10px] pl-[20px] pr-[20px] text-[#777777] flex-col items-center justify-center'>
+              <div className='flex-1'>{_it.name}</div>
+              <div className='flex-[2_1_0%] flex items-center justify-center'>{_it.cnt}</div>
+            </div>
+          ))}
+        </div>
+        <FullCalendar
+          ref={calendarRef}
+          locale='kr'
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView='dayGridMonth'
+          // dateClick={handleDateClick}
+          //커스텀 버튼 생성
+          customButtons={{
+            customNext: {
+              text: '>',
+              click: function () {
+                handleNextMonth();
               },
-            };
-          }),
-          //근태정보 리스트
-          ...monthWorkInfo.map((_it: any) => {
-            return {
-              title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
-              date: moment(_it?.startAt).format('YYYY-MM-DD'),
-              extendedProps: {
-                workType: _it?.workType?.title,
-                workInfo: _it,
+            },
+            customPrev: {
+              text: '<',
+              click: function () {
+                handlePrevMonth();
               },
-            };
-          }),
-        ]}
-        eventContent={renderEventContent}
-        dayCellContent={dayCellContent}
-      />
-    </div>
+            },
+          }}
+          headerToolbar={{
+            start: 'customPrev',
+            center: 'title',
+            end: 'customNext',
+          }}
+          // firstDay={1}
+          height={'60vh'}
+          // aspectRatio={1.8}
+
+          //이벤트 정보 커스텀
+          events={[
+            //공휴일 리스트
+            ...holidayList.map((_it: any, idx) => {
+              return {
+                title: _it?.name,
+                date: moment(_it?.date).format('YYYY-MM-DD'),
+                extendedProps: {
+                  isHoliday: true,
+                },
+              };
+            }),
+            //근태정보 리스트
+            ...monthWorkInfo.map((_it: any) => {
+              return {
+                title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
+                date: moment(_it?.startAt).format('YYYY-MM-DD'),
+                extendedProps: {
+                  workType: _it?.workType?.title,
+                  workInfo: _it,
+                },
+              };
+            }),
+          ]}
+          eventContent={renderEventContent}
+          dayCellContent={dayCellContent}
+        />
+      </div>
+    </>
   );
 };
 
@@ -227,7 +298,7 @@ const WorkInfoEvent = ({ workInfo }: any) => {
     workInfo && (
       <>
         {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event`} onClick={handleModalOpen}>
+        <div className={`work-event p-[10px]`} onClick={handleModalOpen}>
           {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
           {/* <div className='flex justify-end'>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
@@ -246,4 +317,8 @@ const WorkInfoEvent = ({ workInfo }: any) => {
       </>
     )
   );
+};
+
+const CustomChip = ({ name, color }: any) => {
+  return <div className={`flex w-[60px] h-[20px] rounded-[50px] bg-[${color}] text-white items-center justify-center`}>{name}</div>;
 };

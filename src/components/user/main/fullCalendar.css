@@ -6,7 +6,7 @@
   --fc-day-sun-text-color: red;
   --fc-work-event-bg-color: white;
   --fc-work-event-bg-color: white;
-  --fc-holiday-event-bg: #f57453;
+  --fc-holiday-event-bg: #fcaa0b;
 }
 
 .fc .fc-media-screen .fc-direction-ltr .fc-theme-standard {
@@ -18,13 +18,13 @@
 
 /* 일요일 날짜 빨간색 */
 .fc-day-sun a {
-  color: red;
+  /* color: red; */
   text-decoration: none;
 }
 
 /* 토요일 날짜 파란색 */
 .fc-day-sat a {
-  color: red;
+  /* color: red; */
   text-decoration: none;
 }
 
@@ -35,6 +35,7 @@
 
 .fc-day-today {
   background-color: transparent !important;
+  /* background-color: red; */
 }
 
 .fc-day-today a {
@@ -55,7 +56,7 @@
 /* // toolbar container */
 .fc .fc-toolbar.fc-header-toolbar {
   margin: 0;
-  padding: 0 40px;
+  /* padding: 0 40px; */
   background-color: orange;
   height: 63px;
   font-weight: 600;
@@ -63,6 +64,7 @@
   line-height: 29px;
   color: white;
   border-radius: 20px 20px 0px 0px;
+  display: none;
 }
 /*
   // toolbar 버튼 */
@@ -101,7 +103,8 @@
 /*
   // 날짜별 그리드 */
 .fc .fc-daygrid-day-frame {
-  padding: 10px;
+  /* padding: 10px; */
+  /* padding: 5px; */
 }
 
 /* // 날짜  ex) 2일 */
@@ -114,12 +117,13 @@
 .fc-daygrid-day-number {
   display: flex;
   flex: 1;
+  font-size: 1.25rem;
 }
 
 /* // 각 이벤트 요소 */
 .fc-event {
   cursor: pointer;
-  padding: 5px;
+  /* padding: 5px; */
   margin-bottom: 5px;
   border-radius: 4px;
   font-weight: 500;
@@ -159,4 +163,8 @@
 
 button {
   box-shadow: none !important;
+}
+
+.fc-event {
+  margin: 0px !important;
 }

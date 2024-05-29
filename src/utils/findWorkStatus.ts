@@ -5,7 +5,7 @@ const findWorkStatus = (attendInfo: any) => {
   const { isLate, isOver, isNormal, date, isEarly } = attendInfo;
 
   if (isNormal === false && !isToday(date)) {
-    return '비정상';
+    return '이상';
   }
   if (isLate === true) {
     return '지각';
