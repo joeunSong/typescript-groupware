@@ -52,7 +52,7 @@ export const CustomCommuteStartAt = (rowData: any, tableData: any) => {
       title={rowData.id}
       className={`flex w-full items-center h-[50px] p-[16px] border-solid ${tableData.rowIndex === 0 ? 'border-t-[1px]' : ''} border-b-[1px] border-gray-200`}
     >
-      <span className='text-base truncate'>{moment(rowData?.commute?.startAt).format('hh:mm')}</span>
+      <span className='text-base truncate'>{moment(rowData?.commute?.startAt).format('HH:mm')}</span>
     </div>
   );
 };
@@ -63,7 +63,7 @@ export const CustomCommuteEndAt = (rowData: any, tableData: any) => {
       title={rowData.id}
       className={`flex w-full items-center h-[50px] p-[16px] border-solid ${tableData.rowIndex === 0 ? 'border-t-[1px]' : ''} border-b-[1px] border-gray-200`}
     >
-      <span className='text-base truncate'>{moment(rowData?.commute?.endAt).format('hh:mm')}</span>
+      <span className='text-base truncate'>{moment(rowData?.commute?.endAt).format('HH:mm')}</span>
     </div>
   );
 };
