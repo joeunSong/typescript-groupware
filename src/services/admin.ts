@@ -36,13 +36,19 @@ const ADMIN_API = () => {
   const department = async (companyId: number) => {
     baseURLChange();
     return await axios.instance.get(`/companies/${companyId}/departments`);
-  }
+  };
 
   // * 사용자 조회
   const users = async (companyId: number) => {
     baseURLChange();
     return await axios.instance.get(`/companies/${companyId}/users`);
-  }
+  };
+
+  // * 사용자 수정
+  const user_edit = async (companyId: number, userId: number, data: any) => {
+    baseURLChange();
+    return await axios.instance.patch(`/companies/${companyId}/users/${userId}`, { data: data });
+  };
 
   // * 계정 상세 조회
   const account_detail = async (companyId: number, userId: number) => {
@@ -50,7 +56,7 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/users/${userId}`);
   };
 
-  return { admin_login, organization, department_create, department_delete, department_manager_edit, department, account_detail, users };
+  return { admin_login, organization, department_create, department_delete, department_manager_edit, department, account_detail, users, user_edit };
 };
 
 export default ADMIN_API();

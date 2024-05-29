@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CustomButton, CustomModal } from '../common/Components';
-import { Paper, Portal, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import ADMIN_API from '../../services/admin';
 import { COMPANY_ID } from '../../constants/constant';
 import { Account, StringObject } from '../../types/interface';
