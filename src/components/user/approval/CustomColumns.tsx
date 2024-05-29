@@ -75,7 +75,7 @@ export const CustomCommuteAboveWork = (rowData: any, tableData: any) => {
       title={rowData.id}
       className={`flex w-full items-center h-[50px] p-[16px] border-solid ${tableData.rowIndex === 0 ? 'border-t-[1px]' : ''} border-b-[1px] border-gray-200`}
     >
-      <span className='text-base truncate'>{findWorkStatus(rowData)}</span>
+      <span className='text-base truncate'>{findWorkStatus(rowData.commute)}</span>
     </div>
   );
 };
