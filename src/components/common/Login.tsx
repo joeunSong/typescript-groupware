@@ -37,14 +37,15 @@ const Login = ({ logo, role }: LoginProps) => {
         });
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
         // localStorage.setItem(LOGIN_AUTH, 'user');
-        navigate(ENDPOINT.USER_DASHBOARD);
+        //navigate(ENDPOINT.USER_DASHBOARD);
+        navigate(ENDPOINT.USER_MAIN);
       } else {
         const response = await ADMIN_API.admin_login(data.get('email') as string, data.get('password') as string);
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
         localStorage.setItem(COMPANY_ID, response.data?.company_id);
         localStorage.setItem(USER_ID, response.data?.user_id);
         // localStorage.setItem(LOGIN_AUTH, 'admin');
-        navigate(ENDPOINT.ADMIN_DEPARTMENT);
+        navigate(ENDPOINT.ADMIN_DASHBOARD);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -102,7 +103,7 @@ const Login = ({ logo, role }: LoginProps) => {
             required
           />
 
-          <Button className='text-white w-[300px] bg-primary' type='submit'>
+          <Button className='text-white w-[300px] bg-primary hover:text-primary' type='submit'>
             로그인
           </Button>
         </Box>

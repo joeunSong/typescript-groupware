@@ -1,94 +1,190 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+// lib
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
+import moment from 'moment';
+
+// Components
 import SideBarLayout from '../common/SideBar';
 import AttendMenu from '../common/sidebar/AttendMenu';
 import ProfileMenu from '../common/sidebar/ProfileMenu';
-import React, { useEffect, useState } from 'react';
-import SendIcon from '@mui/icons-material/Send';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+
+// icons
+import { Home } from '@mui/icons-material';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import WorkIcon from '@mui/icons-material/Work';
-import _ from 'lodash';
-import moment from 'moment';
-import ApiClient from '../../utils/axios';
 import { Button } from '@mui/material';
+
+// etc
+import USER_API from '../../services/user';
+import * as ENDPOINT from '../../constants/apiEndpoints';
+import { WorkRecord } from '../../types/interface';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
   const navigate = useNavigate();
+  const location = useLocation();
 
   //사용자 정보
   const [userInfo, setUserInfo] = useState<any>();
-
   //출근 여부
   const [onWork, setOnWork] = useState<boolean>(false);
-
+  //당일 근무 정보 리스트
+  const [todayWorkInfoList, setTodayWorkInfoList] = useState<WorkRecord[]>([]);
   //당일 근무 정보
-  const [todayWorkInfo, setTodayWorkInfo] = useState<any>({
-    id: null,
-    startTime: null,
-    endTime: null,
-  });
-
+  const [todayWorkInfo, setTodayWorkInfo] = useState<WorkRecord | null>(null);
   // 메뉴 정보
   const [selectItem, setSelectItem] = useState<any>(null);
-  const [items, setItems] = useState([
+  const [items, setItems] = useState<any>([
     {
       icon: WorkIcon,
       label: '근무',
-      // open: false,
+      open: false,
       // items: [
       //   { icon: DraftsIcon, label: '근무', url: '/user/dashboard' },
       //   { icon: DraftsIcon, label: '근무 승인', url: '/user/work/approval' },
       // ],
     },
-
-    // {
-    //   icon: InboxIcon,
-    //   label: '휴가',
-    //   open: false,
-    //   items: [
-    //     { icon: DraftsIcon, label: '휴가 신청', url: '/user/vacation/request' },
-    //     { icon: DraftsIcon, label: '휴가 기록', url: '/user/vacation/records' },
-    //     { icon: DraftsIcon, label: '휴가 현황', url: '/user/vacation/status' },
-    //     { icon: DraftsIcon, label: '휴가 승인', url: '/user/vacation/approval' },
-    //   ],
-    // },
   ]);
 
   //헤더 템플릿
-  const headerTemplate = {
+  const [headerTemplate, setHeaderTemplate] = useState({
     attendMenu: (
-      <AttendMenu userInfo={userInfo} todayWorkInfo={todayWorkInfo} setTodayWorkInfo={setTodayWorkInfo} onWork={onWork} setOnWork={setOnWork} />
+      <AttendMenu
+        userInfo={userInfo}
+        todayWorkInfo={todayWorkInfo}
+        setTodayWorkInfo={setTodayWorkInfo}
+        todayWorkInfoList={todayWorkInfoList}
+        setTodayWorkInfoList={setTodayWorkInfoList}
+        onWork={onWork}
+        setOnWork={setOnWork}
+      />
     ),
     profileMenu: <ProfileMenu userInfo={userInfo} />,
-  };
-
-  const { instance, setBaseURL } = ApiClient;
+  });
 
   const getTodayWorkTInfo = async () => {
     //API통신을 통해서 출근 상태 및 시간 확인
     const today = moment().format('YYYY-MM-DD');
 
     try {
-      //const response = await ApiClient.instance.get(`http://localhost:8080/api/commutes/status?date=` + today);
-
-      setBaseURL('http://localhost:8080/api/');
-      const response = await instance.get(`commutes/status?date=` + today);
+      const response = await USER_API.commute_today_info(today);
       const data = response.data;
+      const len = data.length;
 
-      const { id, startAt, endAt } = data;
+      //당일 근무 리스트 설정
+      setTodayWorkInfoList(data);
+
+      if (len > 0) {
+        //최근 근무 설정
+        setTodayWorkInfo(data[len - 1]);
+      }
+
+      //console.log(data);
+
+      //const { id, startAt, endAt } = data[data.length - 1];
+      //console.log(data);
 
       //TODO
-      setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
+      //setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
 
-      return response.data;
+      //return response.data;
     } catch (error) {
       console.log(error);
     }
   };
+
+  const getUserInfo = async () => {
+    try {
+      const response = await USER_API.profile();
+      setUserInfo(response.data);
+    } catch (error) {
+      // 요청이 실패하면 여기에서 에러 처리
+      console.log(error);
+    }
+  };
+
+  // * 권한에 따른 사이드바 항목 Set
+  useEffect(() => {
+    if (!_.isEmpty(userInfo)) {
+      // 근태관리자
+      if (userInfo.isLeader) {
+        setItems([
+          {
+            icon: Home,
+            label: '홈',
+            open: false,
+            url: ENDPOINT.USER_MAIN,
+            items: [],
+          },
+          {
+            icon: WorkIcon,
+            label: '근무',
+            open: false,
+            items: [
+              { icon: DraftsIcon, label: '근무 조회', url: ENDPOINT.USER_DASHBOARD },
+              { icon: DraftsIcon, label: '근무 승인', url: ENDPOINT.USER_WORK_APPROVAL },
+            ],
+          },
+        ]);
+      } else {
+        setItems([
+          {
+            icon: Home,
+            label: '홈',
+            open: false,
+            url: ENDPOINT.USER_MAIN,
+            items: [],
+          },
+          {
+            icon: WorkIcon,
+            label: '근무',
+            open: false,
+            url: ENDPOINT.USER_DASHBOARD,
+            items: [],
+          },
+        ]);
+      }
+    }
+  }, [userInfo]);
+
+  // * url로 접속한 경우 뎁스 open
+  useEffect(() => {
+    if (_.isEmpty(selectItem)) {
+      setItems((prevs: any) => {
+        return _.map(prevs, (prev: any) => {
+          // 상위 항목으로 진입한 경우 선택 아이템 set
+          if (prev.url === location.pathname) {
+            setSelectItem(prev);
+            return prev;
+          }
+
+          // 하위 항목으로 진입한 경우 선택 아이템 set
+          const updatedItems = _.map(prev.items, (subItem: any) => {
+            if (subItem.url === location.pathname) {
+              setSelectItem(subItem);
+              return { ...subItem, open: true };
+            }
+            return subItem;
+          });
+
+          if (_.some(updatedItems, { url: location.pathname })) {
+            return { ...prev, open: true, items: updatedItems };
+          }
+          return prev;
+        });
+      });
+    }
+  }, [items]);
+
   useEffect(() => {
     getTodayWorkTInfo();
   }, [onWork]);
+
+  // * 사용자 프로필 조회
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -121,7 +217,7 @@ const UserDefaultLayout = (props: any) => {
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
-      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} setSelectItem={setSelectItem} />
+      <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
       <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
         로그아웃
       </Button>
@@ -132,9 +228,9 @@ const UserDefaultLayout = (props: any) => {
         </div>
         {/* 메인 콘텐츠 */}
 
-        {children?.type?.name === 'UserDashBoard' ? (
+        {children?.type?.name === 'UserDashBoard' || 'UserMain' ? (
           // UserDashBoard일 경우 props전달
-          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo }) || <Outlet />}</div>
+          <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo, todayWorkInfoList }) || <Outlet />}</div>
         ) : (
           children || <Outlet />
         )}

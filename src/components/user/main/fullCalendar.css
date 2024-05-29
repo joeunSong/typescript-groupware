@@ -1,0 +1,162 @@
+:root {
+  --fc-event-bg-color: #3788d8;
+  --fc-event-text-color: #ffffff;
+  --fc-header-bg-color: #f3f3f3;
+  --fc-header-text-color: #333333;
+  --fc-day-sun-text-color: red;
+  --fc-work-event-bg-color: white;
+  --fc-work-event-bg-color: white;
+  --fc-holiday-event-bg: #f57453;
+}
+
+.fc .fc-media-screen .fc-direction-ltr .fc-theme-standard {
+  font-family: 'Noto Sans', sans-serif !important;
+}
+.fc-toolbar-title {
+  font-size: 1.2rem !important;
+}
+
+/* 일요일 날짜 빨간색 */
+.fc-day-sun a {
+  color: red;
+  text-decoration: none;
+}
+
+/* 토요일 날짜 파란색 */
+.fc-day-sat a {
+  color: red;
+  text-decoration: none;
+}
+
+.fc-button {
+  background-color: orange !important;
+  border: none !important;
+}
+
+.fc-day-today {
+  background-color: transparent !important;
+}
+
+.fc-day-today a {
+  color: orange;
+  font-weight: 600;
+}
+
+/* 헤더 색상 */
+.fc-col-header-cell {
+  font-weight: 500 !important;
+}
+
+/* // 캘린더 전체 사이즈 조정 */
+.fc {
+  width: 100%;
+}
+
+/* // toolbar container */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin: 0;
+  padding: 0 40px;
+  background-color: orange;
+  height: 63px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 29px;
+  color: white;
+  border-radius: 20px 20px 0px 0px;
+}
+/*
+  // toolbar 버튼 */
+.fc .fc-button-primary {
+  background-color: transparent;
+  border: none;
+
+  span {
+    font-weight: 500;
+    font-size: 28px;
+  }
+
+  :hover {
+    background-color: transparent;
+  }
+}
+
+/* // 요일 부분 */
+.fc-theme-standard th {
+  height: 32px;
+  /* padding-top: 3.5px; */
+  /* background: #e5edff; */
+  border: 1px solid #dddee0;
+  font-weight: 700 !important;
+  font-size: 16px;
+  line-height: 19px;
+  color: #7b7b7b;
+}
+
+/* // 오늘 날짜 배경색 */
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: #fff8bd;
+  color: #ffffff;
+  overflow: hidden !important;
+}
+/*
+  // 날짜별 그리드 */
+.fc .fc-daygrid-day-frame {
+  padding: 10px;
+}
+
+/* // 날짜  ex) 2일 */
+.fc .fc-daygrid-day-top {
+  flex-direction: row;
+  margin-bottom: 3px;
+  overflow: hidden !important;
+}
+
+.fc-daygrid-day-number {
+  display: flex;
+  flex: 1;
+}
+
+/* // 각 이벤트 요소 */
+.fc-event {
+  cursor: pointer;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  width: 100% !important;
+  overflow: hidden !important;
+  background-color: white !important;
+  border: none !important;
+}
+
+/* 공휴일 */
+.holiday-date {
+  color: red !important; /* Change date text color to red */
+}
+
+.holiday-event {
+  color: white; /* Change event text color to red */
+  background-color: var(--fc-holiday-event-bg) !important;
+  width: 100%;
+}
+
+/* Optionally, you can also style the background or other properties */
+.holiday-event .fc-event-title {
+  color: red;
+}
+
+.work-event {
+  /* position: absolute; */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: black;
+  /* background-color: var(--fc-work-event-bg-color); */
+  width: 100%;
+  font-weight: bold;
+}
+
+button {
+  box-shadow: none !important;
+}

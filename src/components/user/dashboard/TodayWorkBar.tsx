@@ -1,43 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Tooltip } from '@mui/material';
+import USER_API from '../../../services/user';
+import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
+import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
+import { WorkRecord } from '../../../types/interface';
 
 interface TodayWorkBarProps {
-  todayWorkInfo: any;
+  todayWorkInfo: WorkRecord;
 }
 
 function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
   const [workTime, setWorkTime] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
 
     //작업 시간 업데이트
     const updateWorkTime = () => {
-      const start = moment(todayWorkInfo.startTime);
-      const end = todayWorkInfo.endTime ? moment(todayWorkInfo.endTime) : moment();
+      const start = moment(todayWorkInfo.startAt);
+      //const end = todayWorkInfo.endAt ? moment(todayWorkInfo.endAt) : moment();
+      const end = todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt) : moment();
       const diff = moment.duration(end.diff(start)).asMinutes();
 
       setWorkTime(Math.floor(diff));
     };
 
-    if (todayWorkInfo.startTime && !todayWorkInfo.endTime) {
+    //if (todayWorkInfo.startAt && !todayWorkInfo.endAt) {
+    if (todayWorkInfo.startAt && !todayWorkInfo.isNormal) {
       updateWorkTime(); // 초기 작업 시간 업데이트
       intervalId = setInterval(updateWorkTime, 6000); // endTime이 없을 때만 반복
-    } else if (todayWorkInfo.endTime) {
+    } else if (todayWorkInfo.endAt) {
       updateWorkTime(); // endTime이 있을 경우 최종 작업 시간 업데이트
     }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [todayWorkInfo.startTime, todayWorkInfo.endTime]);
+  }, [todayWorkInfo.startAt, todayWorkInfo.endAt]);
 
   //TodayWorkBar 위치 조정
 
-  const startPlace = todayWorkInfo.startTime
-    ? moment(moment(todayWorkInfo.startTime).toLocaleString()).diff(
-        moment(moment(todayWorkInfo.startTime).toLocaleString()).clone().startOf('day'),
+  const startPlace = todayWorkInfo.startAt
+    ? moment(moment(todayWorkInfo.startAt).toLocaleString()).diff(
+        moment(moment(todayWorkInfo.startAt).toLocaleString()).clone().startOf('day'),
         'minutes',
       )
     : 0;
@@ -52,24 +60,61 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
       return `${diff}분`;
     }
   };
-  console.log(todayWorkInfo);
-  return (
-    todayWorkInfo.startTime && (
+
+  const handleModalOpen = async () => {
+    if (todayWorkInfo.isNormal) {
+      try {
+        // 조정 요청 가능한지 조회
+        const response = await USER_API.is_editable(todayWorkInfo.id);
+
+        if (response.data.status !== 'PENDING') {
+          setIsEditable(true);
+        } else {
+          setIsEditable(false);
+        }
+        setIsModalOpen(true);
+      } catch (error) {
+        alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
+        setIsModalOpen(false);
+      }
+    }
+  };
+  return todayWorkInfo.startAt ? (
+    <>
       <Tooltip
-        title={`${moment(todayWorkInfo.startTime).format('hh:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('hh:mm') : '진행중'}`}
+        //title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.endTime ? moment(todayWorkInfo.endTime).format('HH:mm') : '진행중'}`}
+        title={`${todayWorkInfo.workType?.title} : ${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
         placement='top'
       >
         <div
-          className='bg-primary w-0 h-[30px] rounded-[5px]'
+          className={`bg-primary w-0 h-[50px] absolute rounded-[5px] ${todayWorkInfo.isNormal ? 'cursor-pointer' : ''}`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,
             minWidth: 1,
             //transition: 'all 0.5s ease',
           }}
-        />
+          onClick={handleModalOpen}
+        >
+          {workTime >= 120 && (
+            <div className='p-[5px] text-[12px] text-white'>
+              <div>{todayWorkInfo.workType?.title}</div>
+              <div>
+                {`${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
+              </div>
+            </div>
+          )}
+        </div>
       </Tooltip>
-    )
+      {isModalOpen &&
+        (isEditable ? (
+          <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={todayWorkInfo} />
+        ) : (
+          <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        ))}
+    </>
+  ) : (
+    <></>
   );
 }
 
