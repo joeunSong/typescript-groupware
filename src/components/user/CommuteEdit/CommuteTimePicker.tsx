@@ -31,22 +31,21 @@ const CommuteTimePicker = ({ startAt, startOnChange, endAt, endOnChange }: Commu
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <TimePicker views={['hours', 'minutes']} value={startAt} onChange={(value) => value && startOnChange(value)} />
+      <TimePicker ampm={false} views={['hours', 'minutes']} value={startAt} onChange={(value) => value && startOnChange(value)} />
       <span className='self-center'>-</span>
-      <div>
-        <TimePicker
-          views={['hours', 'minutes']}
-          value={endAt}
-          onChange={(value) => value && endOnChange}
-          minTime={startAt}
-          onError={(newError) => setError(newError)}
-          slotProps={{
-            textField: {
-              helperText: errorMessage,
-            },
-          }}
-        />
-      </div>
+      <TimePicker
+        ampm={false}
+        views={['hours', 'minutes']}
+        value={endAt}
+        onChange={(value) => value && endOnChange(value)}
+        minTime={startAt}
+        onError={(newError) => setError(newError)}
+        slotProps={{
+          textField: {
+            helperText: errorMessage,
+          },
+        }}
+      />
     </LocalizationProvider>
   );
 };

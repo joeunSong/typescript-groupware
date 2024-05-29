@@ -1,16 +1,24 @@
+// lib
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
+import moment from 'moment';
+
+// Components
 import SideBarLayout from '../common/SideBar';
 import AttendMenu from '../common/sidebar/AttendMenu';
 import ProfileMenu from '../common/sidebar/ProfileMenu';
-import React, { useEffect, useState } from 'react';
+
+// icons
 import { Home } from '@mui/icons-material';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import WorkIcon from '@mui/icons-material/Work';
-import _ from 'lodash';
-import moment from 'moment';
 import { Button } from '@mui/material';
+
+// etc
 import USER_API from '../../services/user';
 import * as ENDPOINT from '../../constants/apiEndpoints';
+import { WorkRecord } from '../../types/interface';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
@@ -22,9 +30,9 @@ const UserDefaultLayout = (props: any) => {
   //출근 여부
   const [onWork, setOnWork] = useState<boolean>(false);
   //당일 근무 정보 리스트
-  const [todayWorkInfoList, setTodayWorkInfoList] = useState<any>([]);
+  const [todayWorkInfoList, setTodayWorkInfoList] = useState<WorkRecord[]>([]);
   //당일 근무 정보
-  const [todayWorkInfo, setTodayWorkInfo] = useState<any>(null);
+  const [todayWorkInfo, setTodayWorkInfo] = useState<WorkRecord | null>(null);
   // 메뉴 정보
   const [selectItem, setSelectItem] = useState<any>(null);
   const [items, setItems] = useState<any>([
@@ -100,7 +108,7 @@ const UserDefaultLayout = (props: any) => {
   useEffect(() => {
     if (!_.isEmpty(userInfo)) {
       // 근태관리자
-      if (userInfo?.isLeader) {
+      if (userInfo.isLeader) {
         setItems([
           {
             icon: Home,
@@ -206,7 +214,6 @@ const UserDefaultLayout = (props: any) => {
   // 페이지가 처음 로드될 때 한 번 실행
   loadDataAtMidnight();
 
-  console.log('selectItem', selectItem);
   return (
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}

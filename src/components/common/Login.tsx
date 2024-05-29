@@ -103,7 +103,7 @@ const Login = ({ logo, role }: LoginProps) => {
             required
           />
 
-          <Button className='text-white w-[300px] bg-primary' type='submit'>
+          <Button className='text-white w-[300px] bg-primary hover:text-primary' type='submit'>
             로그인
           </Button>
         </Box>

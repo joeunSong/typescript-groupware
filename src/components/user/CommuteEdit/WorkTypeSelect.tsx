@@ -6,7 +6,7 @@ interface WorkTimeSelectProps {
   onChange: (e: SelectChangeEvent) => void;
 }
 
-const WorkTimeSelect = ({ value, onChange }: WorkTimeSelectProps) => {
+const WorkTypeSelect = ({ value, onChange }: WorkTimeSelectProps) => {
   return (
     <Select value={value} onChange={onChange} displayEmpty inputProps={{ 'aria-label': 'Without label' }}>
       <MenuItem value='근무'>근무</MenuItem>
@@ -17,4 +17,4 @@ const WorkTimeSelect = ({ value, onChange }: WorkTimeSelectProps) => {
   );
 };
 
-export default WorkTimeSelect;
+export default WorkTypeSelect;

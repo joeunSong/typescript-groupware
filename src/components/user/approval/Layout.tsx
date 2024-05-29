@@ -104,7 +104,6 @@ const ApprovalLayout = (props: any) => {
       try {
         // * API 정의
         const commutePendingApprovalAPI = await USER_API.commute_pendings();
-
         // API 호출 및 데이터 가공
         const [commutePendingApproval] = await Promise.all([commutePendingApprovalAPI]);
 
@@ -115,7 +114,7 @@ const ApprovalLayout = (props: any) => {
       }
     };
     api();
-  }, []);
+  }, [visible]);
 
   return (
     <>

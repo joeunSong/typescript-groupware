@@ -1,27 +1,37 @@
 import { Button } from 'primereact/button';
 import Modal from '../../../common/Modal';
-import { InputText } from 'primereact/inputtext';
-import { useEffect, useState } from 'react';
 import USER_API from '../../../../services/user';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import findWorkStatus from '../../../../utils/findWorkStatus';
 
 const ApprovalDetailModalLayout = (props: any) => {
   const { visible, setVisible, selectData } = props;
-  // * modal Visible
-  const [value, setValue] = useState('');
-  // * form
-  const [userDetail, setUserDetil]: any = useState([
-    { key: 'requestUser.name', title: '이름', value: '' },
-    { key: 'requestUser.email', title: '아이디', value: '' },
-    { key: 'requestUser.department.title', title: '부서', value: '' },
-    { key: 'requestUser.rank.title', title: '직위', value: '' },
-    { key: 'workType.title', title: '근태구분', value: '' },
-  ]);
-  const [approvalDetail, setApprovalDetail]: any = useState([
-    { key: 'commute.workType.title|commute.startAt|commute.endAt', title: '기존에 등록한 일정', value: '' },
-    { key: 'workType.title|startAt|endAt', title: '조정 요청 일정', value: '' },
-  ]);
+  const userDetail = [
+    { key: 'requestUser.name', title: '이름', value: selectData?.requestUser.name },
+    { key: 'requestUser.email', title: '아이디', value: selectData?.requestUser.email },
+    { key: 'requestUser.department.title', title: '부서', value: selectData?.requestUser.department.title },
+    { key: 'requestUser.rank.title', title: '직위', value: selectData?.requestUser.rank.title },
+    { key: 'workType.title', title: '근태구분', value: selectData && findWorkStatus(selectData?.commute) },
+  ];
+
+  const approvalDetail = [
+    {
+      key: 'commute.workType.title|commute.startAt|commute.endAt',
+      title: '기존에 등록한 일정',
+      value: [
+        selectData?.commute.workType.title,
+        dayjs(selectData?.commute.startAt).format('HH:MM:ss'),
+        '-',
+        dayjs(selectData?.commute.endAt).format('HH:MM:ss'),
+      ],
+    },
+    {
+      key: 'workType.title|startAt|endAt',
+      title: '조정 요청 일정',
+      value: [selectData?.workType.title, dayjs(selectData?.startAt).format('HH:MM:ss'), '-', dayjs(selectData?.endAt).format('HH:MM:ss')],
+    },
+  ];
 
   // * 헤더 템플렛
   const headerTemplate = () => {
@@ -81,54 +91,24 @@ const ApprovalDetailModalLayout = (props: any) => {
         <Button
           label='반려'
           className={`w-[100px] px-2 py-1 ring-0 border-0 text-black bg-secondary-500`}
-          onClick={() => setVisible(false)}
+          onClick={async () => {
+            await USER_API.edit_rejected(selectData?.id);
+            setVisible(false);
+          }}
           autoFocus
         />
-        <Button label='승인' className={`w-[100px] px-5 py-2 ring-0 border-0 text-white bg-primary`} autoFocus />
+        <Button
+          label='승인'
+          className={`w-[100px] px-5 py-2 ring-0 border-0 text-white bg-primary`}
+          onClick={async () => {
+            await USER_API.edit_approved(selectData?.id);
+            setVisible(false);
+          }}
+          autoFocus
+        />
       </div>
     );
   };
-
-  // * 근무 조정 리스트 API 호출
-  useEffect(() => {
-    if (!_.isEmpty(selectData)) {
-      const api = async () => {
-        try {
-          // * API 정의
-          const commutePendingApprovalAPI = await USER_API.commute_pending_detail(selectData?.id);
-
-          // API 호출 및 데이터 가공
-          const [commutePendingApproval]: any = await Promise.all([commutePendingApprovalAPI]);
-          const data = commutePendingApproval?.data[0];
-
-          // 데이터 저장
-          setUserDetil((prevs: any) => {
-            return _.map(prevs, (prev: any) => {
-              return { ...prev, value: _.get(data, prev.key) };
-            });
-          });
-          setApprovalDetail((prevs: any) => {
-            return _.map(prevs, (prev: any) => {
-              let values: any = [];
-              const paths = _.split(prev?.key, '|');
-              _.map(paths, (path: any) => {
-                if (_.includes(path, 'title')) {
-                  values.push(_.get(data, path));
-                } else {
-                  // UTC +9해야하는지 시간 물어보기
-                  values.push(moment(_.get(data, path)).format('hh:mm:ss'));
-                }
-              });
-              return { ...prev, value: values };
-            });
-          });
-        } catch (e) {
-          console.log('e', e);
-        }
-      };
-      api();
-    }
-  }, [selectData]);
 
   return (
     <Modal

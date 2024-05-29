@@ -35,7 +35,7 @@ export interface User {
   employee_number: string;
   enter_date: string;
   is_admin: boolean;
-  is_leader: false;
+  is_leader: boolean;
   name: string;
   sex: string;
   tel: string;
