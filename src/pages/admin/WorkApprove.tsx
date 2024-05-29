@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { COMPANY_ID } from '../../constants/constant';
 import ADMIN_API from '../../services/admin';
 import DetailModal from '../../components/admin/workApprove/modal/DetailModal';
+import moment from 'moment';
 
 const AdminWorkApprovePage = () => {
-  const [commutes, setCommutes] = useState();
+  const [commutes, setCommutes] = useState<any>();
   const [isCommuteDetailOpen, setIsCommuteDetailOpen] = useState(false);
   const [commuteDetailId, setCommuteDetailId] = useState<number>();
 
@@ -16,7 +17,7 @@ const AdminWorkApprovePage = () => {
         const result = await ADMIN_API.getCommutes(companyId);
         console.log(result);
 
-        setCommutes(result.data.data);
+        setCommutes(result.data);
       } catch (error) {
         console.log(error);
       }
@@ -40,11 +41,7 @@ const AdminWorkApprovePage = () => {
 
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
-      <div className='flex justify-end'>
-        {/* <CustomButton variant='contained' color='secondary' size='auto' onClick={HandleOpenModal}>
-          계정 추가
-        </CustomButton> */}
-      </div>
+      <div className='flex justify-end'></div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: 'secondary.main' }}>
@@ -59,21 +56,13 @@ const AdminWorkApprovePage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {commutes &&
-              commutes.map((commute: any) => {
-                const start_at = new Date(commutes.start_at);
-                const end_at = new Date(commutes.end_at);
+            {commutes &&
+              commutes.data.map((commute: any) => {
+                const start_at = moment(commutes.data.start_at);
+                const end_at = moment(commutes.data.end_at);
 
-                const formattedStartTime = new Intl.DateTimeFormat('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-                }).format(start_at);
-                const formattedEndTime = new Intl.DateTimeFormat('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-                }).format(end_at);
+                const formattedStartTime = start_at.format('HH:mm');
+                const formattedEndTime = end_at.format('HH:mm');
 
                 return (
                   <>
@@ -81,9 +70,9 @@ const AdminWorkApprovePage = () => {
                       key={commute.user_name}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}
                       className='cursor-pointer'
-                      // onClick={() => {
-                      //   handleAccountDetail(commute.user_id);
-                      // }}
+                      onClick={() => {
+                        handleAccountDetail(commute.user_id);
+                      }}
                     >
                       <TableCell align='center'>{`${commute.date}(${getDayOfWeek(commute.date)})`}</TableCell>
                       <TableCell align='center'>{commute.user_name}</TableCell>
@@ -95,7 +84,7 @@ const AdminWorkApprovePage = () => {
                     </TableRow>
                   </>
                 );
-              })} */}
+              })}
             {isCommuteDetailOpen && commuteDetailId && (
               <DetailModal
                 commuteDetailId={commuteDetailId}
@@ -106,8 +95,6 @@ const AdminWorkApprovePage = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} /> */}
     </div>
   );
 };
