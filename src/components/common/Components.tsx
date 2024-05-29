@@ -14,8 +14,8 @@ import {
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { ReactNode } from 'react';
-import { Control, Controller, FieldPath, FieldValues, RegisterOptions, useController, UseControllerProps } from 'react-hook-form';
+import { ReactNode, useEffect } from 'react';
+import { Control, Controller, FieldPath, FieldValues, RegisterOptions, useController, UseControllerProps, useFormContext } from 'react-hook-form';
 
 interface CustomButtonProps {
   onClick?: (() => void) | ((event: any) => void);
@@ -120,8 +120,16 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues, TNam
     field,
     fieldState: { error },
   } = useController(props);
+  const formContext = useFormContext();
 
-  return <TextField {...textFieldProps} {...field} value={value} error={!!error} helperText={!!error && error.message} />;
+  useEffect(() => {
+    if (formContext && value) {
+      console.log('setValue called:', props.name, value); // setValue 함수가 호출되는지 확인
+      formContext.setValue(props.name as string, value || '');
+    }
+  }, [formContext, value, props.name]);
+
+  return <TextField {...textFieldProps} {...field} error={!!error} helperText={!!error && error.message} />;
 };
 
 export interface ISelectItem {
@@ -135,7 +143,7 @@ export interface ISelectItem {
 interface CustomSelectProps<T> {
   selectList: ISelectItem[];
   placeholder?: string;
-  onChange?: (event: SelectChangeEvent<T>) => void;
+  onChange?: (event: SelectChangeEvent<any>) => void;
   getValue?: string;
 }
 
@@ -153,20 +161,36 @@ export const CustomSelect = <T extends FieldValues>(props: TProps<T>) => {
     rules,
     control,
   });
-  const handleChange = (event: SelectChangeEvent<T>) => {
-    onChange(event);
+  const handleChange = (event: SelectChangeEvent<any>) => {
+    onChange(event.target.value);
     if (propsOnChange) {
       propsOnChange(event);
     }
   };
-const renderValue = () => {
-  if(getValue) return getValue
-  return(value ? selectList.find((item) => item.value === value)?.label : placeholder)
-};
+  useEffect(() => {
+    if (getValue && !value) {
+      const initialValue = selectList.find((item) => item.label === getValue)?.value;
+      onChange(initialValue);
+    }
+  }, [getValue, value, onChange, selectList]);
+
+  const renderValue = (selected: any) => {
+    if (!selected && getValue) {
+      return getValue;
+    }
+    return selectList.find((item) => item.value === selected)?.label || placeholder;
+  };
   return (
     <div>
       <FormControl sx={{ width: '100%' }}>
-        <Select value={value} renderValue={renderValue} onChange={handleChange} onBlur={onBlur} displayEmpty error={invalid}>
+        <Select
+          value={value || ''}
+          renderValue={(selected) => renderValue(selected)}
+          onChange={handleChange}
+          onBlur={onBlur}
+          displayEmpty
+          error={invalid}
+        >
           <MenuItem disabled value=''>
             {placeholder}
           </MenuItem>
@@ -225,7 +249,7 @@ export const CustomDatePicker = <T,>({
   getValue,
   ...rest
 }: CustomDatePickerProps<T>) => {
-  const val = getValue? getValue : null
+  const val = getValue ? getValue : null;
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Controller

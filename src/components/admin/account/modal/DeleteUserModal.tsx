@@ -1,7 +1,8 @@
 import React from 'react';
 import Modal from '../../../common/Modal';
 import { CustomButton } from '../../../common/Components';
-
+import ADMIN_API from '../../../../services/admin';
+import { COMPANY_ID } from '../../../../constants/constant';
 interface DeleteUserProps {
   accountId: number;
   isAccountDetailOpen: number;
@@ -10,27 +11,40 @@ interface DeleteUserProps {
 
 const headerTemplate = () => {
   return (
-    <div className='flex w-full p-3'>
-      <span className='text-xl font-bold'>계정 삭제</span>
-    </div>
-  );
-};
-// * 콘텐츠 템플렛
-const contentTemplate = (setIsAccountDetailOpen: React.Dispatch<number>) => {
-  return (
-    <div className='flex items-center w-full gap-5 p-5 bg-white'>
-      <div className='flex w-[70px] min-w-[70px]'>계정을 삭제하시겠습니까?</div>
-      <CustomButton variant='contained' size='auto' color='secondary' onClick={() => setIsAccountDetailOpen(1)}>
-        취소
-      </CustomButton>
-      <CustomButton variant='contained' size='auto' color='primary'>
-        확인
-      </CustomButton>
+    <div className='flex items-center w-full p-9'>
+      <span className='justify-center w-full font-bold text-center align-center font-h2'>계정 삭제</span>
     </div>
   );
 };
 
 const DeleteUserModal = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen }: DeleteUserProps) => {
+  const handleDeleteClick = async () => {
+    try {
+      const companyId = Number(localStorage.getItem(COMPANY_ID));
+      const response = await ADMIN_API.user_delete(companyId, accountId);
+
+      console.log('response: ', response);
+      setIsAccountDetailOpen(0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const contentTemplate = () => {
+    return (
+      <div className='flex flex-col items-center gap-7'>
+        <div className='flex font-body1-bold'>계정을 삭제하시겠습니까?</div>
+        <div className='flex gap-3'>
+          <CustomButton variant='contained' size='auto' color='secondary' onClick={() => setIsAccountDetailOpen(1)}>
+            취소
+          </CustomButton>
+          <CustomButton variant='contained' size='auto' color='primary' onClick={() => handleDeleteClick()}>
+            확인
+          </CustomButton>
+        </div>
+      </div>
+    );
+  };
   return (
     <Modal
       visible={isAccountDetailOpen}
@@ -38,7 +52,7 @@ const DeleteUserModal = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpe
       headerTemplate={headerTemplate}
       contentTemplate={contentTemplate}
       dialogHeaderClassName={'p-0'}
-      dialogClassName={`z-1400 max-sm:w-full sm:w-9/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-5/12 3xl:w-4/12 4xl:w-3/12 `}
+      dialogClassName={``}
     />
   );
 };

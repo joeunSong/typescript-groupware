@@ -49,7 +49,19 @@ const ADMIN_API = () => {
   // * 사용자 수정
   const user_edit = async (companyId: number, userId: number, data: any) => {
     baseURLChange();
-    return await axios.instance.patch(`/companies/${companyId}/users/${userId}`, { data: data });
+    return await axios.instance.patch(`/companies/${companyId}/users/${userId}`, data);
+  };
+
+  // * 사용자 생성
+  const user_create = async (companyId: number, data: any) => {
+    baseURLChange();
+    return await axios.instance.post(`/companies/${companyId}/users`, data);
+  };
+
+  // * 사용자 생성
+  const user_delete = async (companyId: number, userId: number) => {
+    baseURLChange();
+    return await axios.instance.delete(`/companies/${companyId}/users/${userId}`);
   };
 
   // * 계정 상세 조회
@@ -117,6 +129,8 @@ const ADMIN_API = () => {
     account_detail,
     users,
     user_edit,
+    user_create,
+    user_delete,
     getCommutes,
     getCommutes_detail,
     statistics_department,

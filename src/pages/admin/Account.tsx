@@ -46,13 +46,39 @@ const AccountPageLayout = () => {
     };
     getUsersInfo();
     // console.log('usersInfo: ', usersInfo);
-  }, [isModalOpen]);
+  }, [isModalOpen, isAccountDetailOpen]);
 
   const handleAccountDetail = (accountId: number) => {
     setIsAccountDetailOpen(1);
     setAccountDetailId(accountId);
   };
   // console.log('usersInfo: ', usersInfo);
+  const renderModal = () => {
+    if (accountDetailId) {
+      switch (isAccountDetailOpen) {
+        case 1:
+          return (
+            <AccountDetail accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
+          );
+        case 2:
+          return (
+            <ModifyUserModal
+              accountId={accountDetailId}
+              isAccountDetailOpen={isAccountDetailOpen}
+              setIsAccountDetailOpen={setIsAccountDetailOpen}
+              rankSelectList={rankSelectList}
+              authSelectList={authSelectList}
+            />
+          );
+        case 3:
+          return (
+            <DeleteUserModal accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
+          );
+        default:
+          return null;
+      }
+    }
+  };
 
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
@@ -99,22 +125,8 @@ const AccountPageLayout = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {isAccountDetailOpen === 1 && accountDetailId && (
-        <AccountDetail accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
-      )}
-      {isAccountDetailOpen === 2 && accountDetailId && (
-        <ModifyUserModal
-          accountId={accountDetailId}
-          isAccountDetailOpen={isAccountDetailOpen}
-          setIsAccountDetailOpen={setIsAccountDetailOpen}
-          rankSelectList={rankSelectList}
-          authSelectList={authSelectList}
-        />
-      )}
-      {isAccountDetailOpen === 3 && accountDetailId && (
-        <DeleteUserModal accountId={accountDetailId} isAccountDetailOpen={isAccountDetailOpen} setIsAccountDetailOpen={setIsAccountDetailOpen} />
-      )}
       <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
+      {renderModal()}
     </div>
   );
 };

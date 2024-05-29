@@ -46,7 +46,7 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
 
   return (
     <>
-      <CustomModal isOpen={isAccountDetailOpen !== 0} onClose={handleCloseModal} title='계정 상세'>
+      <CustomModal isOpen={isAccountDetailOpen === 1} onClose={handleCloseModal} title='계정 상세'>
         <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
           <Table sx={{ minWidth: 500 }}>
             <TableBody>

@@ -4,6 +4,8 @@ import { CustomButton, CustomDatePicker, CustomInput, CustomModal, CustomSelect 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useForm } from 'react-hook-form';
+import ADMIN_API from '../../../../services/admin';
+import { COMPANY_ID } from '../../../../constants/constant';
 import dayjs from 'dayjs';
 
 interface FormValue {
@@ -43,9 +45,9 @@ const CreateUserModal = (props: any) => {
   useEffect(() => {
     const getDepartmentInfo = async () => {
       try {
-        setBaseURL('http://127.0.0.1/api/');
+        const companyId = Number(localStorage.getItem(COMPANY_ID));
+        const response = await ADMIN_API.department(companyId);
 
-        const response = await instance.get(`v1/companies/1/departments`);
         const data = response.data.data;
         // console.log('getDepartmentInfo data: ', data);
         // console.log(Array.isArray(data));
@@ -80,9 +82,10 @@ const CreateUserModal = (props: any) => {
         enter_date: dayjs(data.enter_date).format('YYYY-MM-DD'),
       };
 
-      // console.log('sendUserData: ', sendUserData);
-      const response = await instance.post(`v1/companies/1/users`, sendUserData);
-      // console.log('response: ', response);
+      console.log('sendUserData: ', sendUserData);
+      const companyId = Number(localStorage.getItem(COMPANY_ID));
+      const response = await ADMIN_API.user_create(companyId, sendUserData);
+      console.log('response: ', response);
 
       HandleCloseModal();
     } catch (error) {
