@@ -17,6 +17,7 @@ const Modal = (props: any) => {
     dialogContentClassName,
     dialogFooterClassName,
     dialogCloseButtonClassName,
+    dismissableMask,
   } = props;
 
   return (
@@ -25,6 +26,8 @@ const Modal = (props: any) => {
       visible={visible}
       header={headerTemplate}
       footer={footerTemplate}
+      // 외부 배경 클릭 시 Modal Close
+      dismissableMask={dialogCloseButtonClassName ? dialogCloseButtonClassName : true}
       // Modal 크기 조정 비활성화
       resizable={false}
       // 드래그 비활성화

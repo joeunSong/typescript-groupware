@@ -1,3 +1,8 @@
+/* 사이드바 선택 색상 */
+.Mui-selected {
+  background-color: #c6c6c6 !important;
+}
+
 /* 사이드바 아이콘 영역 사이즈 */
 .css-cveggr-MuiListItemIcon-root {
   min-width: 30px !important;
