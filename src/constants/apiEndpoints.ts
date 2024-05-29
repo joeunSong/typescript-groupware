@@ -10,6 +10,8 @@ const ADMIN_DASHBOARD = '/admin/dashboard';
 const ADMIN_ACCOUNT = '/admin/account';
 const ADMIN_DEPARTMENT = '/admin/department';
 const ADMIN_WORKTIME = '/admin/work-time';
+const ADMIN_WORK_APPROVE = '/admin/work/WorkApprove';
+
 export {
   // * 로그인
   USER_LOGIN,
@@ -23,4 +25,5 @@ export {
   ADMIN_ACCOUNT,
   ADMIN_DEPARTMENT,
   ADMIN_WORKTIME,
+  ADMIN_WORK_APPROVE,
 };

@@ -22,21 +22,21 @@ const AccountPageLayout = () => {
         setBaseURL('http://127.0.0.1/api/');
 
         const response = await instance.get(`v1/companies/1/users`);
-        console.log('data: ', response.data);
+        // console.log('data: ', response.data);
         setUsersInfo(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     getUsersInfo();
-    console.log('usersInfo: ', usersInfo);
+    // console.log('usersInfo: ', usersInfo);
   }, [isModalOpen]);
 
   const handleAccountDetail = (accountId: number) => {
     setIsAccountDetailOpen(true);
     setAccountDetailId(accountId);
   };
-  console.log('usersInfo: ', usersInfo);
+  // console.log('usersInfo: ', usersInfo);
 
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>

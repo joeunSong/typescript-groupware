@@ -40,6 +40,18 @@ const ADMIN_API = () => {
     return await axios.instance.get(`/companies/${companyId}/users/${userId}`);
   };
 
+  // * 근무 조회
+  const getCommutes = async (companyId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/commutes`);
+  };
+
+  // * 근무 상세 조회
+  const getCommutes_detail = async (companyId: number, userId: number) => {
+    baseURLChange();
+    return await axios.instance.get(`/companies/${companyId}/commutes/${userId}`);
+  };
+
   // * 부서별 평균 근무시간 조회 (Bar 차트)
   const statistics_department = async (companyId: any) => {
     baseURLChange();
@@ -84,6 +96,8 @@ const ADMIN_API = () => {
     department_delete,
     department_manager_edit,
     account_detail,
+    getCommutes,
+    getCommutes_detail,
     statistics_department,
     statistics_department_workType,
     statistics_ranking,

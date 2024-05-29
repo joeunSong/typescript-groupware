@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ApiClient from '../../../../utils/axios';
 import { CustomButton, CustomDatePicker, CustomInput, CustomModal, CustomSelect } from '../../../common/Components';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -7,18 +7,13 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 const rankSelectList = [
-  { label: '대표', value: '대표' },
-  { label: '부장', value: '부장' },
-  { label: '차장', value: '차장' },
-  { label: '과장', value: '과장' },
-  { label: '대리', value: '대리' },
-  { label: '사원', value: '사원' },
-  { label: '인턴', value: '인턴' },
-];
-
-const departmentSelectList = [
-  { label: '개발 부서', value: '개발 부서' },
-  { label: '기획 부서', value: '기획 부서' },
+  { label: '대표', value: 8 },
+  { label: '부장', value: 6 },
+  { label: '차장', value: 5 },
+  { label: '과장', value: 4 },
+  { label: '대리', value: 1 },
+  { label: '사원', value: 3 },
+  { label: '인턴', value: 2 },
 ];
 
 const authSelectList = [
@@ -31,16 +26,22 @@ interface FormValue {
   email: string;
   password: string;
   password_confirmation: string;
-  rank_title: string;
-  department_title: string;
+  rank_id: number;
+  department_id: number;
   is_admin: string;
   enter_date: Date | null;
+}
+
+interface departmentType {
+  label: string;
+  value: number;
 }
 
 const CreateUserModal = (props: any) => {
   const { isModalOpen, setIsModalOpen } = props;
 
   const { instance, setBaseURL } = ApiClient;
+  const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
   const { control, handleSubmit, watch, reset } = useForm<FormValue>({
     defaultValues: {
       enter_date: null,
@@ -54,6 +55,32 @@ const CreateUserModal = (props: any) => {
     reset();
   };
 
+  useEffect(() => {
+    const getDepartmentInfo = async () => {
+      try {
+        setBaseURL('http://127.0.0.1/api/');
+
+        const response = await instance.get(`v1/companies/1/departments`);
+        const data = response.data.data;
+        // console.log('getDepartmentInfo data: ', data);
+        // console.log(Array.isArray(data));
+
+        if (Array.isArray(data)) {
+          const formattedData = data.map((item: any) => ({
+            key: item.id,
+            label: item.title,
+            value: item.id,
+          }));
+          setDepartmentInfo(formattedData);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDepartmentInfo();
+    // console.log('departmentInfo: ', departmentInfo);
+  }, [departmentInfo]);
+
   const postUserInfo = async (data: any) => {
     try {
       setBaseURL('http://127.0.0.1/api/');
@@ -62,15 +89,15 @@ const CreateUserModal = (props: any) => {
         email: data.email + componyEmail,
         password: data.password,
         password_confirmation: data.password_confirmation,
-        rank_title: data.rank_title,
-        department_title: data.department_title,
+        rank_id: data.rank_id,
+        department_id: data.department_id,
         is_admin: data.is_admin,
         enter_date: dayjs(data.enter_date).format('YYYY-MM-DD'),
       };
 
-      console.log('sendUserData: ', sendUserData);
+      // console.log('sendUserData: ', sendUserData);
       const response = await instance.post(`v1/companies/1/users`, sendUserData);
-      console.log('response: ', response);
+      // console.log('response: ', response);
 
       HandleCloseModal();
     } catch (error) {
@@ -159,7 +186,7 @@ const CreateUserModal = (props: any) => {
           />
           <div className='text-black font-body1'>직위</div>
           <CustomSelect
-            name='rank_title'
+            name='rank_id'
             control={control}
             rules={{ required: '필수 선택 항목입니다.' }}
             selectList={rankSelectList}
@@ -167,10 +194,10 @@ const CreateUserModal = (props: any) => {
           />
           <div className='text-black font-body1'>부서</div>
           <CustomSelect
-            name='department_title'
+            name='department_id'
             control={control}
             rules={{ required: '필수 선택 항목입니다.' }}
-            selectList={departmentSelectList}
+            selectList={departmentInfo}
             placeholder='부서 선택'
           />
           <div className='text-black font-body1'>권한</div>
