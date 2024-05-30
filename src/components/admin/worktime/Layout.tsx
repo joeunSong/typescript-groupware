@@ -132,11 +132,11 @@ const WorkTimeLayout = (props: any) => {
           <div className='flex items-center gap-3'>
             <span className='text-[18px]'>*출근불가 시간</span>
             <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.break_start_at, ':'), (time: any, index: number) => {
+              {_.map(_.split('00:00:00', ':'), (time: any, index: number) => {
                 return (
                   <Fragment key={index}>
                     <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.break_start_at, ':').length === index + 1 ? null : <span>:</span>}
+                    {_.split('00:00:00', ':').length === index + 1 ? null : <span>:</span>}
                   </Fragment>
                 );
               })}
@@ -146,11 +146,11 @@ const WorkTimeLayout = (props: any) => {
           {/* 출근 불가 종료 시간 */}
           <div className='flex items-center'>
             <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.break_end_at, ':'), (time: any, index: number) => {
+              {_.map(_.split('04:00:00', ':'), (time: any, index: number) => {
                 return (
                   <Fragment key={index}>
                     <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.break_end_at, ':').length === index + 1 ? null : <span>:</span>}
+                    {_.split('04:00:00', ':').length === index + 1 ? null : <span>:</span>}
                   </Fragment>
                 );
               })}
