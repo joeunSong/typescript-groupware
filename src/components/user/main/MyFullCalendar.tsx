@@ -90,32 +90,75 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     }
   };
 
+  const workStateList = [
+    {
+      name: '정상',
+      cnt: 3,
+      color: '#307D2E',
+    },
+    {
+      name: '지각',
+      cnt: 3,
+      color: '#FFC451',
+    },
+    {
+      name: '이상',
+      cnt: 3,
+      color: '#FF0000',
+    },
+    {
+      name: '초과',
+      cnt: 3,
+      color: '#432E7D',
+    },
+    {
+      name: '조퇴',
+      cnt: 3,
+      color: '#432E7D',
+    },
+  ];
+
   function dayCellContent(info: any) {
     const isHoliday = holidayList.find((holiday) => moment(holiday.date).isSame(info.date, 'date'));
-    const workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
+    let workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
+    let status: any;
+    let workState;
 
     info.dayNumberText = info.dayNumberText.replace('일', '');
 
+    if (workInfo) {
+      status = findWorkStatus(workInfo);
+      workState = workStateList.find((state) => state.name === status);
+      console.log(workState?.color);
+    }
+
     return (
-      <div className='fc-daygrid-day-custom flex flex-1 items-center justify-between truncate '>
+      <div className='flex items-center justify-between flex-1 truncate fc-daygrid-day-custom '>
         {isHoliday ? (
           <>
             <div className='flex bg-[#fcaa0b] w-full text-white p-[5px] items-center'>
               {info.dayNumberText}
               <span className='m-auto'> {isHoliday.name}</span>
               {workInfo && (
-                <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>
-                  {findWorkStatus(workInfo)}
+                //커스텀 칩 넣는 부분
+                <div
+                  className={`flex w-[60px] h-[20px] rounded-[50px] text-white items-center justify-center`}
+                  style={{ backgroundColor: workState?.color }}
+                >
+                  {status}
                 </div>
               )}
             </div>
           </>
         ) : (
           <>
-            <div className={`flex fc-daygrid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
+            <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
             {workInfo && (
-              <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>
-                {findWorkStatus(workInfo)}
+              <div
+                className='flex w-[60px] h-[20px] rounded-[50px] text-white items-center justify-center'
+                style={{ backgroundColor: workState?.color }}
+              >
+                {status}
               </div>
             )}
           </>
@@ -153,29 +196,6 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
       </>
     );
   };
-
-  const workStateList = [
-    {
-      name: '정상',
-      cnt: 3,
-      color: '#307D2E',
-    },
-    {
-      name: '지각',
-      cnt: 3,
-      color: '#FFC451',
-    },
-    {
-      name: '이상',
-      cnt: 3,
-      color: '#FF0000',
-    },
-    {
-      name: '초과',
-      cnt: 3,
-      color: '#432E7D',
-    },
-  ];
 
   return (
     <>
