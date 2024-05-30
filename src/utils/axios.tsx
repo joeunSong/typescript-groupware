@@ -10,6 +10,7 @@ const ApiClient = () => {
       'Content-Type': 'application/json',
       // "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
       // "Accept-Encoding": "identity",
+      'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Origin': '*',
       // origin: "http://localhost:3000",
       // Accept: "application/json",
