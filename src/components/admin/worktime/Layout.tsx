@@ -4,9 +4,12 @@ import { COMPANY_ID } from '../../../constants/constant';
 import _ from 'lodash';
 import 'moment/locale/ko';
 import moment from 'moment';
+import LoadingLayout from '../../common/Loading';
 
 const WorkTimeLayout = (props: any) => {
   const {} = props;
+
+  const [loading, setLoading] = useState(true);
   const [workSystemData, setWorkSystemData] = useState<any>([]);
   const [weekDays, setWeekDays] = useState<any>([]);
   // * 기본 근무 시스템 조회
@@ -31,6 +34,8 @@ const WorkTimeLayout = (props: any) => {
         setWorkSystemData(workSystem.data.data[0]);
       } catch (err: any) {
         console.log('err', err);
+      } finally {
+        setLoading(false);
       }
     };
     api();
@@ -60,104 +65,108 @@ const WorkTimeLayout = (props: any) => {
           })}
         </div>
       </div>
-      {/* 근무 시간 */}
-      <div className='flex flex-col w-full'>
-        <span className='text-[18px] font-bold'>근무시간</span>
-        {/* 업무 */}
-        <div className='flex w-full items-center px-5 py-3 gap-4'>
-          {/* 업무 시작 시간 */}
-          <div className='flex items-center gap-3'>
-            <span className='text-[18px]'>업무시작</span>
-            <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.work_start_at, ':'), (time: any, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.work_start_at, ':').length === index + 1 ? null : <span>:</span>}
-                  </Fragment>
-                );
-              })}
+      {loading ? (
+        <LoadingLayout />
+      ) : (
+        <div className='flex flex-col w-full'>
+          {/* 근무 시간 */}
+          <span className='text-[18px] font-bold'>근무시간</span>
+          {/* 업무 */}
+          <div className='flex w-full items-center px-5 py-3 gap-4'>
+            {/* 업무 시작 시간 */}
+            <div className='flex items-center gap-3'>
+              <span className='text-[18px]'>업무시작</span>
+              <div className='flex items-center gap-2'>
+                {_.map(_.split(workSystemData?.work_start_at, ':'), (time: any, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
+                      {_.split(workSystemData?.work_start_at, ':').length === index + 1 ? null : <span>:</span>}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </div>
+            <span className='text-lg font-bold'>~</span>
+            {/* 업무 종료 시간 */}
+            <div className='flex items-center gap-3'>
+              <span className='text-[18px]'>업무종료</span>
+              <div className='flex items-center gap-2'>
+                {_.map(_.split(workSystemData?.work_end_at, ':'), (time: any, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
+                      {_.split(workSystemData?.work_end_at, ':').length === index + 1 ? null : <span>:</span>}
+                    </Fragment>
+                  );
+                })}
+              </div>
             </div>
           </div>
-          <span className='text-lg font-bold'>~</span>
-          {/* 업무 종료 시간 */}
-          <div className='flex items-center gap-3'>
-            <span className='text-[18px]'>업무종료</span>
-            <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.work_end_at, ':'), (time: any, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.work_end_at, ':').length === index + 1 ? null : <span>:</span>}
-                  </Fragment>
-                );
-              })}
+          {/* 휴게 */}
+          <div className='flex w-full items-center px-5 py-3 gap-4'>
+            {/* 시작 시간 */}
+            <div className='flex items-center gap-3'>
+              <span className='text-[18px]'>휴게시간</span>
+              <div className='flex items-center gap-2'>
+                {_.map(_.split(workSystemData?.break_start_at, ':'), (time: any, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
+                      {_.split(workSystemData?.break_start_at, ':').length === index + 1 ? null : <span>:</span>}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </div>
+            <span className='text-lg font-bold'>:</span>
+            {/* 종료 시간 */}
+            <div className='flex items-center'>
+              <div className='flex items-center gap-2'>
+                {_.map(_.split(workSystemData?.break_end_at, ':'), (time: any, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
+                      {_.split(workSystemData?.break_end_at, ':').length === index + 1 ? null : <span>:</span>}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          {/* 출근불가 */}
+          <div className='flex w-full items-center px-5 py-3 gap-4'>
+            {/* 출근 불가 시작 시간 */}
+            <div className='flex items-center gap-3'>
+              <span className='text-[18px]'>*출근불가 시간</span>
+              <div className='flex items-center gap-2'>
+                {_.map(_.split('00:00:00', ':'), (time: any, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
+                      {_.split('00:00:00', ':').length === index + 1 ? null : <span>:</span>}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </div>
+            <span className='text-lg font-bold'>:</span>
+            {/* 출근 불가 종료 시간 */}
+            <div className='flex items-center'>
+              <div className='flex items-center gap-2'>
+                {_.map(_.split('04:00:00', ':'), (time: any, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
+                      {_.split('04:00:00', ':').length === index + 1 ? null : <span>:</span>}
+                    </Fragment>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-        {/* 휴게 */}
-        <div className='flex w-full items-center px-5 py-3 gap-4'>
-          {/* 시작 시간 */}
-          <div className='flex items-center gap-3'>
-            <span className='text-[18px]'>휴게시간</span>
-            <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.break_start_at, ':'), (time: any, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.break_start_at, ':').length === index + 1 ? null : <span>:</span>}
-                  </Fragment>
-                );
-              })}
-            </div>
-          </div>
-          <span className='text-lg font-bold'>:</span>
-          {/* 종료 시간 */}
-          <div className='flex items-center'>
-            <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.break_end_at, ':'), (time: any, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.break_end_at, ':').length === index + 1 ? null : <span>:</span>}
-                  </Fragment>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        {/* 출근불가 */}
-        <div className='flex w-full items-center px-5 py-3 gap-4'>
-          {/* 출근 불가 시작 시간 */}
-          <div className='flex items-center gap-3'>
-            <span className='text-[18px]'>*출근불가 시간</span>
-            <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.break_start_at, ':'), (time: any, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.break_start_at, ':').length === index + 1 ? null : <span>:</span>}
-                  </Fragment>
-                );
-              })}
-            </div>
-          </div>
-          <span className='text-lg font-bold'>:</span>
-          {/* 출근 불가 종료 시간 */}
-          <div className='flex items-center'>
-            <div className='flex items-center gap-2'>
-              {_.map(_.split(workSystemData?.break_end_at, ':'), (time: any, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-solid border-[1px] px-4 py-1.5'>{time}</div>
-                    {_.split(workSystemData?.break_end_at, ':').length === index + 1 ? null : <span>:</span>}
-                  </Fragment>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

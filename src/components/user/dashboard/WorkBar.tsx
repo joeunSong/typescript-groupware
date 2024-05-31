@@ -5,6 +5,7 @@ import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import USER_API from '../../../services/user';
 import { WorkRecord } from '../../../types/interface';
+import getEditable from '../../../utils/getEditable';
 
 interface workBarProps {
   workInfo: WorkRecord;
@@ -41,9 +42,8 @@ function WorkBar({ workInfo }: workBarProps) {
   const handleModalOpen = async () => {
     try {
       // 조정 요청 가능한지 조회
-      const response = await USER_API.is_editable(workInfo.id);
-      console.log(response);
-      if (response.data.status !== 'PENDING') {
+      const editable = await getEditable(workInfo.id);
+      if (editable) {
         setIsEditable(true);
       } else {
         setIsEditable(false);

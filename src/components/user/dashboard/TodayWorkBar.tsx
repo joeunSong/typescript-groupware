@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Tooltip } from '@mui/material';
-import USER_API from '../../../services/user';
 import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import { WorkRecord } from '../../../types/interface';
+import getEditable from '../../../utils/getEditable';
 
 interface TodayWorkBarProps {
   todayWorkInfo: WorkRecord;
@@ -65,16 +65,16 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
     if (todayWorkInfo.isNormal) {
       try {
         // 조정 요청 가능한지 조회
-        const response = await USER_API.is_editable(todayWorkInfo.id);
+        const editable = await getEditable(todayWorkInfo.id);
 
-        if (response.data.status !== 'PENDING') {
+        if (editable) {
           setIsEditable(true);
         } else {
           setIsEditable(false);
         }
         setIsModalOpen(true);
       } catch (error) {
-        alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
+        console.log(error);
         setIsModalOpen(false);
       }
     }

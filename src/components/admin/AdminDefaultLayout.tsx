@@ -43,6 +43,7 @@ const AdminDefaultLayout = (props: any) => {
       open: false,
       items: [
         { path: ENDPOINT.ADMIN_WORKTIME, icon: null, label: '근무 시간 설정', explan: '회사의 기본 근무 시간 설정' },
+        { path: ENDPOINT.ADMIN_WORKTIME, icon: null, label: '근무 유형 관리', explan: '근무 유형을 등록하고 관리할 수 있습니다.' },
         { path: ENDPOINT.ADMIN_WORK_APPROVE, icon: null, label: '근태 조회', explan: '회사 전체 출근한 사용자의 정보를 조회' },
       ],
     },
