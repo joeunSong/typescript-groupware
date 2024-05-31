@@ -11,6 +11,7 @@ import findWorkStatus from '../../../utils/findWorkStatus';
 import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import { isSameDate, isToday } from '../../../utils/dateUtil';
+import getEditable from '../../../utils/getEditable';
 
 interface MyFullCalendarProps {
   onWork?: boolean;
@@ -205,13 +206,13 @@ const WorkInfoEvent = ({ workInfo }: any) => {
 
     try {
       // 조정 요청 가능한지 조회
-      const response = await USER_API.is_editable(workInfo.id);
+      const editable = await getEditable(workInfo.id);
 
-      if (response.data.status !== 'PENDING') {
-        setIsEditable(true);
-      } else {
-        setIsEditable(false);
-      }
+      if (editable) {
+          setIsEditable(true);
+        } else {
+          setIsEditable(false);
+        }
       setIsModalOpen(true);
     } catch (error) {
       alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
