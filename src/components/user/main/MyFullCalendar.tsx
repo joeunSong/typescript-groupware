@@ -11,6 +11,8 @@ import findWorkStatus from '../../../utils/findWorkStatus';
 import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import { isSameDate, isToday } from '../../../utils/dateUtil';
+import { CustomButton } from '../../common/Components';
+import CustomChip from '../Customchip';
 
 interface MyFullCalendarProps {
   onWork?: boolean;
@@ -93,27 +95,22 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
   const workStateList = [
     {
       name: '정상',
-      cnt: 3,
       color: '#307D2E',
     },
     {
       name: '지각',
-      cnt: 3,
       color: '#FFC451',
     },
     {
       name: '이상',
-      cnt: 3,
       color: '#FF0000',
     },
     {
       name: '초과',
-      cnt: 3,
       color: '#432E7D',
     },
     {
       name: '조퇴',
-      cnt: 3,
       color: '#432E7D',
     },
   ];
@@ -121,16 +118,9 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
   function dayCellContent(info: any) {
     const isHoliday = holidayList.find((holiday) => moment(holiday.date).isSame(info.date, 'date'));
     let workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
-    let status: any;
-    let workState;
 
     info.dayNumberText = info.dayNumberText.replace('일', '');
-
-    if (workInfo) {
-      status = findWorkStatus(workInfo);
-      workState = workStateList.find((state) => state.name === status);
-      console.log(workState?.color);
-    }
+    console.log(workInfo);
 
     return (
       <div className='flex items-center justify-between flex-1 truncate fc-daygrid-day-custom '>
@@ -141,25 +131,23 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
               <span className='m-auto'> {isHoliday.name}</span>
               {workInfo && (
                 //커스텀 칩 넣는 부분
-                <div
-                  className={`flex w-[60px] h-[20px] rounded-[50px] text-white items-center justify-center`}
-                  style={{ backgroundColor: workState?.color }}
-                >
-                  {status}
-                </div>
+                <CustomChip workInfo={workInfo} />
               )}
             </div>
           </>
         ) : (
           <>
-            <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
-            {workInfo && (
-              <div
-                className='flex w-[60px] h-[20px] rounded-[50px] text-white items-center justify-center'
-                style={{ backgroundColor: workState?.color }}
-              >
-                {status}
+            {isToday(info.date) ? (
+              <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>
+                <div className='flex items-center justify-center bg-[#FCAA0B] w-[30px] h-[30px] rounded-[50%] text-black'>{info.dayNumberText}</div>
               </div>
+            ) : (
+              <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
+            )}
+            {workInfo && (
+              <>
+                <CustomChip workInfo={workInfo} />
+              </>
             )}
           </>
         )}
@@ -199,27 +187,40 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
 
   return (
     <>
-      <div className='w-full h-full font-noto-sans'>
-        <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px]'>
-          <span className='cursor-pointer' onClick={handlePrevMonth}>
-            {'<'}
-          </span>
-          <div>{moment(currentMonth.start).format('M') + '월'}</div>
-          <span className='cursor-pointer' onClick={handleNextMonth}>
-            {'>'}
-          </span>
+      <div className='w-[85%] h-full font-noto-sans '>
+        {/* 커스텀 헤더 */}
+        <div className='flex p-[10px] pr-[30px] pl-[30px] items-center'>
+          <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px] mb-[10px]'>
+            <span className='cursor-pointer' onClick={handlePrevMonth}>
+              {'<'}
+            </span>
+            <div>{moment(currentMonth.start).format('M') + '월'}</div>
+            <span className='cursor-pointer' onClick={handleNextMonth}>
+              {'>'}
+            </span>
+          </div>
 
-          <button onClick={handleTodayButtonClick}>Today</button>
+          <button
+            className='bg-white w-[60px] h-[35px] border border-solid border-[#C7C7C7] rounded-[5px] font-body1  right-10 cursor-pointer'
+            onClick={handleTodayButtonClick}
+          >
+            오늘
+          </button>
         </div>
 
-        <div className='flex w-full h-[80px] rounded-[10px] border border-solid border-[#C7C7C7] gap-[10%]'>
+        {/* 한달 근무 유형 */}
+        <div className='flex w-full h-[80px] rounded-[10px] border border-solid border-[#C7C7C7] mb-[10px] gap-[5%]'>
           {workStateList.map((_it) => (
-            <div className='p-[10px] pl-[20px] pr-[20px] text-[#777777] flex-col items-center justify-center'>
-              <div className='flex-1'>{_it.name}</div>
-              <div className='flex-[2_1_0%] flex items-center justify-center'>{_it.cnt}</div>
+            <div className='p-[10px] pl-[30px] pr-[30px] text-[#777777] flex-col items-center justify-center'>
+              <div className='mb-[5px]'>{_it.name}</div>
+              <div className='flex items-center justify-center font-body1'>
+                {monthWorkInfo.filter((_workInfo: any) => _it.name === findWorkStatus(_workInfo)).length}
+              </div>
             </div>
           ))}
         </div>
+
+        {/* 달력 */}
         <FullCalendar
           ref={calendarRef}
           locale='kr'
@@ -318,7 +319,7 @@ const WorkInfoEvent = ({ workInfo }: any) => {
     workInfo && (
       <>
         {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event p-[10px]`} onClick={handleModalOpen}>
+        <div className={`work-event p-[10px] text-[13px] font-body2`} onClick={handleModalOpen}>
           {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
           {/* <div className='flex justify-end'>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
@@ -337,8 +338,4 @@ const WorkInfoEvent = ({ workInfo }: any) => {
       </>
     )
   );
-};
-
-const CustomChip = ({ name, color }: any) => {
-  return <div className={`flex w-[60px] h-[20px] rounded-[50px] bg-[${color}] text-white items-center justify-center`}>{name}</div>;
 };

@@ -12,6 +12,7 @@
 .fc .fc-media-screen .fc-direction-ltr .fc-theme-standard {
   font-family: 'Noto Sans', sans-serif !important;
 }
+
 .fc-toolbar-title {
   font-size: 1.2rem !important;
 }
@@ -40,7 +41,7 @@
 
 .fc-day-today a {
   color: orange;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 /* 헤더 색상 */
@@ -84,14 +85,14 @@
 
 /* // 요일 부분 */
 .fc-theme-standard th {
-  height: 32px;
+  height: 50px;
   /* padding-top: 3.5px; */
   /* background: #e5edff; */
   border: 1px solid #dddee0;
   font-weight: 700 !important;
-  font-size: 16px;
-  line-height: 19px;
-  color: #7b7b7b;
+  font-size: 18px;
+  line-height: 50px;
+  /* color: #7b7b7b; */
 }
 
 /* // 오늘 날짜 배경색 */
@@ -118,6 +119,7 @@
   display: flex;
   flex: 1;
   font-size: 1.25rem;
+  font-weight: 500;
 }
 
 /* // 각 이벤트 요소 */
@@ -167,4 +169,19 @@ button {
 
 .fc-event {
   margin: 0px !important;
+}
+
+/* 특정 날짜 셀 숨기기 */
+.fc-daygrid-day.hidden-cell {
+  display: none;
+}
+
+.fc {
+  overflow: hidden !important;
+}
+
+/* 스크롤 삭제 */
+.fc-scroller {
+  height: auto !important;
+  overflow-y: auto;
 }
