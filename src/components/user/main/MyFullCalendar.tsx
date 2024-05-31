@@ -12,6 +12,8 @@ import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import { isSameDate, isToday } from '../../../utils/dateUtil';
 import getEditable from '../../../utils/getEditable';
+import { CustomButton } from '../../common/Components';
+import CustomChip from '../Customchip';
 
 interface MyFullCalendarProps {
   onWork?: boolean;
@@ -33,6 +35,14 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     start: today.startOf('month').startOf('day').toISOString(),
     end: today.endOf('month').endOf('day').toISOString(),
   });
+
+  function handleTodayButtonClick() {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.today();
+      handleCurrentMonth();
+    }
+  }
 
   //다음 달 클릭시
   function handleNextMonth() {
@@ -83,15 +93,64 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     }
   };
 
+  const workStateList = [
+    {
+      name: '정상',
+      color: '#307D2E',
+    },
+    {
+      name: '지각',
+      color: '#FFC451',
+    },
+    {
+      name: '이상',
+      color: '#FF0000',
+    },
+    {
+      name: '초과',
+      color: '#432E7D',
+    },
+    {
+      name: '조퇴',
+      color: '#432E7D',
+    },
+  ];
+
   function dayCellContent(info: any) {
     const isHoliday = holidayList.find((holiday) => moment(holiday.date).isSame(info.date, 'date'));
-    const workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
+    let workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
+
+    info.dayNumberText = info.dayNumberText.replace('일', '');
+    console.log(workInfo);
 
     return (
-      <div className='fc-daygrid-day-custom flex flex-1 items-center justify-between'>
-        <div className={`flex fc-daygrid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
-        {workInfo && (
-          <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
+      <div className='flex items-center justify-between flex-1 truncate fc-daygrid-day-custom '>
+        {isHoliday ? (
+          <>
+            <div className='flex bg-[#fcaa0b] w-full text-white p-[5px] items-center'>
+              {info.dayNumberText}
+              <span className='m-auto'> {isHoliday.name}</span>
+              {workInfo && (
+                //커스텀 칩 넣는 부분
+                <CustomChip workInfo={workInfo} />
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            {isToday(info.date) ? (
+              <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>
+                <div className='flex items-center justify-center bg-[#FCAA0B] w-[30px] h-[30px] rounded-[50%] text-black'>{info.dayNumberText}</div>
+              </div>
+            ) : (
+              <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
+            )}
+            {workInfo && (
+              <>
+                <CustomChip workInfo={workInfo} />
+              </>
+            )}
+          </>
         )}
       </div>
     );
@@ -117,78 +176,111 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     return (
       <>
         {workInfo && <WorkInfoEvent workInfo={workInfo} />}
-        {isHoliday && (
+        {/* {isHoliday && (
           <div className={`holiday-event`}>
             <div>{eventInfo.event?.extendedProps?.workType}</div>
             {eventInfo.event?.title}
           </div>
-        )}
+        )} */}
       </>
     );
   };
 
   return (
-    <div className='w-full h-full font-noto-sans'>
-      {/* <button onClick={handlePrevMonth}>Prev</button>
-      <button onClick={handleNextMonth}>Next</button> */}
-      <FullCalendar
-        ref={calendarRef}
-        locale='kr'
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView='dayGridMonth'
-        // dateClick={handleDateClick}
-        //커스텀 버튼 생성
-        customButtons={{
-          customNext: {
-            text: '>',
-            click: function () {
-              handleNextMonth();
-            },
-          },
-          customPrev: {
-            text: '<',
-            click: function () {
-              handlePrevMonth();
-            },
-          },
-        }}
-        headerToolbar={{
-          start: 'customPrev',
-          center: 'title',
-          end: 'customNext',
-        }}
-        // firstDay={1}
-        height={'80vh'}
-        // aspectRatio={1.8}
+    <>
+      <div className='w-[85%] h-full font-noto-sans '>
+        {/* 커스텀 헤더 */}
+        <div className='flex p-[10px] pr-[30px] pl-[30px] items-center'>
+          <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px] mb-[10px]'>
+            <span className='cursor-pointer' onClick={handlePrevMonth}>
+              {'<'}
+            </span>
+            <div>{moment(currentMonth.start).format('M') + '월'}</div>
+            <span className='cursor-pointer' onClick={handleNextMonth}>
+              {'>'}
+            </span>
+          </div>
 
-        //이벤트 정보 커스텀
-        events={[
-          //공휴일 리스트
-          ...holidayList.map((_it: any) => {
-            return {
-              title: _it?.name,
-              date: moment(_it?.date).format('YYYY-MM-DD'),
-              extendedProps: {
-                isHoliday: true,
+          <button
+            className='bg-white w-[60px] h-[35px] border border-solid border-[#C7C7C7] rounded-[5px] font-body1  right-10 cursor-pointer'
+            onClick={handleTodayButtonClick}
+          >
+            오늘
+          </button>
+        </div>
+
+        {/* 한달 근무 유형 */}
+        <div className='flex w-full h-[80px] rounded-[10px] border border-solid border-[#C7C7C7] mb-[10px] gap-[5%]'>
+          {workStateList.map((_it) => (
+            <div className='p-[10px] pl-[30px] pr-[30px] text-[#777777] flex-col items-center justify-center'>
+              <div className='mb-[5px]'>{_it.name}</div>
+              <div className='flex items-center justify-center font-body1'>
+                {monthWorkInfo.filter((_workInfo: any) => _it.name === findWorkStatus(_workInfo)).length}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 달력 */}
+        <FullCalendar
+          ref={calendarRef}
+          locale='kr'
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView='dayGridMonth'
+          // dateClick={handleDateClick}
+          //커스텀 버튼 생성
+          customButtons={{
+            customNext: {
+              text: '>',
+              click: function () {
+                handleNextMonth();
               },
-            };
-          }),
-          //근태정보 리스트
-          ...monthWorkInfo.map((_it: any) => {
-            return {
-              title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
-              date: moment(_it?.startAt).format('YYYY-MM-DD'),
-              extendedProps: {
-                workType: _it?.workType?.title,
-                workInfo: _it,
+            },
+            customPrev: {
+              text: '<',
+              click: function () {
+                handlePrevMonth();
               },
-            };
-          }),
-        ]}
-        eventContent={renderEventContent}
-        dayCellContent={dayCellContent}
-      />
-    </div>
+            },
+          }}
+          headerToolbar={{
+            start: 'customPrev',
+            center: 'title',
+            end: 'customNext',
+          }}
+          // firstDay={1}
+          height={'60vh'}
+          // aspectRatio={1.8}
+
+          //이벤트 정보 커스텀
+          events={[
+            //공휴일 리스트
+            ...holidayList.map((_it: any, idx) => {
+              return {
+                title: _it?.name,
+                date: moment(_it?.date).format('YYYY-MM-DD'),
+                extendedProps: {
+                  isHoliday: true,
+                },
+              };
+            }),
+            //근태정보 리스트
+            ...monthWorkInfo.map((_it: any) => {
+              return {
+                title: `${moment(_it?.startAt).format('HH:mm')} ~ ${moment(_it?.endAt).format('HH:mm')}`,
+                date: moment(_it?.startAt).format('YYYY-MM-DD'),
+                extendedProps: {
+                  workType: _it?.workType?.title,
+                  workInfo: _it,
+                },
+              };
+            }),
+          ]}
+          eventContent={renderEventContent}
+          dayCellContent={dayCellContent}
+        />
+      </div>
+    </>
   );
 };
 
@@ -209,10 +301,10 @@ const WorkInfoEvent = ({ workInfo }: any) => {
       const editable = await getEditable(workInfo.id);
 
       if (editable) {
-          setIsEditable(true);
-        } else {
-          setIsEditable(false);
-        }
+        setIsEditable(true);
+      } else {
+        setIsEditable(false);
+      }
       setIsModalOpen(true);
     } catch (error) {
       alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
@@ -228,7 +320,7 @@ const WorkInfoEvent = ({ workInfo }: any) => {
     workInfo && (
       <>
         {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event`} onClick={handleModalOpen}>
+        <div className={`work-event p-[10px] text-[13px] font-body2`} onClick={handleModalOpen}>
           {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
           {/* <div className='flex justify-end'>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>

@@ -9,7 +9,7 @@ interface UserMainProps {
 
 const UserMain = ({ onWork, todayWorkInfo, setTodayWorkInfo, todayWorkInfoList }: UserMainProps) => {
   return (
-    <div className='flex flex-col w-full h-full p-[20px]'>
+    <div className='flex flex-col w-full h-full justify-center items-center'>
       {<MyFullCalendar onWork={onWork} todayWorkInfo={todayWorkInfo} todayWorkInfoList={todayWorkInfoList} />}
     </div>
   );
