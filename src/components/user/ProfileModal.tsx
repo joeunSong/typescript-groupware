@@ -26,7 +26,7 @@ const ProfileModal = ({ isProfileModalOpen, setIsProfileModalOpen, profile }: Pr
   };
 
   return (
-    <CustomModal isOpen={isProfileModalOpen} onClose={handleCloseModal} title='계정 상세'>
+    <CustomModal isOpen={isProfileModalOpen} onClose={handleCloseModal} title='프로필'>
       <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
         <Table sx={{ minWidth: 500 }}>
           <TableBody>
