@@ -58,8 +58,10 @@ const AdminWorkApprovePage = () => {
           <TableBody>
             {commutes &&
               commutes.map((commute: any) => {
-                const start_at = moment(commutes.start_at);
-                const end_at = moment(commutes.end_at);
+                let start_at;
+                let end_at;
+                start_at = moment(commute.start_at);
+                end_at = moment(commute.end_at);
 
                 const formattedStartTime = start_at.format('HH:mm');
                 const formattedEndTime = end_at.format('HH:mm');
