@@ -10,13 +10,14 @@ import USER_API from '../../services/user';
 import { useHoliday } from '../../hooks/useHoliday';
 import findWorkStatus from '../../utils/findWorkStatus';
 import { isSameDate, isToday } from '../../utils/dateUtil';
-import { DayWork } from '../../types/interface';
+import { DayWork, WorkRecord } from '../../types/interface';
+import CustomChip from '../../components/user/Customchip';
 
 interface UserDashBoardProps {
   userInfo?: any;
   onWork?: boolean;
   setOnWork?: any;
-  todayWorkInfoList?: any; //오늘근무 정보 리스트
+  todayWorkInfoList?: DayWork[]; //오늘근무 정보 리스트
   todayWorkInfo: DayWork;
   setTodayWorkInfo?: React.Dispatch<DayWork>;
 }
@@ -53,7 +54,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
     try {
       const response = await USER_API.commute_log(startDay, endDay);
       const data = response.data;
-      console.log(data);
+      //console.log(data);
       setWeekWorkInfo(data);
     } catch (error) {
       console.log(error);
@@ -91,12 +92,13 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
   };
 
   //
-  const findDayWorkStatus = (day: string) => {
-    const todayInfo = weekWorkInfo.find((_info: any) => isSameDate(day, _info.startAt));
-    if (todayInfo) {
-      return findWorkStatus(todayInfo);
-    }
-    return null;
+  const findDayWork = (day: string) => {
+    const todayInfo = weekWorkInfo.find((_info: DayWork) => isSameDate(day, _info.startAt));
+    return todayInfo ? todayInfo : null;
+    // if (todayInfo) {
+    //   return findWorkStatus(todayInfo);
+    // }
+    // return null;
   };
 
   const foramttedDay = (day: string) => {
@@ -105,7 +107,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
 
   // 근무 시간 구하기
   const getWorkTime = (day: string) => {
-    const workInfo = weekWorkInfo.find((_info: any) => isSameDate(day, _info.startAt));
+    const workInfo = weekWorkInfo.find((_info: DayWork) => isSameDate(day, _info.startAt));
 
     if (!workInfo) {
       return;
@@ -119,7 +121,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
       if (isToday(date)) {
         return '근무중';
       } else {
-        return;
+        return '퇴근 미등록';
       }
     }
 
@@ -180,25 +182,25 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
                 </div>
               )}
 
-              {/* //근무 시간 */}
-              {getWorkTime(_day) && (
-                <div className='flex text-[10px] w-[60px] h-[20px] rounded-[50px] bg-primary text-white  items-center justify-center'>
-                  {getWorkTime(_day)}
-                </div>
-              )}
-
-              {findDayWorkStatus(_day) && (
-                <div className='flex text-[10px] w-[60px] h-[20px] rounded-[50px] bg-red-500 text-white  items-center justify-center'>
-                  {findDayWorkStatus(_day)}
-                </div>
-              )}
+              <div className='flex-1 flex flex-col items-center justify-center gap-[10px]'>
+                <>
+                  {/* 커스텀 칩 사용 */}
+                  {findDayWork(_day) && <CustomChip workInfo={findDayWork(_day)} />}
+                  {/* //근무 시간 */}
+                  {getWorkTime(_day) && (
+                    <div className='flex text-[10px] min-w-[60px] h-[20px] rounded-[5px]  text-[#777777] border border-solid border-[#777777]  items-center justify-center'>
+                      {getWorkTime(_day)}
+                    </div>
+                  )}
+                </>
+              </div>
             </div>
-            <div className='flex flex-1 items-center relative'>
+            <div className={`flex flex-1 items-center relative ${isHoliday(_day) ? 'bg-[#F5F5F5]' : ''}`}>
               {/* //해당 날짜에 해당하는 workInfo 추출 */}
               {weekWorkInfo
-                .filter((_info: any) => isSameDate(_day, _info.startAt))
-                .map((_it: any) => {
-                  console.log(_it);
+                .filter((_info: WorkRecord) => isSameDate(_day, _info.startAt))
+                .map((_it: WorkRecord) => {
+                  //console.log(_it);
                   return isToday(_day) ? <TodayWorkBar todayWorkInfo={_it} /> : <WorkBar workInfo={_it} />;
                 })}
 
