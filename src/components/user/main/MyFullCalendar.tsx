@@ -14,6 +14,9 @@ import { isSameDate, isToday } from '../../../utils/dateUtil';
 import getEditable from '../../../utils/getEditable';
 import { CustomButton } from '../../common/Components';
 import CustomChip from '../Customchip';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIoNewIcon from '@mui/icons-material/ArrowForwardIos';
+import IconButton from '@mui/material/IconButton';
 
 interface MyFullCalendarProps {
   onWork?: boolean;
@@ -192,13 +195,13 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
         {/* 커스텀 헤더 */}
         <div className='flex p-[10px] pr-[30px] pl-[30px] items-center'>
           <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px] mb-[10px]'>
-            <span className='cursor-pointer' onClick={handlePrevMonth}>
-              {'<'}
-            </span>
+            <IconButton className='text-primary' onClick={handlePrevMonth}>
+              <ArrowBackIosNewIcon />
+            </IconButton>
             <div>{moment(currentMonth.start).format('M') + '월'}</div>
-            <span className='cursor-pointer' onClick={handleNextMonth}>
-              {'>'}
-            </span>
+            <IconButton className='text-primary' onClick={handleNextMonth}>
+              <ArrowForwardIoNewIcon />
+            </IconButton>
           </div>
 
           <button
@@ -249,7 +252,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
             end: 'customNext',
           }}
           // firstDay={1}
-          height={'60vh'}
+          height={'75%'}
           // aspectRatio={1.8}
 
           //이벤트 정보 커스텀
@@ -320,7 +323,7 @@ const WorkInfoEvent = ({ workInfo }: any) => {
     workInfo && (
       <>
         {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event p-[10px] text-[13px] font-body2`} onClick={handleModalOpen}>
+        <div className={`work-event pr-[10px] pl-[10px] text-[13px] font-body2`} onClick={handleModalOpen}>
           {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
           {/* <div className='flex justify-end'>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>
