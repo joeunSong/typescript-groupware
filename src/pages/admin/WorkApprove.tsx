@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { COMPANY_ID } from '../../constants/constant';
 import ADMIN_API from '../../services/admin';
 import DetailModal from '../../components/admin/workApprove/modal/DetailModal';
-import moment from 'moment';
 import CustomeDataTable from '../../components/common/DataTable';
 import {
   CustomDate,
@@ -34,20 +33,11 @@ const AdminWorkApprovePage = () => {
       }
     };
     getCommutes();
-    // console.log('commutes: ', commutes);
   });
 
-  // const getDayOfWeek = (date: Date) => {
-  //   const week = ['일', '월', '화', '수', '목', '금', '토'];
-
-  //   const dayOfWeek = week[new Date(date).getDay()];
-
-  //   return dayOfWeek;
-  // };
-
-  const handleAccountDetail = (commuteDetailId: number) => {
+  const handleAccountDetail = (selectData: any) => {
     setIsCommuteDetailOpen(true);
-    setCommuteDetailId(commuteDetailId);
+    setCommuteDetailId(selectData.data.id);
   };
 
   const columns = [
@@ -120,7 +110,8 @@ const AdminWorkApprovePage = () => {
         selectData={selectData}
         setSelectData={setSelectData}
         filterVisible={false}
-        paginatorVisible={false}
+        paginatorVisible={true}
+        handleRowClick={handleAccountDetail}
       />
       {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }}>

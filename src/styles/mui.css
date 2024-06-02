@@ -34,3 +34,8 @@
   width: 100%;
   gap: 2rem;
 }
+
+.p-highlight {
+  background: #ffefde;
+  color: black;
+}
