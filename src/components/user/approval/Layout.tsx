@@ -120,10 +120,10 @@ const ApprovalLayout = (props: any) => {
     <>
       <ApprovalDetailModalLayout visible={visible} setVisible={setVisible} selectData={selectPendingApproval} />
       <div className='flex flex-col w-full p-[10px] gap-5'>
-        <div className='flex flex-col w-full py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
+        {/* <div className='flex flex-col w-full py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
           <span className='text-[24px] font-bold font-noto-sans'>근무승인</span>
           <span className='text-[18px] text-[#777777] font-noto-sans'>부서원이 보낸 조정요청을 조회, 승인할 수 있습니다.</span>
-        </div>
+        </div> */}
         <div className='flex flex-col w-full h-full scrollYWrap overflow-y-auto gap-3'>
           <span className='text-[18px] font-noto-sans'>조정요청 내역</span>
           <CustomeDataTable
