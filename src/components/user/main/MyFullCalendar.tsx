@@ -196,13 +196,13 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
         {/* 커스텀 헤더 */}
         <div className='flex p-[10px] pr-[30px] pl-[30px] items-center'>
           <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px] mb-[10px]'>
-            <span className='cursor-pointer' onClick={handlePrevMonth}>
-              {'<'}
-            </span>
+            <IconButton className='text-primary' onClick={handlePrevMonth}>
+              <ArrowBackIosNewIcon />
+            </IconButton>
             <div>{moment(currentMonth.start).format('M') + '월'}</div>
-            <span className='cursor-pointer' onClick={handleNextMonth}>
-              {'>'}
-            </span>
+            <IconButton className='text-primary' onClick={handleNextMonth}>
+              <ArrowForwardIoNewIcon />
+            </IconButton>
           </div>
 
           <Button

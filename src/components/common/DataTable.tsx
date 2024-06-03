@@ -26,6 +26,7 @@ interface Props {
   pt?: any; // 데이터 테이블 pt
   className?: any; // 데이터테이블 className
   tableStyle?: any; // 데이터테이블 style
+  handleRowClick?: any; // 셀 클릭 함수
 }
 
 /**
@@ -49,6 +50,7 @@ const CustomeDataTable = ({
   tableStyle = null,
   selectData,
   setSelectData,
+  handleRowClick,
   paginatorVisible = true,
   ...props
 }: Props) => {
@@ -80,7 +82,7 @@ const CustomeDataTable = ({
         // {/* 우측 */}
         <div className='flex items-center gap-5 max-sm:gap-3'>
           {/* 리셋버튼 */}
-          <button onClick={handleSortClear} className='flex-none px-5 py-2 rounded-full border-transparent bg-gray-200 hover:bg-gray-300 max-sm:px-2'>
+          <button onClick={handleSortClear} className='flex-none px-5 py-2 bg-gray-200 border-transparent rounded-full hover:bg-gray-300 max-sm:px-2'>
             <ResetIcon width={15} height={15} />
           </button>
           {/* 검색 */}
@@ -114,8 +116,14 @@ const CustomeDataTable = ({
     value: data,
     dataKey: 'id',
     paginator: paginatorVisible,
-    rows: 5,
-    rowsPerPageOptions: [5, 10, 25],
+    rows: 8,
+    // rowsPerPageOptions: [5, 10, 25],
+  };
+
+  const onRowSelect = (e: any) => {
+    if (handleRowClick) {
+      handleRowClick(e);
+    }
   };
 
   return (
@@ -132,12 +140,13 @@ const CustomeDataTable = ({
       globalFilterFields={_.isEmpty(globalFilterFields) ? [] : globalFilterFields}
       pt={_.isEmpty(pt) ? { header: { className: `p-0` } } : pt}
       // * css
-      className={`${className !== null ? className : 'w-full'} `}
+      className={`${className !== null ? className : 'w-full'} p-highlight`}
       // tableStyle={tableStyle !== null ? tableStyle : { width: '100%' }}
       // * select
       selection={selectData}
       onSelectionChange={(e) => setSelectData(e.value)}
       // * basicOption
+      onRowClick={onRowSelect}
       {...basicOption}
     >
       {_.map(columns, (column: any, index: number) => {
