@@ -195,3 +195,13 @@ button {
 .fc-daygrid-day-frame {
   min-height: 60px !important;
 }
+
+/* 포인터 비활성화 */
+a {
+  cursor: default !important;
+}
+
+/* .fc-day-other {
+  visibility: hidden;
+  border: none !important;
+} */
