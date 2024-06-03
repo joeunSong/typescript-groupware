@@ -79,16 +79,6 @@ const UserDefaultLayout = (props: any) => {
         //최근 근무 설정
         setTodayWorkInfo(data[len - 1]);
       }
-
-      //console.log(data);
-
-      //const { id, startAt, endAt } = data[data.length - 1];
-      //console.log(data);
-
-      //TODO
-      //setTodayWorkInfo({ id, startTime: startAt, endTime: endAt });
-
-      //return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -123,8 +113,13 @@ const UserDefaultLayout = (props: any) => {
             label: '근무',
             open: false,
             items: [
-              { icon: DraftsIcon, label: '근무 조회', url: ENDPOINT.USER_DASHBOARD },
-              { icon: DraftsIcon, label: '근무 승인', url: ENDPOINT.USER_WORK_APPROVAL },
+              { icon: null, label: '내 근무', url: ENDPOINT.USER_DASHBOARD, explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.' },
+              {
+                icon: null,
+                label: '근무 승인',
+                url: ENDPOINT.USER_WORK_APPROVAL,
+                explan: '부서원이 보낸 조정요청을 조회, 승인할 수 있습니다.',
+              },
             ],
           },
         ]);
@@ -144,6 +139,7 @@ const UserDefaultLayout = (props: any) => {
             open: false,
             url: ENDPOINT.USER_DASHBOARD,
             items: [],
+            explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.',
           },
         ]);
       }
@@ -193,6 +189,16 @@ const UserDefaultLayout = (props: any) => {
     navigate('/');
   };
 
+  const setSubtitle = (subtitle: string | undefined) => {
+    if (subtitle === 'HOME') {
+      return '대시보드';
+    }
+    if (subtitle === '근무') {
+      return '내 근무';
+    }
+    return subtitle;
+  };
+
   // 자정에 데이터를 불러오는 함수
   function loadDataAtMidnight() {
     // 현재 시간을 가져옴
@@ -225,17 +231,41 @@ const UserDefaultLayout = (props: any) => {
       </Button>
       <div className='flex flex-col w-full h-full'>
         {/* 헤더 */}
-        <div className='flex p-6 px-10 bg-gray-100'>
-          <span className='text-2xl font-bold'>{_.isEmpty(selectItem) ? '근무' : selectItem?.label}</span>
+        <div className='flex p-6 bg-gray-100'>
+          <span className='font-noto-sans text-[30px] font-bold'>
+            {_.isEmpty(selectItem)
+              ? null
+              : _.isEmpty(selectItem?.icon)
+                ? _.find(items, (item) => {
+                    return item.items && _.some(item.items, { label: selectItem?.label });
+                  })?.label
+                : selectItem?.label}
+          </span>
         </div>
+        {/* <div className='flex p-6 px-10 bg-gray-100'>
+          <span className='text-2xl font-bold'>{_.isEmpty(selectItem) ? '근무' : selectItem?.label}</span>
+        </div> */}
         {/* 소제목 */}
         <div className='flex w-full bg-white'>
-          {selectItem?.icon ? (
+          <div className='flex w-full bg-white'>
+            {_.isEmpty(selectItem?.icon) ? (
+              <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
+                <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label}</span>
+                <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
+              </div>
+            ) : (
+              <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
+                <span className='text-[24px] font-bold font-noto-sans'>{setSubtitle(selectItem?.label)}</span>
+                <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
+              </div>
+            )}
+          </div>
+          {/* {selectItem?.icon ? (
             <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
               <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label === 'HOME' ? '대시보드' : selectItem?.label}</span>
               <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
             </div>
-          ) : null}
+          ) : null} */}
         </div>
         {/* 메인 콘텐츠 */}
         {children?.type?.name === 'UserDashBoard' || 'UserMain' ? (

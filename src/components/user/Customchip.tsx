@@ -18,7 +18,7 @@ const workStateList = [
   },
   {
     name: '조퇴',
-    color: '#432E7D',
+    color: '#FFC451',
   },
 ];
 const CustomChip = ({ workInfo }: any) => {

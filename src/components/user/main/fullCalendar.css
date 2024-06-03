@@ -85,14 +85,17 @@
 
 /* // 요일 부분 */
 .fc-theme-standard th {
-  height: 50px;
   /* padding-top: 3.5px; */
   /* background: #e5edff; */
   border: 1px solid #dddee0;
   font-weight: 700 !important;
   font-size: 18px;
-  line-height: 50px;
+  line-height: 35px;
   /* color: #7b7b7b; */
+}
+
+.fc-theme-standard th .fc-day-sat {
+  color: red;
 }
 
 /* // 오늘 날짜 배경색 */
@@ -106,6 +109,7 @@
 .fc .fc-daygrid-day-frame {
   /* padding: 10px; */
   /* padding: 5px; */
+  padding: 0px;
 }
 
 /* // 날짜  ex) 2일 */
@@ -156,7 +160,7 @@
   /* position: absolute; */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  /* gap: 10px; */
   color: black;
   /* background-color: var(--fc-work-event-bg-color); */
   width: 100%;
@@ -178,10 +182,26 @@ button {
 
 .fc {
   overflow: hidden !important;
+  cursor: default !important;
 }
 
 /* 스크롤 삭제 */
 .fc-scroller {
   height: auto !important;
-  overflow-y: auto;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
 }
+
+.fc-daygrid-day-frame {
+  min-height: 60px !important;
+}
+
+/* 포인터 비활성화 */
+a {
+  cursor: default !important;
+}
+
+/* .fc-day-other {
+  visibility: hidden;
+  border: none !important;
+} */
