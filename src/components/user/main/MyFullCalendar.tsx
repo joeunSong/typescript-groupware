@@ -124,7 +124,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
     let workInfo = monthWorkInfo.find((_it: any) => isSameDate(_it.startAt, info.date));
 
     info.dayNumberText = info.dayNumberText.replace('일', '');
-    console.log(workInfo);
+    //console.log(workInfo);
 
     return (
       <div className='flex items-center justify-between flex-1 truncate fc-daygrid-day-custom '>
@@ -132,7 +132,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
           <>
             <div className='flex bg-[#fcaa0b] w-full text-white p-[5px] items-center'>
               {info.dayNumberText}
-              <span className='m-auto'> {isHoliday.name}</span>
+              <span className='m-auto text-[16px]'> {isHoliday.name}</span>
               {workInfo && (
                 //커스텀 칩 넣는 부분
                 <CustomChip workInfo={workInfo} />
@@ -191,7 +191,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
 
   return (
     <>
-      <div className='w-[85%] h-full font-noto-sans '>
+      <div className='w-[85%] h-full font-noto-sans'>
         {/* 커스텀 헤더 */}
         <div className='flex p-[10px] pr-[30px] pl-[30px] items-center'>
           <div className='flex w-full h-[45px] items-center justify-center text-primary font-h2 gap-[10px] mb-[10px]'>
@@ -246,11 +246,11 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
               },
             },
           }}
-          headerToolbar={{
-            start: 'customPrev',
-            center: 'title',
-            end: 'customNext',
-          }}
+          // headerToolbar={{
+          //   start: 'customPrev',
+          //   center: 'title',
+          //   end: 'customNext',
+          // }}
           // firstDay={1}
           height={'75%'}
           // aspectRatio={1.8}
@@ -323,7 +323,7 @@ const WorkInfoEvent = ({ workInfo }: any) => {
     workInfo && (
       <>
         {/* //해당 컴포넌트 클릭 시 모달 열리게 설정 */}
-        <div className={`work-event pr-[10px] pl-[10px] text-[13px] font-body2`} onClick={handleModalOpen}>
+        <div className={`work-event pr-[10px] pl-[10px] text-[13px] font-body2 cursor-pointer hover:bg-[#f6f7f7]`} onClick={handleModalOpen}>
           {/* <div>{eventInfo.event?.extendedProps?.workType}</div> */}
           {/* <div className='flex justify-end'>
             <div className='flex w-[60px] h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{findWorkStatus(workInfo)}</div>

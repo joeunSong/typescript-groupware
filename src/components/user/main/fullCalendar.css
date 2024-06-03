@@ -65,7 +65,7 @@
   line-height: 29px;
   color: white;
   border-radius: 20px 20px 0px 0px;
-  display: none;
+  /* display: none; */
 }
 /*
   // toolbar 버튼 */
@@ -185,3 +185,13 @@ button {
   height: auto !important;
   overflow-y: auto;
 }
+
+/* 포인터 비활성화 */
+a {
+  cursor: default !important;
+}
+
+/* .fc-day-other {
+  visibility: hidden;
+  border: none !important;
+} */
