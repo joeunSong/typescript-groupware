@@ -6,25 +6,26 @@
   --fc-day-sun-text-color: red;
   --fc-work-event-bg-color: white;
   --fc-work-event-bg-color: white;
-  --fc-holiday-event-bg: #f57453;
+  --fc-holiday-event-bg: #fcaa0b;
 }
 
 .fc .fc-media-screen .fc-direction-ltr .fc-theme-standard {
   font-family: 'Noto Sans', sans-serif !important;
 }
+
 .fc-toolbar-title {
   font-size: 1.2rem !important;
 }
 
 /* 일요일 날짜 빨간색 */
 .fc-day-sun a {
-  color: red;
+  /* color: red; */
   text-decoration: none;
 }
 
 /* 토요일 날짜 파란색 */
 .fc-day-sat a {
-  color: red;
+  /* color: red; */
   text-decoration: none;
 }
 
@@ -35,11 +36,12 @@
 
 .fc-day-today {
   background-color: transparent !important;
+  /* background-color: red; */
 }
 
 .fc-day-today a {
   color: orange;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 /* 헤더 색상 */
@@ -55,7 +57,7 @@
 /* // toolbar container */
 .fc .fc-toolbar.fc-header-toolbar {
   margin: 0;
-  padding: 0 40px;
+  /* padding: 0 40px; */
   background-color: orange;
   height: 63px;
   font-weight: 600;
@@ -63,6 +65,7 @@
   line-height: 29px;
   color: white;
   border-radius: 20px 20px 0px 0px;
+  display: none;
 }
 /*
   // toolbar 버튼 */
@@ -82,14 +85,14 @@
 
 /* // 요일 부분 */
 .fc-theme-standard th {
-  height: 32px;
+  height: 50px;
   /* padding-top: 3.5px; */
   /* background: #e5edff; */
   border: 1px solid #dddee0;
   font-weight: 700 !important;
-  font-size: 16px;
-  line-height: 19px;
-  color: #7b7b7b;
+  font-size: 18px;
+  line-height: 50px;
+  /* color: #7b7b7b; */
 }
 
 /* // 오늘 날짜 배경색 */
@@ -101,7 +104,8 @@
 /*
   // 날짜별 그리드 */
 .fc .fc-daygrid-day-frame {
-  padding: 10px;
+  /* padding: 10px; */
+  /* padding: 5px; */
 }
 
 /* // 날짜  ex) 2일 */
@@ -114,12 +118,14 @@
 .fc-daygrid-day-number {
   display: flex;
   flex: 1;
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
 /* // 각 이벤트 요소 */
 .fc-event {
   cursor: pointer;
-  padding: 5px;
+  /* padding: 5px; */
   margin-bottom: 5px;
   border-radius: 4px;
   font-weight: 500;
@@ -159,4 +165,23 @@
 
 button {
   box-shadow: none !important;
+}
+
+.fc-event {
+  margin: 0px !important;
+}
+
+/* 특정 날짜 셀 숨기기 */
+.fc-daygrid-day.hidden-cell {
+  display: none;
+}
+
+.fc {
+  overflow: hidden !important;
+}
+
+/* 스크롤 삭제 */
+.fc-scroller {
+  height: auto !important;
+  overflow-y: auto;
 }

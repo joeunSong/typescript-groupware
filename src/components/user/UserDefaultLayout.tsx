@@ -112,10 +112,11 @@ const UserDefaultLayout = (props: any) => {
         setItems([
           {
             icon: Home,
-            label: '홈',
+            label: 'HOME',
             open: false,
             url: ENDPOINT.USER_MAIN,
             items: [],
+            explan: '한 달동안 내 근무를 한 눈에 볼 수 있어요.',
           },
           {
             icon: WorkIcon,
@@ -131,10 +132,11 @@ const UserDefaultLayout = (props: any) => {
         setItems([
           {
             icon: Home,
-            label: '홈',
+            label: 'HOME',
             open: false,
             url: ENDPOINT.USER_MAIN,
             items: [],
+            explan: '한 달동안 내 근무를 한 눈에 볼 수 있어요.',
           },
           {
             icon: WorkIcon,
@@ -226,8 +228,16 @@ const UserDefaultLayout = (props: any) => {
         <div className='flex p-6 px-10 bg-gray-100'>
           <span className='text-2xl font-bold'>{_.isEmpty(selectItem) ? '근무' : selectItem?.label}</span>
         </div>
+        {/* 소제목 */}
+        <div className='flex w-full bg-white'>
+          {selectItem?.icon ? (
+            <div className='flex flex-col w-full mx-3 py-2 gap-2 bg-white border-solid border-b-[1px] border-[#777777]'>
+              <span className='text-[24px] font-bold font-noto-sans'>{selectItem?.label === 'HOME' ? '대시보드' : selectItem?.label}</span>
+              <span className='text-[18px] text-[#777777] font-noto-sans'>{selectItem?.explan}</span>
+            </div>
+          ) : null}
+        </div>
         {/* 메인 콘텐츠 */}
-
         {children?.type?.name === 'UserDashBoard' || 'UserMain' ? (
           // UserDashBoard일 경우 props전달
           <div className='flex w-full h-full'>{React.cloneElement(children, { onWork, todayWorkInfo, todayWorkInfoList }) || <Outlet />}</div>
