@@ -8,6 +8,16 @@ import AccountDetail from '../../components/admin/AccountDetail';
 import CreateUserModal from '../../components/admin/account/modal/CreateUserModal';
 import ModifyUserModal from '../../components/admin/account/modal/ModifyUserModal';
 import DeleteUserModal from '../../components/admin/account/modal/DeleteUserModal';
+import {
+  CustomCreatedDate,
+  CustomDepartment,
+  CustomEmail,
+  CustomEnterDate,
+  CustomIsAdmin,
+  CustomName,
+  CustomRank,
+} from '../../components/admin/account/content/CustomColumns';
+import CustomeDataTable from '../../components/common/DataTable';
 
 const rankSelectList = [
   { label: '대표', value: 8 },
@@ -27,6 +37,7 @@ const authSelectList = [
 const AccountPageLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usersInfo, setUsersInfo] = useState<any>(null);
+  const [selectData, setSelectData]: any = useState(null);
   const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(1);
   const [accountDetailId, setAccountDetailId] = useState<number>();
 
@@ -39,20 +50,79 @@ const AccountPageLayout = () => {
         const response = await ADMIN_API.users(companyId);
 
         console.log('data: ', response.data);
-        setUsersInfo(response.data);
+        setUsersInfo(response.data.data);
       } catch (error) {
         console.log(error);
       }
     };
     getUsersInfo();
-    // console.log('usersInfo: ', usersInfo);
+    console.log('usersInfo: ', usersInfo);
   }, [isModalOpen, isAccountDetailOpen]);
 
-  const handleAccountDetail = (accountId: number) => {
+  const columns = [
+    {
+      field: 'name',
+      header: '이름',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomName(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+    {
+      field: 'department_title',
+      header: '부서',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomDepartment(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+    {
+      field: 'rank_title',
+      header: '직위',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomRank(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+    {
+      field: 'email',
+      header: 'ID',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomEmail(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+    {
+      field: 'is_admin',
+      header: '권한',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomIsAdmin(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+    {
+      field: 'enter_date',
+      header: '입사일',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomEnterDate(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+    {
+      field: 'created_date',
+      header: '계정 생성일',
+      sortable: false,
+      body: (rowData: any, tableData: any) => CustomCreatedDate(rowData, tableData),
+      className: 'max-w-[0px] p-0',
+      style: { width: '20%' },
+    },
+  ];
+
+  const handleAccountDetail = (selectData: any) => {
     setIsAccountDetailOpen(1);
-    setAccountDetailId(accountId);
+    setAccountDetailId(selectData.data.id);
   };
-  // console.log('usersInfo: ', usersInfo);
+  console.info('usersInfo: ', usersInfo);
   const renderModal = () => {
     if (accountDetailId) {
       switch (isAccountDetailOpen) {
@@ -87,44 +157,15 @@ const AccountPageLayout = () => {
           계정 추가
         </CustomButton>
       </div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }}>
-          <TableHead sx={{ backgroundColor: 'secondary.main' }}>
-            <TableRow>
-              <TableCell align='center'>이름</TableCell>
-              <TableCell align='center'>부서</TableCell>
-              <TableCell align='center'>직위</TableCell>
-              <TableCell align='center'>ID</TableCell>
-              <TableCell align='center'>권한</TableCell>
-              <TableCell align='center'>입사일</TableCell>
-              <TableCell align='center'>계정 생성일</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {usersInfo &&
-              usersInfo.data.map((user: any) => (
-                <>
-                  <TableRow
-                    key={user.name}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, textAlign: 'center' }}
-                    className='cursor-pointer'
-                    onClick={() => {
-                      handleAccountDetail(user.id);
-                    }}
-                  >
-                    <TableCell align='center'>{user.name}</TableCell>
-                    <TableCell align='center'>{user.department_title}</TableCell>
-                    <TableCell align='center'>{user.rank_title}</TableCell>
-                    <TableCell align='center'>{user.email}</TableCell>
-                    <TableCell align='center'>{user.is_admin}</TableCell>
-                    <TableCell align='center'>{user.enter_date}</TableCell>
-                    <TableCell align='center'>{user.created_date}</TableCell>
-                  </TableRow>
-                </>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <CustomeDataTable
+        data={usersInfo}
+        columns={columns}
+        selectData={selectData}
+        setSelectData={setSelectData}
+        filterVisible={false}
+        paginatorVisible={true}
+        handleRowClick={handleAccountDetail}
+      />
       <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
       {renderModal()}
     </div>
