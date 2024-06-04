@@ -48,7 +48,7 @@ const ApprovalDetailModalLayout = (props: any) => {
         <div className='flex flex-col w-full gap-5 border-solid border-b-[1px] border-secondary-600 pb-5'>
           {_.map(userDetail, (detail: any) => {
             return (
-              <div className='flex w-full gap-5'>
+              <div className='flex w-full gap-5' key={detail?.title}>
                 <div className='flex w-[80px] min-w-[80px]'>
                   <span className='text-[15px] font-noto-sans-kr'>{detail?.title}</span>
                 </div>
@@ -62,7 +62,7 @@ const ApprovalDetailModalLayout = (props: any) => {
         <div className='flex flex-col w-full gap-5'>
           {_.map(approvalDetail, (detail: any) => {
             return (
-              <div className='flex w-full gap-5'>
+              <div className='flex w-full gap-5' key={detail?.title}>
                 <div className='flex w-[150px] min-w-[150px] justify-between'>
                   <span className='text-[15px] font-noto-sans-kr'>{detail?.title}</span>
                   <span className='text-[15px] font-noto-sans-kr'>:</span>
