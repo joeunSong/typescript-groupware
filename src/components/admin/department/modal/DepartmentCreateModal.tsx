@@ -49,7 +49,7 @@ const DepartmentCreateModal = (props: any) => {
     return (
       <div className='flex w-full justify-end px-3 pb-2'>
         <Button label='닫기' className={`w-1/2 px-2 py-1 ring-0 border-0 text-white bg-gray-400`} onClick={() => setVisible(false)} autoFocus />
-        <Button label='확인' className={`w-1/2 px-5 py-2 ring-0 border-0 text-white `} onClick={handleAPI} autoFocus />
+        <Button label='확인' className={`w-1/2 px-5 py-2 ring-0 border-0 text-white bg-primary `} onClick={handleAPI} autoFocus />
       </div>
     );
   };
