@@ -1,4 +1,3 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { COMPANY_ID } from '../../constants/constant';
 import ADMIN_API from '../../services/admin';
@@ -13,12 +12,14 @@ import {
   CustomWorkTypeTitle,
 } from '../../components/admin/workApprove/content/CustomColumns';
 import { CustomStartAt } from '../../components/user/approval/CustomColumns';
+import Loading from '../../components/common/Loading'
 
 const AdminWorkApprovePage = () => {
   const [commutes, setCommutes] = useState<any>();
   const [isCommuteDetailOpen, setIsCommuteDetailOpen] = useState(false);
   const [commuteDetailId, setCommuteDetailId] = useState<number>();
   const [selectData, setSelectData]: any = useState(null);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const getCommutes = async () => {
@@ -30,10 +31,12 @@ const AdminWorkApprovePage = () => {
         setCommutes(result.data.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     };
     getCommutes();
-  });
+  },[]);
 
   const handleWorkDetail = (selectData: any) => {
     setIsCommuteDetailOpen(true);
@@ -102,7 +105,7 @@ const AdminWorkApprovePage = () => {
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'></div>
-      <CustomeDataTable
+      {loading ? <Loading/> : <CustomeDataTable
         data={commutes}
         columns={columns}
         selectData={selectData}
@@ -110,7 +113,7 @@ const AdminWorkApprovePage = () => {
         filterVisible={false}
         paginatorVisible={true}
         handleRowClick={handleWorkDetail}
-      />
+      />}
       {isCommuteDetailOpen && commuteDetailId && (
         <DetailModal commuteDetailId={commuteDetailId} isCommuteDetailOpen={isCommuteDetailOpen} setIsCommuteDetailOpen={setIsCommuteDetailOpen} />
       )}
