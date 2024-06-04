@@ -5,6 +5,7 @@ import { CustomModal } from '../../../common/Components';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import _ from 'lodash';
 import moment from 'moment';
+import LoadingLayout from '../../../common/Loading';
 
 interface AccountDetailProps {
   commuteDetailId: number;
@@ -26,6 +27,7 @@ const KOREAN_LABEL: any = {
 
 const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailOpen }: AccountDetailProps) => {
   const [commute, setCommute] = useState<any>();
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const getCommuteDetail = async () => {
@@ -35,6 +37,8 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
         setCommute(result.data.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     };
     getCommuteDetail();
@@ -46,7 +50,7 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
 
   return (
     <CustomModal isOpen={isCommuteDetailOpen} onClose={handleCloseModal} title='근무 상세'>
-      <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
+      {loading ? <LoadingLayout/> : <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
         <Table sx={{ minWidth: 500 }}>
           <TableBody>
             {Object.entries(_.pick(commute, SHOW_DATA)).map(([key, value]) => {
@@ -61,7 +65,7 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
             })}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer>}
     </CustomModal>
   );
 };

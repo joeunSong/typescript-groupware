@@ -6,6 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { COMPANY_ID } from '../../../../constants/constant';
+import LoadingLayout from '../../../common/Loading';
 
 interface FormValue {
   name: string;
@@ -29,6 +30,7 @@ const ModifyUserModal = (props: any) => {
   const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
   const { control, handleSubmit, watch, setValue, reset } = useForm<FormValue>();
   const password = watch('password', '');
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const getDepartmentInfo = async () => {
@@ -49,6 +51,8 @@ const ModifyUserModal = (props: any) => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     };
 
@@ -110,7 +114,7 @@ const ModifyUserModal = (props: any) => {
 
   return (
     <CustomModal isOpen={isAccountDetailOpen !== 0} onClose={HandleCloseModal} title='계정추가'>
-      <form onSubmit={handleSubmit((data: any) => editUserInfo(data))}>
+      {loading ? <LoadingLayout/> : <form onSubmit={handleSubmit((data: any) => editUserInfo(data))}>
         <div className='grid-box'>
           <div className='text-black font-body1'>이름</div>
           <CustomInput name='name' control={control} value={account?.name || ''} />
@@ -182,7 +186,7 @@ const ModifyUserModal = (props: any) => {
             저장
           </CustomButton>
         </div>
-      </form>
+      </form>}
     </CustomModal>
   );
 };

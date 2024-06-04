@@ -5,6 +5,7 @@ import ADMIN_API from '../../services/admin';
 import { COMPANY_ID } from '../../constants/constant';
 import { User, StringObject } from '../../types/interface';
 import _ from 'lodash';
+import LoadingLayout from '../common/Loading';
 
 interface AccountDetailProps {
   accountId: number;
@@ -25,6 +26,7 @@ const KOREAN_LABEL: StringObject = {
 
 const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen }: AccountDetailProps) => {
   const [account, setAccount] = useState<User>();
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const getAccountDetail = async () => {
@@ -35,6 +37,8 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
         setAccount(result.data.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     };
     getAccountDetail();
@@ -47,7 +51,7 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
   return (
     <>
       <CustomModal isOpen={isAccountDetailOpen === 1} onClose={handleCloseModal} title='계정 상세'>
-        <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
+        {loading ? <LoadingLayout/> : <><TableContainer component={Paper} sx={{ boxShadow: 0 }}>
           <Table sx={{ minWidth: 500 }}>
             <TableBody>
               {Object.entries(_.pick(account, SHOW_DATA)).map(([key, value]) => {
@@ -68,7 +72,7 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
           <CustomButton variant='contained' size='auto' color='primary' onClick={() => setIsAccountDetailOpen(2)}>
             수정
           </CustomButton>
-        </div>
+        </div></>}
       </CustomModal>
     </>
   );
