@@ -31,6 +31,7 @@
     "react-lazyload": "^3.2.1",
     "react-lottie-player": "^2.0.0",
     "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.5",
     "react-use": "^17.5.0",
     "styled-components": "^6.1.10",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",

@@ -18,6 +18,7 @@ import {
   CustomRank,
 } from '../../components/admin/account/content/CustomColumns';
 import CustomeDataTable from '../../components/common/DataTable';
+import LoadingLayout from '../../components/common/Loading';
 
 const rankSelectList = [
   { label: '대표', value: 8 },
@@ -40,6 +41,7 @@ const AccountPageLayout = () => {
   const [selectData, setSelectData]: any = useState(null);
   const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(1);
   const [accountDetailId, setAccountDetailId] = useState<number>();
+  const [loading, setLoading] = useState(true)
 
   const HandleOpenModal = () => setIsModalOpen(true);
 
@@ -53,6 +55,8 @@ const AccountPageLayout = () => {
         setUsersInfo(response.data.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     };
     getUsersInfo();
@@ -157,7 +161,7 @@ const AccountPageLayout = () => {
           계정 추가
         </CustomButton>
       </div>
-      <CustomeDataTable
+      {loading ? <LoadingLayout/> : <CustomeDataTable
         data={usersInfo}
         columns={columns}
         selectData={selectData}
@@ -165,7 +169,7 @@ const AccountPageLayout = () => {
         filterVisible={false}
         paginatorVisible={true}
         handleRowClick={handleAccountDetail}
-      />
+      />}
       <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
       {renderModal()}
     </div>

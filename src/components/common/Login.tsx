@@ -8,7 +8,7 @@ import axios from 'axios';
 import { TextField, Button, Box } from '@mui/material';
 // * constants
 import * as ENDPOINT from '../../constants/apiEndpoints';
-import { ACCESS_TOKEN, COMPANY_ID, USER_ID } from '../../constants/constant';
+import { ACCESS_TOKEN, COMPANY_ID, LOGIN_AUTH, USER_ID } from '../../constants/constant';
 // * apis
 import USER_API from '../../services/user';
 import ADMIN_API from '../../services/admin';
@@ -28,7 +28,6 @@ const Login = ({ logo, role }: LoginProps) => {
 
     try {
       const data = new FormData(e.currentTarget);
-
       // api 호출 후 result 저장
       if (role === 'user') {
         const response = await USER_API.login({
@@ -36,15 +35,14 @@ const Login = ({ logo, role }: LoginProps) => {
           password: data.get('password') as string,
         });
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
-        // localStorage.setItem(LOGIN_AUTH, 'user');
-        //navigate(ENDPOINT.USER_DASHBOARD);
+        localStorage.setItem(LOGIN_AUTH, 'user');
         navigate(ENDPOINT.USER_MAIN);
       } else {
         const response = await ADMIN_API.admin_login(data.get('email') as string, data.get('password') as string);
         localStorage.setItem(ACCESS_TOKEN, response.data?.access_token);
         localStorage.setItem(COMPANY_ID, response.data?.company_id);
         localStorage.setItem(USER_ID, response.data?.user_id);
-        // localStorage.setItem(LOGIN_AUTH, 'admin');
+        localStorage.setItem(LOGIN_AUTH, 'admin');
         navigate(ENDPOINT.ADMIN_DASHBOARD);
       }
     } catch (error) {
