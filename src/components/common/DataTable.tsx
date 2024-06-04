@@ -27,6 +27,7 @@ interface Props {
   className?: any; // 데이터테이블 className
   tableStyle?: any; // 데이터테이블 style
   handleRowClick?: any; // 셀 클릭 함수
+  emptyMessage?: any; // 빈 값 메세지
 }
 
 /**
@@ -52,6 +53,7 @@ const CustomeDataTable = ({
   setSelectData,
   handleRowClick,
   paginatorVisible = true,
+  emptyMessage,
   ...props
 }: Props) => {
   // * Ref
@@ -147,6 +149,8 @@ const CustomeDataTable = ({
       onSelectionChange={(e) => setSelectData(e.value)}
       // * basicOption
       onRowClick={onRowSelect}
+      // * empty Message
+      emptyMessage={emptyMessage !== undefined && emptyMessage !== null ? emptyMessage : '값이 없습니다.'}
       {...basicOption}
     >
       {_.map(columns, (column: any, index: number) => {

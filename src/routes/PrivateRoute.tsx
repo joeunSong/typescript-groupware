@@ -18,43 +18,48 @@ import { LOGIN_AUTH } from '../constants/constant';
 
 // TODO 사용자 로그인 이후 로그인 페이지, 관리자 페이지로 url 바꾸는 경우 login으로 이동은 하나 컴포넌트가 안뜸 해당 현상 추후 해결 (이거 로컬스토리지 없어서 그런듯? API 정상적으로 호출하면 해결 될듯?)
 const PrivateRoute = (props: any) => {
-  const { authentication } = props;
   const location = useLocation();
   const navigate = useNavigate();
 
-  /**
-   * 로그인을 했는지에 대한 여부를 판단
-   * 1. 로그인 했을 경우 : true라는 텍스트 반환
-   * 2. 로그인 안했을 경우 : null or false 반환
-   */
   let isAuthentication = localStorage.getItem(LOGIN_AUTH);
-  if (authentication) {
-    // 인증이 반드시 필요한 페이지 (사용자, 관리자 구분)
 
-    // 인증을 안했을 경우 로그인 페이지, 했을 경우 해당 페이지 (로그인 하지 않은 사용자는)
+  /*
+   * 로그인 하지 않았던 사용자는 로그인 페이지만 접근 가능
+   * 그외에 접근시 로컬스토리지 클리어 후 사용자 로그인 페이지로 이동
+   */
+  if (isAuthentication === null) {
+    if (_.includes(location?.pathname, '/login')) {
+      return <Outlet />;
+    } else {
+      localStorage.clear();
+      navigate(ENDPOINT.USER_LOGIN);
+    }
+  } else {
     if (isAuthentication === 'user') {
+      /*
+       * 사용자로 로그인 하였으나 다시 로그인 페이지에 진입하려고 시도, 관리자 페이지로 접근을 시도한다면 사용자 메인 페이지로 이동
+       * 사용자 페이지로 로그인한 사용자가 사용자 페이지로 접근 시 허용
+       */
       if (_.includes(location?.pathname, '/login') || _.includes(location?.pathname, '/admin')) {
-        localStorage.clear();
-        return <Navigate to={ENDPOINT.USER_LOGIN} />;
+        return <Navigate to={ENDPOINT.USER_MAIN} />;
       } else {
         return <Outlet />;
       }
     } else if (isAuthentication === 'admin') {
+      /*
+       * 관리자 페이지로 로그인 하였으나 로그인 페이지에 진입하려고 시도, 사용자 페이지로 접근을 시도한다면 관리자 메인 페이지로 이동
+       * 관리자 페이지로 로그인한 사용자가 관리자 페이지로 접근 시 허용
+       */
       if (_.includes(location?.pathname, '/login') || _.includes(location?.pathname, '/user')) {
-        return <Navigate to={ENDPOINT.ADMIN_LOGIN} />;
+        return <Navigate to={ENDPOINT.ADMIN_DASHBOARD} />;
       } else {
         return <Outlet />;
       }
     } else {
-      localStorage.clear();
-      return <Navigate to={ENDPOINT.USER_LOGIN} />;
-    }
-  } else {
-    // 인증이 반드시 필요 없는 페이지
-    // 인증을 안했을 경우 해당 페이지로 인증을 한 상태인 경우 main페이지 (로그인 한 사용자는 로그아웃 하기 전까지는 로그인 페이지에 접근 불가)
-    if (isAuthentication === null) {
-      return <Outlet />;
-    } else {
+      /*
+       * 사용자, 관리자로 로그인하지 않고 비정상적인 경로로 접근한 사용자
+       * 로컬스토리지 초기화 후 사용자 로그인 페이지로 이동
+       */
       localStorage.clear();
       navigate(ENDPOINT.USER_LOGIN);
     }

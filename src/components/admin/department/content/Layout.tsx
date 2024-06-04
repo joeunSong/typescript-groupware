@@ -87,11 +87,11 @@ const ContentLayout = (props: any) => {
             <span className='text-[18px]'>부서명(한글)</span>
           </div>
           <div className='flex w-full'>
-            <span>{selectDepartment?.label} </span>
+            <span>{_.isEmpty(selectDepartment?.label) ? '부서를 선택해주세요' : selectDepartment?.label} </span>
           </div>
         </div>
         {/* 부서 생성일  */}
-        <div className='flex w-full'>
+        {/* <div className='flex w-full'>
           <div className='flex min-w-[150px]'>
             <span className='text-[18px]'>부서 생성일</span>
           </div>
@@ -102,7 +102,7 @@ const ContentLayout = (props: any) => {
                 : moment(selectDepartment?.created_at).format('YYYY-MM-DD hh:mm:ss')}
             </span>
           </div>
-        </div>
+        </div> */}
         {/* 부서 근태관리자  */}
         <div className='flex w-full items-center'>
           <div className='flex min-w-[150px]'>
@@ -120,25 +120,20 @@ const ContentLayout = (props: any) => {
 
         {/* 부서원 목록  */}
         <div className='flex flex-col w-full h-full gap-3 overflow-hidden'>
-          {_.isEmpty(selectDepartment?.users) ? (
-            <></>
-          ) : (
-            <>
-              <span className='text-[18px]'>부서원 목록</span>
-              <div className='flex w-full h-full scrollYWrap overflow-y-auto'>
-                <CustomeDataTable
-                  data={selectDepartment?.users}
-                  columns={columns}
-                  headerTitle={'부서원 목록'}
-                  headerTitleVisible={false}
-                  selectData={selectUser}
-                  setSelectData={setSelectUser}
-                  filterVisible={false}
-                  paginatorVisible={false}
-                />
-              </div>
-            </>
-          )}
+          <span className='text-[18px]'>부서원 목록</span>
+          <div className='flex w-full h-full scrollYWrap overflow-y-auto'>
+            <CustomeDataTable
+              data={selectDepartment?.users}
+              columns={columns}
+              headerTitle={'부서원 목록'}
+              headerTitleVisible={false}
+              selectData={selectUser}
+              setSelectData={setSelectUser}
+              filterVisible={false}
+              paginatorVisible={true}
+              emptyMessage={'부서원을 추가해주세요'}
+            />
+          </div>
         </div>
       </div>
     </>

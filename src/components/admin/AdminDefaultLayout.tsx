@@ -17,7 +17,6 @@ import * as ENDPOINT from '../../constants/apiEndpoints';
 const AdminDefaultLayout = (props: any) => {
   const { children } = props;
   const navigate = useNavigate();
-  const location = useLocation();
   // * 사이드 바 선택, 사이드 바 폼
   const [selectItem, setSelectItem] = useState<any>(null);
   const [items, setItems] = useState([
@@ -43,7 +42,6 @@ const AdminDefaultLayout = (props: any) => {
       open: false,
       items: [
         { path: ENDPOINT.ADMIN_WORKTIME, icon: null, label: '근무 시간 설정', explan: '회사의 기본 근무 시간 설정' },
-        { path: ENDPOINT.ADMIN_WORKTIME, icon: null, label: '근무 유형 관리', explan: '근무 유형을 등록하고 관리할 수 있습니다.' },
         { path: ENDPOINT.ADMIN_WORK_APPROVE, icon: null, label: '근태 조회', explan: '회사 전체 출근한 사용자의 정보를 조회' },
       ],
     },
@@ -63,35 +61,6 @@ const AdminDefaultLayout = (props: any) => {
     localStorage.clear();
     navigate(ENDPOINT.ADMIN_LOGIN);
   };
-
-  // * url로 접속한 경우 뎁스 open
-  useEffect(() => {
-    if (_.isEmpty(selectItem)) {
-      setItems((prevs) => {
-        return _.map(prevs, (prev: any) => {
-          // 상위 항목으로 진입한 경우 선택 아이템 set
-          if (prev.path === location.pathname) {
-            setSelectItem(prev);
-            return prev;
-          }
-
-          // 하위 항목으로 진입한 경우 선택 아이템 set
-          const updatedItems = _.map(prev.items, (subItem: any) => {
-            if (subItem.path === location.pathname) {
-              setSelectItem(subItem);
-              return { ...subItem, open: true };
-            }
-            return subItem;
-          });
-
-          if (_.some(updatedItems, { path: location.pathname })) {
-            return { ...prev, open: true, items: updatedItems };
-          }
-          return prev;
-        });
-      });
-    }
-  }, []);
 
   return (
     <div className='flex w-full h-full min-w-[1200px]'>

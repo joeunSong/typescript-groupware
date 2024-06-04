@@ -66,7 +66,9 @@ const WorkTimeLayout = (props: any) => {
         </div>
       </div>
       {loading ? (
-        <LoadingLayout />
+        <div className='flex w-full items-center justify-center'>
+          <LoadingLayout />
+        </div>
       ) : (
         <div className='flex flex-col w-full'>
           {/* 근무 시간 */}

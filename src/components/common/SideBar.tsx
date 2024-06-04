@@ -1,14 +1,16 @@
 // * basic
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 // * install libraries
 import _ from 'lodash';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // * components
 import { JiranFullLogoIcon } from './JiranIcon';
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { LOGIN_AUTH } from '../../constants/constant';
 // * constants
+import * as ENDPOINT from '../../constants/apiEndpoints';
 // * apis
 
 interface Props {
@@ -34,6 +36,7 @@ const SideBarLayout = ({
   setSelectItem,
   ...props
 }: Props) => {
+  const location = useLocation();
   const navigate = useNavigate();
 
   // * 1차 뎁스 Open 상태 변경
@@ -61,10 +64,50 @@ const SideBarLayout = ({
     }
   };
 
+  // * 로고 클릭시 대쉬보드 이동
+  const handleHomeLogoClick = () => {
+    const auth = localStorage.getItem(LOGIN_AUTH);
+    if (auth === 'user') {
+      navigate(ENDPOINT.USER_DASHBOARD);
+    } else if (auth === 'admin') {
+      navigate(ENDPOINT.ADMIN_DASHBOARD);
+    }
+  };
+
+  // * url로 접속한 경우 뎁스 open
+  useEffect(() => {
+    console.log(selectItem);
+    setItems((prevs: any) => {
+      return _.map(prevs, (prev: any) => {
+        // 상위 항목으로 진입한 경우 선택 아이템 set
+        if (prev.path === location.pathname) {
+          setSelectItem(prev);
+          return prev;
+        }
+
+        // 하위 항목으로 진입한 경우 선택 아이템 set
+        const updatedItems = _.map(prev.items, (subItem: any) => {
+          if (subItem.path === location.pathname) {
+            setSelectItem(subItem);
+            return { ...subItem, open: true };
+          }
+          return subItem;
+        });
+
+        if (_.some(updatedItems, { path: location.pathname })) {
+          return { ...prev, open: true, items: updatedItems };
+        }
+        return prev;
+      });
+    });
+  }, [location.pathname]);
+
   return (
     <div className={`flex flex-col ${width} min-w-[270px] h-full gap-5 ${padding} ${color}`}>
       {/* 상단 제목 */}
-      <div className='flex w-full items-center justify-center'>{icon}</div>
+      <div className='flex w-full items-center justify-center cursor-pointer' onClick={handleHomeLogoClick}>
+        {icon}
+      </div>
 
       {/* Header */}
       {!_.isEmpty(headerTemplate) ? (
