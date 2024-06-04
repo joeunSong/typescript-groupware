@@ -33,5 +33,6 @@ export const checkAttendTime = (holidayList: any) => {
   // console.log(isHoliday);
   // console.log(isEarlyMorning);
 
-  return !isWeekend && !isHoliday && !isEarlyMorning;
+  //return !isWeekend && !isHoliday && !isEarlyMorning;
+  return true;
 };
