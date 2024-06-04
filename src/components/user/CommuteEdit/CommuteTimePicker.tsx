@@ -3,14 +3,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Dayjs } from 'dayjs';
 import { useMemo, useState } from 'react';
 
-interface CommuteTimePickerProps {
-  startAt: Dayjs;
-  startOnChange: (newValue: Dayjs) => void;
-  endAt: Dayjs;
-  endOnChange: (newValue: Dayjs) => void;
+interface CustomTimePickerProps {
+  initialValue: Dayjs;
+  onChange: (newValue: Dayjs) => void;
 }
 
-const CommuteTimePicker = ({ startAt, startOnChange, endAt, endOnChange }: CommuteTimePickerProps) => {
+const CustomTimePicker = ({ initialValue, onChange }: CustomTimePickerProps) => {
   const [error, setError] = useState<TimeValidationError | null>(null);
 
   const errorMessage = useMemo(() => {
@@ -28,24 +26,34 @@ const CommuteTimePicker = ({ startAt, startOnChange, endAt, endOnChange }: Commu
       }
     }
   }, [error]);
+  return (
+    <TimePicker
+      ampm={false}
+      views={['hours', 'minutes']}
+      value={initialValue}
+      onChange={(value) => value && onChange(value)}
+      onError={(newError) => setError(newError)}
+      slotProps={{
+        textField: {
+          helperText: errorMessage,
+        },
+      }}
+    />
+  );
+};
+interface CommuteTimePickerProps {
+  startAt: Dayjs;
+  startOnChange: (newValue: Dayjs) => void;
+  endAt: Dayjs;
+  endOnChange: (newValue: Dayjs) => void;
+}
 
+const CommuteTimePicker = ({ startAt, startOnChange, endAt, endOnChange }: CommuteTimePickerProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <TimePicker ampm={false} views={['hours', 'minutes']} value={startAt} onChange={(value) => value && startOnChange(value)} />
+      <CustomTimePicker initialValue={startAt} onChange={startOnChange} />
       <span className='self-center'>-</span>
-      <TimePicker
-        ampm={false}
-        views={['hours', 'minutes']}
-        value={endAt}
-        onChange={(value) => value && endOnChange(value)}
-        minTime={startAt}
-        onError={(newError) => setError(newError)}
-        slotProps={{
-          textField: {
-            helperText: errorMessage,
-          },
-        }}
-      />
+      <CustomTimePicker initialValue={endAt} onChange={endOnChange} />
     </LocalizationProvider>
   );
 };
