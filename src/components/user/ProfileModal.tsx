@@ -31,7 +31,7 @@ const ProfileModal = ({ isProfileModalOpen, setIsProfileModalOpen, profile }: Pr
         <Table sx={{ minWidth: 500 }}>
           <TableBody>
             {Object.entries(_.pick(profile, SHOW_DATA)).map(([key, value]) => {
-              if (key === 'is_admin') {
+              if (key === 'isAdmin') {
                 return CustomRow(key, value ? '관리자' : '사용자');
               } else if (key === 'department' || key === 'rank') {
                 return CustomRow(key, value.title);
