@@ -46,13 +46,13 @@ const Router = () => {
           {/* 인증 여부 상관 없이 접속 가능한 페이지 정의(개발 예정 아직 없음) */}
 
           {/* 인증을 반드시 하지 않아야만 접속 가능한 페이지 정의 ex) 로그인 페이지 */}
-          <Route element={<PrivateRoute authentication={false} />}>
+          <Route element={<PrivateRoute />}>
             <Route path={ENDPOINT.USER_LOGIN} element={<LoginPage />} />
             <Route path={ENDPOINT.ADMIN_LOGIN} element={<AdminLoginPage />} />
           </Route>
 
           {/* 인증을 반드시 해야지만 접속 가능한 페이지 정의 ex) 로그인 이후 대쉬보드*/}
-          <Route element={<PrivateRoute authentication={false} />}>
+          <Route element={<PrivateRoute />}>
             {/* !! 사용자 페이지 !! */}
             {_.map(userRoutes, (userRoute: any) => {
               return (

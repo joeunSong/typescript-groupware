@@ -23,7 +23,6 @@ import { WorkRecord } from '../../types/interface';
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
   const navigate = useNavigate();
-  const location = useLocation();
 
   //사용자 정보
   const [userInfo, setUserInfo] = useState<any>();
@@ -37,13 +36,19 @@ const UserDefaultLayout = (props: any) => {
   const [selectItem, setSelectItem] = useState<any>(null);
   const [items, setItems] = useState<any>([
     {
+      icon: Home,
+      label: 'HOME',
+      open: false,
+      path: ENDPOINT.USER_MAIN,
+      items: [],
+      explan: '한 달동안 내 근무를 한 눈에 볼 수 있어요.',
+    },
+    {
       icon: WorkIcon,
       label: '근무',
       open: false,
-      // items: [
-      //   { icon: DraftsIcon, label: '근무', url: '/user/dashboard' },
-      //   { icon: DraftsIcon, label: '근무 승인', url: '/user/work/approval' },
-      // ],
+      path: ENDPOINT.USER_DASHBOARD,
+      items: [],
     },
   ]);
 
@@ -104,7 +109,7 @@ const UserDefaultLayout = (props: any) => {
             icon: Home,
             label: 'HOME',
             open: false,
-            url: ENDPOINT.USER_MAIN,
+            path: ENDPOINT.USER_MAIN,
             items: [],
             explan: '한 달동안 내 근무를 한 눈에 볼 수 있어요.',
           },
@@ -113,13 +118,8 @@ const UserDefaultLayout = (props: any) => {
             label: '근무',
             open: false,
             items: [
-              { icon: null, label: '내 근무', url: ENDPOINT.USER_DASHBOARD, explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.' },
-              {
-                icon: null,
-                label: '근무 승인',
-                url: ENDPOINT.USER_WORK_APPROVAL,
-                explan: '부서원이 보낸 조정요청을 조회, 승인할 수 있습니다.',
-              },
+              { icon: null, label: '근무 조회', path: ENDPOINT.USER_DASHBOARD, explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.' },
+              { icon: null, label: '근무 승인', path: ENDPOINT.USER_WORK_APPROVAL, explan: '부서원이 보낸 조정요청을 조회, 승인할 수 있습니다.' },
             ],
           },
         ]);
@@ -129,7 +129,7 @@ const UserDefaultLayout = (props: any) => {
             icon: Home,
             label: 'HOME',
             open: false,
-            url: ENDPOINT.USER_MAIN,
+            path: ENDPOINT.USER_MAIN,
             items: [],
             explan: '한 달동안 내 근무를 한 눈에 볼 수 있어요.',
           },
@@ -137,7 +137,7 @@ const UserDefaultLayout = (props: any) => {
             icon: WorkIcon,
             label: '근무',
             open: false,
-            url: ENDPOINT.USER_DASHBOARD,
+            path: ENDPOINT.USER_DASHBOARD,
             items: [],
             explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.',
           },
@@ -145,35 +145,6 @@ const UserDefaultLayout = (props: any) => {
       }
     }
   }, [userInfo]);
-
-  // * url로 접속한 경우 뎁스 open
-  useEffect(() => {
-    if (_.isEmpty(selectItem)) {
-      setItems((prevs: any) => {
-        return _.map(prevs, (prev: any) => {
-          // 상위 항목으로 진입한 경우 선택 아이템 set
-          if (prev.url === location.pathname) {
-            setSelectItem(prev);
-            return prev;
-          }
-
-          // 하위 항목으로 진입한 경우 선택 아이템 set
-          const updatedItems = _.map(prev.items, (subItem: any) => {
-            if (subItem.url === location.pathname) {
-              setSelectItem(subItem);
-              return { ...subItem, open: true };
-            }
-            return subItem;
-          });
-
-          if (_.some(updatedItems, { url: location.pathname })) {
-            return { ...prev, open: true, items: updatedItems };
-          }
-          return prev;
-        });
-      });
-    }
-  }, [items]);
 
   useEffect(() => {
     getTodayWorkTInfo();
