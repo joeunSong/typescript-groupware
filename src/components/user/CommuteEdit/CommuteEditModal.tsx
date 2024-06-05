@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { CustomButton, CustomModal } from '../../common/Components';
+import { useState } from 'react';
 import { FormControl, SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { KSTtoMMDD, period } from '../../../utils/dateFormatter';
@@ -9,6 +9,7 @@ import { WorkRecord } from '../../../types/interface';
 import USER_API from '../../../services/user';
 import { WORKTYPE_ID } from '../../../constants/constant';
 import utc from 'dayjs/plugin/utc';
+import { TimeValidationError } from '@mui/x-date-pickers/models/validation';
 
 interface CommuteEditModalProps {
   isModalOpen: boolean;
@@ -28,6 +29,8 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
     startAt: dayjs(work.startAt),
     endAt: dayjs(work.endAt),
   });
+  const [timepickerError, setTimepickerError] = useState<Record<string, TimeValidationError>>({ startAt: null, endAT: null });
+  const [isDataSame, setIsDataSame] = useState<boolean>(true);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -36,7 +39,7 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
   const handleSubmit = async () => {
     try {
       dayjs.extend(utc);
-      console.log('workForm in handleSubmit', workForm);
+
       const response = await USER_API.commute_edit({
         id: String(work.id),
         startAt: dayjs.utc(workForm.startAt).format(),
@@ -54,7 +57,6 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
       console.log(error);
     }
   };
-  console.log('workForm: ', workForm);
 
   return (
     <CustomModal isOpen={isModalOpen} onClose={handleModalClose} title='근무 기록 조정'>
@@ -66,26 +68,50 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
           </div>
         </div>
         <FormControl className='gap-2'>
-          <WorkTypeSelect value={workForm.type} onChange={(e: SelectChangeEvent) => setWorkForm({ ...workForm, type: e.target.value })} />
+          <WorkTypeSelect
+            value={workForm.type}
+            onChange={(e: SelectChangeEvent) => {
+              if (e.target.value === work.workType.title) {
+                setIsDataSame(true);
+              } else {
+                setIsDataSame(false);
+                setWorkForm({ ...workForm, type: e.target.value });
+              }
+            }}
+          />
 
           <div className='flex space-x-2'>
             <CommuteTimePicker
               startAt={workForm.startAt}
               startOnChange={(newValue: Dayjs) => {
-                setWorkForm((prev) => {
-                  console.log('setWorkForm worked');
-                  return { ...prev, startAt: newValue };
-                });
+                if (workForm.startAt.isSame(newValue)) {
+                  setIsDataSame(true);
+                } else {
+                  setIsDataSame(false);
+                  setWorkForm((prev) => ({ ...prev, startAt: newValue }));
+                }
               }}
               endAt={workForm.endAt}
               endOnChange={(newValue: Dayjs) => {
-                setWorkForm((prev) => {
-                  return { ...prev, endAt: newValue };
-                });
+                if (workForm.endAt.isSame(newValue)) {
+                  setIsDataSame(true);
+                } else {
+                  setIsDataSame(false);
+                  setWorkForm((prev) => ({ ...prev, endAt: newValue }));
+                }
               }}
+              error={timepickerError}
+              setError={setTimepickerError}
             />
           </div>
-          <CustomButton variant='text' size='auto' color='primary' submit={true} onClick={handleSubmit}>
+          <CustomButton
+            variant='text'
+            size='auto'
+            color='primary'
+            submit={true}
+            onClick={handleSubmit}
+            disabled={!!timepickerError.startAt || !!timepickerError.endAt || isDataSame}
+          >
             수정
           </CustomButton>
         </FormControl>
