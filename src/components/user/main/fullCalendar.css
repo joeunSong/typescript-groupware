@@ -19,13 +19,13 @@
 
 /* 일요일 날짜 빨간색 */
 .fc-day-sun a {
-  /* color: red; */
+  color: red;
   text-decoration: none;
 }
 
-/* 토요일 날짜 파란색 */
+/* 토요일 날짜 빨간색 */
 .fc-day-sat a {
-  /* color: red; */
+  color: red;
   text-decoration: none;
 }
 
@@ -94,9 +94,9 @@
   /* color: #7b7b7b; */
 }
 
-.fc-theme-standard th .fc-day-sat {
+/* .fc-theme-standard th .fc-day-sat {
   color: red;
-}
+} */
 
 /* // 오늘 날짜 배경색 */
 .fc .fc-daygrid-day.fc-day-today {
