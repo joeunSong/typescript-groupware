@@ -37,7 +37,6 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
   };
 
   const handleSubmit = async () => {
-    if (error.startAt || error.endAt) return;
     try {
       dayjs.extend(utc);
 
