@@ -21,15 +21,20 @@ const ApprovalDetailModalLayout = (props: any) => {
       title: '기존에 등록한 일정',
       value: [
         selectData?.commute.workType.title,
-        dayjs(selectData?.commute.startAt).format('HH:MM:ss'),
+        dayjs(selectData?.commute.startAt).format('YYYY-MM-DD HH:mm'),
         '-',
-        dayjs(selectData?.commute.endAt).format('HH:MM:ss'),
+        dayjs(selectData?.commute.endAt).format('YYYY-MM-DD HH:mm'),
       ],
     },
     {
       key: 'workType.title|startAt|endAt',
       title: '조정 요청 일정',
-      value: [selectData?.workType.title, dayjs(selectData?.startAt).format('HH:MM:ss'), '-', dayjs(selectData?.endAt).format('HH:MM:ss')],
+      value: [
+        selectData?.workType.title,
+        dayjs(selectData?.startAt).format('YYYY-MM-DD HH:mm'),
+        '-',
+        dayjs(selectData?.endAt).format('YYYY-MM-DD HH:mm'),
+      ],
     },
   ];
 
