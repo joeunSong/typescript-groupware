@@ -41,7 +41,7 @@ const AccountPageLayout = () => {
   const [selectData, setSelectData]: any = useState(null);
   const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(1);
   const [accountDetailId, setAccountDetailId] = useState<number>();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const HandleOpenModal = () => setIsModalOpen(true);
 
@@ -56,7 +56,7 @@ const AccountPageLayout = () => {
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     getUsersInfo();
@@ -70,7 +70,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomName(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'department_title',
@@ -78,7 +78,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomDepartment(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'rank_title',
@@ -86,7 +86,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomRank(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '10%' },
     },
     {
       field: 'email',
@@ -94,7 +94,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomEmail(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '25%' },
     },
     {
       field: 'is_admin',
@@ -102,7 +102,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomIsAdmin(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '10%' },
     },
     {
       field: 'enter_date',
@@ -110,7 +110,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomEnterDate(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'created_date',
@@ -118,7 +118,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomCreatedDate(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '30%' },
     },
   ];
 
