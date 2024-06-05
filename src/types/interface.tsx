@@ -1,8 +1,3 @@
-export interface User {
-  id: number
-  name: string
-}
-
 export interface StringObject {
   [key: string]: string;
 }

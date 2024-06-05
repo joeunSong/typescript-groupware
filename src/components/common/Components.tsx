@@ -24,6 +24,7 @@ interface CustomButtonProps {
   size: 'lg' | 'md' | 'auto';
   color: 'primary' | 'secondary' | 'add';
   submit?: boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -32,7 +33,7 @@ interface CustomButtonProps {
  * @param size lg: 로그인 버튼, md: 근태등록버튼
  * @returns
  */
-export const CustomButton = ({ onClick, children, variant, size, color, submit }: CustomButtonProps) => {
+export const CustomButton = ({ onClick, children, variant, size, color, submit, disabled = false }: CustomButtonProps) => {
   const width: Record<CustomButtonProps['size'], string> = {
     auto: 'auto',
     md: '14.375rem',
@@ -54,6 +55,7 @@ export const CustomButton = ({ onClick, children, variant, size, color, submit }
         ':hover': { backgroundColor: colorSet[color].hover },
         width: width[size],
       }}
+      disabled={disabled}
     >
       {children}
     </Button>
