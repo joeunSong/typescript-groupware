@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { CustomButton, CustomModal } from '../../common/Components';
+import { useState } from 'react';
 import { FormControl, SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { KSTtoMMDD, period } from '../../../utils/dateFormatter';
@@ -29,8 +29,9 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
     startAt: dayjs(work.startAt),
     endAt: dayjs(work.endAt),
   });
-  const [error, setError] = useState<Record<string, TimeValidationError>>({startAt: null, endAT: null});
-  
+  const [timepickerError, setTimepickerError] = useState<Record<string, TimeValidationError>>({ startAt: null, endAT: null });
+  const [isDataSame, setIsDataSame] = useState<boolean>(true);
+
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -68,23 +69,50 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
           </div>
         </div>
         <FormControl className='gap-2'>
-          <WorkTypeSelect value={workForm.type} onChange={(e: SelectChangeEvent) => setWorkForm({ ...workForm, type: e.target.value })} />
+          <WorkTypeSelect
+            value={workForm.type}
+            onChange={(e: SelectChangeEvent) => {
+              if (e.target.value === work.workType.title) {
+                setIsDataSame(true);
+              } else {
+                setIsDataSame(false);
+                setWorkForm({ ...workForm, type: e.target.value });
+              }
+            }}
+          />
 
           <div className='flex space-x-2'>
             <CommuteTimePicker
               startAt={workForm.startAt}
               startOnChange={(newValue: Dayjs) => {
-                setWorkForm((prev) => ({ ...prev, startAt: newValue }));
+                if (workForm.startAt.isSame(newValue)) {
+                  setIsDataSame(true);
+                } else {
+                  setIsDataSame(false);
+                  setWorkForm((prev) => ({ ...prev, startAt: newValue }));
+                }
               }}
               endAt={workForm.endAt}
               endOnChange={(newValue: Dayjs) => {
-                setWorkForm((prev) => ({ ...prev, endAt: newValue }));
+                if (workForm.endAt.isSame(newValue)) {
+                  setIsDataSame(true);
+                } else {
+                  setIsDataSame(false);
+                  setWorkForm((prev) => ({ ...prev, endAt: newValue }));
+                }
               }}
-              error={error}
-              setError={setError}
+              error={timepickerError}
+              setError={setTimepickerError}
             />
           </div>
-          <CustomButton variant='text' size='auto' color='primary' submit={true} onClick={handleSubmit} disabled={!!error.startAt || !!error.endAt}>
+          <CustomButton
+            variant='text'
+            size='auto'
+            color='primary'
+            submit={true}
+            onClick={handleSubmit}
+            disabled={!!timepickerError.startAt || !!timepickerError.endAt || isDataSame}
+          >
             수정
           </CustomButton>
         </FormControl>

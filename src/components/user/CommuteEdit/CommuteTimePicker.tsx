@@ -9,9 +9,10 @@ interface CustomTimePickerProps {
   onChange: (newValue: Dayjs) => void;
   setError: Dispatch<SetStateAction<Record<string, TimeValidationError>>>;
   error: Record<string, TimeValidationError>;
+  startAt?: Dayjs;
 }
 
-const CustomTimePicker = ({ type, initialValue, onChange, setError, error }: CustomTimePickerProps) => {
+const CustomTimePicker = ({ type, initialValue, onChange, setError, error, startAt }: CustomTimePickerProps) => {
   const errorMessage = useMemo(() => {
     switch (error[type]) {
       case 'minTime': {
@@ -39,6 +40,7 @@ const CustomTimePicker = ({ type, initialValue, onChange, setError, error }: Cus
           helperText: errorMessage,
         },
       }}
+      {...(type === 'endAt' ? { minTime: startAt } : {})}
     />
   );
 };
@@ -56,7 +58,7 @@ const CommuteTimePicker = ({ startAt, startOnChange, endAt, endOnChange, setErro
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <CustomTimePicker type='startAt' initialValue={startAt} onChange={startOnChange} setError={setError} error={error} />
       <span className='self-center'>-</span>
-      <CustomTimePicker type='endAt' initialValue={endAt} onChange={endOnChange} setError={setError} error={error} />
+      <CustomTimePicker type='endAt' initialValue={endAt} onChange={endOnChange} setError={setError} error={error} startAt={startAt} />
     </LocalizationProvider>
   );
 };
