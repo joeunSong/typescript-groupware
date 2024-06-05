@@ -27,7 +27,7 @@ const KOREAN_LABEL: any = {
 
 const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailOpen }: AccountDetailProps) => {
   const [commute, setCommute] = useState<any>();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getCommuteDetail = async () => {
@@ -38,7 +38,7 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     getCommuteDetail();
@@ -50,22 +50,28 @@ const DetailModal = ({ commuteDetailId, isCommuteDetailOpen, setIsCommuteDetailO
 
   return (
     <CustomModal isOpen={isCommuteDetailOpen} onClose={handleCloseModal} title='근무 상세'>
-      {loading ? <LoadingLayout/> : <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
-        <Table sx={{ minWidth: 500 }}>
-          <TableBody>
-            {Object.entries(_.pick(commute, SHOW_DATA)).map(([key, value]) => {
-              if (key === 'start_at' || key === 'end_at') {
-                const timeValue = moment(value);
-                return [CustomRow(key, timeValue.format('HH:mm:ss'))];
-              } else if (key === 'rank_title') {
-                return [CustomRow(key, String(value)), CustomRow('title', commute.work_type.title)];
-              } else {
-                return [CustomRow(key, String(value))];
-              }
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>}
+      {loading ? (
+        <div className='flex justify-center w-full'>
+          <LoadingLayout />
+        </div>
+      ) : (
+        <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
+          <Table sx={{ minWidth: 500 }}>
+            <TableBody>
+              {Object.entries(_.pick(commute, SHOW_DATA)).map(([key, value]) => {
+                if (key === 'start_at' || key === 'end_at') {
+                  const timeValue = moment(value);
+                  return [CustomRow(key, timeValue.format('HH:mm:ss'))];
+                } else if (key === 'rank_title') {
+                  return [CustomRow(key, String(value)), CustomRow('title', commute.work_type.title)];
+                } else {
+                  return [CustomRow(key, String(value))];
+                }
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </CustomModal>
   );
 };

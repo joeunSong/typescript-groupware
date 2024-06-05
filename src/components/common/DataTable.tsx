@@ -161,6 +161,7 @@ const CustomeDataTable = ({
               whiteSpace: 'nowrap',
               // overflow: 'hidden',
               textOverflow: 'ellipsis',
+              padding: '16px 8px',
             }}
             pt={column.pt}
             field={column.field}

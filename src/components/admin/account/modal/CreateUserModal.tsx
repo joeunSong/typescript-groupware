@@ -19,16 +19,16 @@ interface FormValue {
   enter_date: Date | null;
 }
 
-interface departmentType {
-  label: string;
-  value: number;
-}
+// interface departmentType {
+//   label: string;
+//   value: number;
+// }
 
 const CreateUserModal = (props: any) => {
-  const { isModalOpen, setIsModalOpen, rankSelectList, authSelectList } = props;
+  const { isModalOpen, setIsModalOpen, rankSelectList, authSelectList, departmentInfo } = props;
 
   const { instance, setBaseURL } = ApiClient;
-  const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
+  // const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
   const { control, handleSubmit, watch, reset } = useForm<FormValue>({
     defaultValues: {
       enter_date: null,
@@ -42,31 +42,31 @@ const CreateUserModal = (props: any) => {
     reset();
   };
 
-  useEffect(() => {
-    const getDepartmentInfo = async () => {
-      try {
-        const companyId = Number(localStorage.getItem(COMPANY_ID));
-        const response = await ADMIN_API.department(companyId);
+  // useEffect(() => {
+  //   const getDepartmentInfo = async () => {
+  //     try {
+  //       const companyId = Number(localStorage.getItem(COMPANY_ID));
+  //       const response = await ADMIN_API.department(companyId);
 
-        const data = response.data.data;
-        // console.log('getDepartmentInfo data: ', data);
-        // console.log(Array.isArray(data));
+  //       const data = response.data.data;
+  //       // console.log('getDepartmentInfo data: ', data);
+  //       // console.log(Array.isArray(data));
 
-        if (Array.isArray(data)) {
-          const formattedData = data.map((item: any) => ({
-            key: item.id,
-            label: item.title,
-            value: item.id,
-          }));
-          setDepartmentInfo(formattedData);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getDepartmentInfo();
-    // console.log('departmentInfo: ', departmentInfo);
-  }, [departmentInfo]);
+  //       if (Array.isArray(data)) {
+  //         const formattedData = data.map((item: any) => ({
+  //           key: item.id,
+  //           label: item.title,
+  //           value: item.id,
+  //         }));
+  //         setDepartmentInfo(formattedData);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getDepartmentInfo();
+  //   // console.log('departmentInfo: ', departmentInfo);
+  // }, [departmentInfo]);
 
   const postUserInfo = async (data: any) => {
     try {

@@ -22,7 +22,7 @@ interface CustomButtonProps {
   children: any;
   variant: 'text' | 'outlined' | 'contained';
   size: 'lg' | 'md' | 'auto';
-  color: 'primary' | 'secondary';
+  color: 'primary' | 'secondary' | 'add';
   submit?: boolean;
   disabled?: boolean;
 }
@@ -39,9 +39,10 @@ export const CustomButton = ({ onClick, children, variant, size, color, submit, 
     md: '14.375rem',
     lg: '18.75rem',
   };
-  const colorSet: Record<CustomButtonProps['color'], { backgroundColor: string; hover: string }> = {
+  const colorSet: Record<CustomButtonProps['color'], { backgroundColor: string; hover: string; color?: string }> = {
     primary: { backgroundColor: 'primary.main', hover: '#bc6003' },
     secondary: { backgroundColor: 'secondary.600', hover: '#959595' },
+    add: { backgroundColor: '#EDF5FF', hover: '#DEE7F2' },
   };
   return (
     <Button
@@ -49,7 +50,7 @@ export const CustomButton = ({ onClick, children, variant, size, color, submit, 
       onClick={onClick}
       type={submit ? 'submit' : 'button'}
       sx={{
-        color: 'white',
+        color: color === 'add' ? '#4182FB' : 'white',
         backgroundColor: colorSet[color].backgroundColor,
         ':hover': { backgroundColor: colorSet[color].hover },
         width: width[size],

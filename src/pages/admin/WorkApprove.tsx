@@ -7,19 +7,19 @@ import {
   CustomDate,
   CustomDepartmentTitle,
   CustomEndAt,
+  CustomStartAt,
   CustomStatus,
   CustomUserName,
   CustomWorkTypeTitle,
 } from '../../components/admin/workApprove/content/CustomColumns';
-import { CustomStartAt } from '../../components/user/approval/CustomColumns';
-import Loading from '../../components/common/Loading'
+import Loading from '../../components/common/Loading';
 
 const AdminWorkApprovePage = () => {
   const [commutes, setCommutes] = useState<any>();
   const [isCommuteDetailOpen, setIsCommuteDetailOpen] = useState(false);
   const [commuteDetailId, setCommuteDetailId] = useState<number>();
   const [selectData, setSelectData]: any = useState(null);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getCommutes = async () => {
@@ -32,11 +32,11 @@ const AdminWorkApprovePage = () => {
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     getCommutes();
-  },[]);
+  }, []);
 
   const handleWorkDetail = (selectData: any) => {
     setIsCommuteDetailOpen(true);
@@ -74,7 +74,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomWorkTypeTitle(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'start_at',
@@ -82,7 +82,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomStartAt(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'end_at',
@@ -90,7 +90,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomEndAt(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'status',
@@ -105,15 +105,21 @@ const AdminWorkApprovePage = () => {
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'></div>
-      {loading ? <Loading/> : <CustomeDataTable
-        data={commutes}
-        columns={columns}
-        selectData={selectData}
-        setSelectData={setSelectData}
-        filterVisible={false}
-        paginatorVisible={true}
-        handleRowClick={handleWorkDetail}
-      />}
+      {loading ? (
+        <div className='flex justify-center w-full'>
+          <Loading />
+        </div>
+      ) : (
+        <CustomeDataTable
+          data={commutes}
+          columns={columns}
+          selectData={selectData}
+          setSelectData={setSelectData}
+          filterVisible={false}
+          paginatorVisible={true}
+          handleRowClick={handleWorkDetail}
+        />
+      )}
       {isCommuteDetailOpen && commuteDetailId && (
         <DetailModal commuteDetailId={commuteDetailId} isCommuteDetailOpen={isCommuteDetailOpen} setIsCommuteDetailOpen={setIsCommuteDetailOpen} />
       )}
