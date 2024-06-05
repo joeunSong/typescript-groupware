@@ -157,19 +157,23 @@ const AccountPageLayout = () => {
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'>
-        <CustomButton variant='contained' color='secondary' size='auto' onClick={HandleOpenModal}>
+        <CustomButton variant='contained' color='add' size='auto' onClick={HandleOpenModal}>
           계정 추가
         </CustomButton>
       </div>
-      {loading ? <LoadingLayout/> : <CustomeDataTable
-        data={usersInfo}
-        columns={columns}
-        selectData={selectData}
-        setSelectData={setSelectData}
-        filterVisible={false}
-        paginatorVisible={true}
-        handleRowClick={handleAccountDetail}
-      />}
+      {loading ? (
+        <LoadingLayout />
+      ) : (
+        <CustomeDataTable
+          data={usersInfo}
+          columns={columns}
+          selectData={selectData}
+          setSelectData={setSelectData}
+          filterVisible={false}
+          paginatorVisible={true}
+          handleRowClick={handleAccountDetail}
+        />
+      )}
       <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
       {renderModal()}
     </div>
