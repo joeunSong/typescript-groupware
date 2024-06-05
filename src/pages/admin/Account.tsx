@@ -35,6 +35,11 @@ const authSelectList = [
   { label: '관리자', value: '1' },
 ];
 
+interface departmentType {
+  label: string;
+  value: number;
+}
+
 const AccountPageLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usersInfo, setUsersInfo] = useState<any>(null);
@@ -42,8 +47,35 @@ const AccountPageLayout = () => {
   const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(1);
   const [accountDetailId, setAccountDetailId] = useState<number>();
   const [loading, setLoading] = useState(true);
+  const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
 
   const HandleOpenModal = () => setIsModalOpen(true);
+
+  useEffect(() => {
+    const getDepartmentInfo = async () => {
+      try {
+        const companyId = Number(localStorage.getItem(COMPANY_ID));
+        const response = await ADMIN_API.department(companyId);
+
+        const data = response.data.data;
+        // console.log('getDepartmentInfo data: ', data);
+        // console.log(Array.isArray(data));
+
+        if (Array.isArray(data)) {
+          const formattedData = data.map((item: any) => ({
+            key: item.id,
+            label: item.title,
+            value: item.id,
+          }));
+          setDepartmentInfo(formattedData);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDepartmentInfo();
+    // console.log('departmentInfo: ', departmentInfo);
+  }, []);
 
   useEffect(() => {
     const getUsersInfo = async () => {
@@ -142,6 +174,7 @@ const AccountPageLayout = () => {
               setIsAccountDetailOpen={setIsAccountDetailOpen}
               rankSelectList={rankSelectList}
               authSelectList={authSelectList}
+              departmentInfo={departmentInfo}
             />
           );
         case 3:
@@ -174,7 +207,13 @@ const AccountPageLayout = () => {
           handleRowClick={handleAccountDetail}
         />
       )}
-      <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
+      <CreateUserModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        rankSelectList={rankSelectList}
+        authSelectList={authSelectList}
+        departmentInfo={departmentInfo}
+      />
       {renderModal()}
     </div>
   );
