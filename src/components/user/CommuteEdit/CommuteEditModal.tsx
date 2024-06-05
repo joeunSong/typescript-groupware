@@ -9,6 +9,7 @@ import { WorkRecord } from '../../../types/interface';
 import USER_API from '../../../services/user';
 import { WORKTYPE_ID } from '../../../constants/constant';
 import utc from 'dayjs/plugin/utc';
+import { TimeValidationError } from '@mui/x-date-pickers/models/validation';
 
 interface CommuteEditModalProps {
   isModalOpen: boolean;
@@ -28,15 +29,17 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
     startAt: dayjs(work.startAt),
     endAt: dayjs(work.endAt),
   });
-
+  const [error, setError] = useState<Record<string, TimeValidationError>>({startAt: null, endAT: null});
+  
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
 
   const handleSubmit = async () => {
+    if (error.startAt || error.endAt) return;
     try {
       dayjs.extend(utc);
-      console.log('workForm in handleSubmit', workForm);
+
       const response = await USER_API.commute_edit({
         id: String(work.id),
         startAt: dayjs.utc(workForm.startAt).format(),
@@ -54,7 +57,6 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
       console.log(error);
     }
   };
-  console.log('workForm: ', workForm);
 
   return (
     <CustomModal isOpen={isModalOpen} onClose={handleModalClose} title='근무 기록 조정'>
@@ -72,20 +74,17 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
             <CommuteTimePicker
               startAt={workForm.startAt}
               startOnChange={(newValue: Dayjs) => {
-                setWorkForm((prev) => {
-                  console.log('setWorkForm worked');
-                  return { ...prev, startAt: newValue };
-                });
+                setWorkForm((prev) => ({ ...prev, startAt: newValue }));
               }}
               endAt={workForm.endAt}
               endOnChange={(newValue: Dayjs) => {
-                setWorkForm((prev) => {
-                  return { ...prev, endAt: newValue };
-                });
+                setWorkForm((prev) => ({ ...prev, endAt: newValue }));
               }}
+              error={error}
+              setError={setError}
             />
           </div>
-          <CustomButton variant='text' size='auto' color='primary' submit={true} onClick={handleSubmit}>
+          <CustomButton variant='text' size='auto' color='primary' submit={true} onClick={handleSubmit} disabled={!!error.startAt || !!error.endAt}>
             수정
           </CustomButton>
         </FormControl>
