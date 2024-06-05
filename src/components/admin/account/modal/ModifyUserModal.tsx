@@ -87,7 +87,9 @@ const ModifyUserModal = (props: any) => {
   return (
     <CustomModal isOpen={isAccountDetailOpen !== 0} onClose={HandleCloseModal} title='계정추가'>
       {loading ? (
-        <LoadingLayout />
+        <div className='flex justify-center w-full'>
+          <LoadingLayout />
+        </div>
       ) : (
         <form onSubmit={handleSubmit((data: any) => editUserInfo(data))}>
           <div className='grid-box'>

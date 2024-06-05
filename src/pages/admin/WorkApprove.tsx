@@ -106,7 +106,9 @@ const AdminWorkApprovePage = () => {
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'></div>
       {loading ? (
-        <Loading />
+        <div className='flex justify-center w-full'>
+          <Loading />
+        </div>
       ) : (
         <CustomeDataTable
           data={commutes}

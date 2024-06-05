@@ -195,7 +195,9 @@ const AccountPageLayout = () => {
         </CustomButton>
       </div>
       {loading ? (
-        <LoadingLayout />
+        <div className='flex justify-center w-full'>
+          <LoadingLayout />
+        </div>
       ) : (
         <CustomeDataTable
           data={usersInfo}

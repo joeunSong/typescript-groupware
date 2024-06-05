@@ -26,7 +26,7 @@ const KOREAN_LABEL: StringObject = {
 
 const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen }: AccountDetailProps) => {
   const [account, setAccount] = useState<User>();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getAccountDetail = async () => {
@@ -38,7 +38,7 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     getAccountDetail();
@@ -51,28 +51,36 @@ const AccountDetail = ({ accountId, isAccountDetailOpen, setIsAccountDetailOpen 
   return (
     <>
       <CustomModal isOpen={isAccountDetailOpen === 1} onClose={handleCloseModal} title='계정 상세'>
-        {loading ? <LoadingLayout/> : <><TableContainer component={Paper} sx={{ boxShadow: 0 }}>
-          <Table sx={{ minWidth: 500 }}>
-            <TableBody>
-              {Object.entries(_.pick(account, SHOW_DATA)).map(([key, value]) => {
-                if (key === 'is_admin') {
-                  console.log('isadmin', value ? '관리자' : '사용자');
-                  return CustomRow(key, value ? '관리자' : '사용자');
-                } else {
-                  return CustomRow(key, String(value));
-                }
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div className='flex justify-center gap-5 mt-8'>
-          <CustomButton variant='contained' size='auto' color='secondary' onClick={() => setIsAccountDetailOpen(3)}>
-            삭제
-          </CustomButton>
-          <CustomButton variant='contained' size='auto' color='primary' onClick={() => setIsAccountDetailOpen(2)}>
-            수정
-          </CustomButton>
-        </div></>}
+        {loading ? (
+          <div className='flex justify-center w-full'>
+            <LoadingLayout />
+          </div>
+        ) : (
+          <>
+            <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
+              <Table sx={{ minWidth: 500 }}>
+                <TableBody>
+                  {Object.entries(_.pick(account, SHOW_DATA)).map(([key, value]) => {
+                    if (key === 'is_admin') {
+                      console.log('isadmin', value ? '관리자' : '사용자');
+                      return CustomRow(key, value ? '관리자' : '사용자');
+                    } else {
+                      return CustomRow(key, String(value));
+                    }
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <div className='flex justify-center gap-5 mt-8'>
+              <CustomButton variant='contained' size='auto' color='secondary' onClick={() => setIsAccountDetailOpen(3)}>
+                삭제
+              </CustomButton>
+              <CustomButton variant='contained' size='auto' color='primary' onClick={() => setIsAccountDetailOpen(2)}>
+                수정
+              </CustomButton>
+            </div>
+          </>
+        )}
       </CustomModal>
     </>
   );
