@@ -167,8 +167,9 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
       <TimelineBar />
       <div className='flex flex-col h-full'>
         {currentWeek.map((_day: string, idx: number) => (
-          <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-[#e0e1e2] hover:bg-[#f6f7f7]'>
-            <div className='flex gap-[10px] p-[10px] items-center w-[200px] border-solid border-r-[1px] border-[#e0e1e2] font-body1-bold'>
+          // // <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-[#e0e1e2] hover:bg-[#f6f7f7]'>
+          <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-[#e0e1e2]'>
+            <div className='flex gap-[10px] p-[10px] items-center w-[200px] min-h-[60px] border-solid border-r-[1px] relative border-[#e0e1e2] font-body1-bold'>
               {idx === 5 || idx === 6 || isHoliday(_day) ? (
                 <div className='text-red text-[16px]'>{workDays[idx]} </div>
               ) : (
@@ -178,17 +179,11 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
               {isToday(_day) ? (
                 <div className='flex bg-primary items-center justify-center text-white rounded-[50%] w-[25px] h-[25px]'>{foramttedDay(_day)}</div>
               ) : (
-                <div className='flex items-center justify-center w-[25px]'>
-                  {foramttedDay(_day)}
-                  {/* 공휴일 표시
-                {isHoliday(_day) && (
-                  <div className='flex h-[20px] rounded-[50px] bg-primary text-white items-center justify-center'>{isHoliday(_day)}</div>
-                )}
-                {findDayWorkStatus(_day) && (
-                  <div className='flex h-[20px] rounded-[50px] bg-red-500 text-white items-center justify-center'>{findDayWorkStatus(_day)}</div>
-                )} */}
-                </div>
+                <div className='flex items-center justify-center w-[25px]'>{foramttedDay(_day)}</div>
               )}
+
+              {/* 공휴일 표시 */}
+              {/* {isHoliday(_day) && <div className='absolute left-2.5 bottom-2 text-[12px] text-[red]'>{isHoliday(_day)}</div>} */}
 
               <div className='flex-1 flex flex-col items-center justify-center gap-[10px]'>
                 <>

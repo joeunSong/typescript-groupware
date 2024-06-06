@@ -8,7 +8,7 @@ function TimelineBar() {
 
   return (
     <div className='flex w-full mb-[10px] '>
-      <div className='w-[200px]'></div>
+      <div className='min-w-[200px]'></div>
       <div className='flex-1 flex w-full justify-between'>
         {timeline.map((_it, idx) => (
           <span key={idx} className='flex-1 text-gray-500'>
