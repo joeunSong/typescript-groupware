@@ -125,12 +125,20 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
       }
     }
 
-    const start = moment(startAt);
-    const end = moment(endAt);
-    // 출근부터 퇴근까지의 시간 계산
-    let workTime = moment.duration(end.diff(start)).asMinutes();
-    let diff = Math.floor(workTime);
+    // const start = moment(startAt);
+    // const end = moment(endAt);
+    // // 출근부터 퇴근까지의 시간 계산
+    // let workTime = moment.duration(end.diff(start)).asMinutes();
+    // let diff = Math.floor(workTime);
 
+    // moment 객체로 변환하고 초 단위를 제거
+    const start = moment(startAt, 'YYYY-MM-DD HH:mm:ss').startOf('minute');
+    const end = moment(endAt, 'YYYY-MM-DD HH:mm:ss').startOf('minute');
+
+    // 시간 차이 계산 (분 단위)
+    let diff = end.diff(start, 'minutes');
+
+    //console.log(diff);
     if (diff >= 60) {
       const hours = Math.floor(diff / 60);
       const minutes = diff % 60;
@@ -168,9 +176,9 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
               )}
 
               {isToday(_day) ? (
-                <div className='flex bg-primary items-center justify-center text-white rounded-[50%] w-[30px] h-[30px]'>{foramttedDay(_day)}</div>
+                <div className='flex bg-primary items-center justify-center text-white rounded-[50%] w-[25px] h-[25px]'>{foramttedDay(_day)}</div>
               ) : (
-                <div>
+                <div className='flex items-center justify-center w-[25px]'>
                   {foramttedDay(_day)}
                   {/* 공휴일 표시
                 {isHoliday(_day) && (
