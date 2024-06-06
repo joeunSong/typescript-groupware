@@ -118,7 +118,7 @@ const UserDefaultLayout = (props: any) => {
             label: '근무',
             open: false,
             items: [
-              { icon: null, label: '근무 조회', path: ENDPOINT.USER_DASHBOARD, explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.' },
+              { icon: null, label: '내 근무', path: ENDPOINT.USER_DASHBOARD, explan: '한 주동안 내 근무를 한 눈에 볼 수 있어요.' },
               { icon: null, label: '근무 승인', path: ENDPOINT.USER_WORK_APPROVAL, explan: '부서원이 보낸 조정요청을 조회, 승인할 수 있습니다.' },
             ],
           },
