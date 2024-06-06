@@ -87,7 +87,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
         placement='top'
       >
         <div
-          className={`bg-primary w-0 h-[50px] absolute rounded-[5px] ${todayWorkInfo.isNormal ? 'cursor-pointer' : ''}`}
+          className={`bg-primary w-0 min-h-[40px] absolute rounded-[10px] ${todayWorkInfo.isNormal ? 'cursor-pointer' : ''}`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,

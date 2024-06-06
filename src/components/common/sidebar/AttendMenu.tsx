@@ -190,8 +190,7 @@ const AttendMenu = ({ userInfo, todayWorkInfoList, setTodayWorkInfoList, onWork,
     const now = moment();
 
     // 다음 자정을 계산
-    const midnight = now.clone().endOf('day');
-
+    const midnight = now.clone().add(1, 'day').startOf('day');
     // 다음 자정까지의 시간 차이 계산 (밀리초 단위)
     const timeUntilMidnight = midnight.diff(now);
 
