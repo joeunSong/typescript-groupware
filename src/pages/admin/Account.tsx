@@ -35,15 +35,47 @@ const authSelectList = [
   { label: '관리자', value: '1' },
 ];
 
+interface departmentType {
+  label: string;
+  value: number;
+}
+
 const AccountPageLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usersInfo, setUsersInfo] = useState<any>(null);
   const [selectData, setSelectData]: any = useState(null);
   const [isAccountDetailOpen, setIsAccountDetailOpen] = useState(1);
   const [accountDetailId, setAccountDetailId] = useState<number>();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
 
   const HandleOpenModal = () => setIsModalOpen(true);
+
+  useEffect(() => {
+    const getDepartmentInfo = async () => {
+      try {
+        const companyId = Number(localStorage.getItem(COMPANY_ID));
+        const response = await ADMIN_API.department(companyId);
+
+        const data = response.data.data;
+        // console.log('getDepartmentInfo data: ', data);
+        // console.log(Array.isArray(data));
+
+        if (Array.isArray(data)) {
+          const formattedData = data.map((item: any) => ({
+            key: item.id,
+            label: item.title,
+            value: item.id,
+          }));
+          setDepartmentInfo(formattedData);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDepartmentInfo();
+    // console.log('departmentInfo: ', departmentInfo);
+  }, []);
 
   useEffect(() => {
     const getUsersInfo = async () => {
@@ -56,7 +88,7 @@ const AccountPageLayout = () => {
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     getUsersInfo();
@@ -70,7 +102,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomName(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'department_title',
@@ -78,7 +110,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomDepartment(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'rank_title',
@@ -86,7 +118,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomRank(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '10%' },
     },
     {
       field: 'email',
@@ -94,7 +126,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomEmail(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '25%' },
     },
     {
       field: 'is_admin',
@@ -102,7 +134,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomIsAdmin(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '10%' },
     },
     {
       field: 'enter_date',
@@ -110,7 +142,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomEnterDate(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'created_date',
@@ -118,7 +150,7 @@ const AccountPageLayout = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomCreatedDate(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '30%' },
     },
   ];
 
@@ -142,6 +174,7 @@ const AccountPageLayout = () => {
               setIsAccountDetailOpen={setIsAccountDetailOpen}
               rankSelectList={rankSelectList}
               authSelectList={authSelectList}
+              departmentInfo={departmentInfo}
             />
           );
         case 3:
@@ -157,20 +190,32 @@ const AccountPageLayout = () => {
   return (
     <div className='flex flex-col w-full h-full gap-5 p-5 bg-white'>
       <div className='flex justify-end'>
-        <CustomButton variant='contained' color='secondary' size='auto' onClick={HandleOpenModal}>
+        <CustomButton variant='contained' color='add' size='auto' onClick={HandleOpenModal}>
           계정 추가
         </CustomButton>
       </div>
-      {loading ? <LoadingLayout/> : <CustomeDataTable
-        data={usersInfo}
-        columns={columns}
-        selectData={selectData}
-        setSelectData={setSelectData}
-        filterVisible={false}
-        paginatorVisible={true}
-        handleRowClick={handleAccountDetail}
-      />}
-      <CreateUserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} rankSelectList={rankSelectList} authSelectList={authSelectList} />
+      {loading ? (
+        <div className='flex justify-center w-full'>
+          <LoadingLayout />
+        </div>
+      ) : (
+        <CustomeDataTable
+          data={usersInfo}
+          columns={columns}
+          selectData={selectData}
+          setSelectData={setSelectData}
+          filterVisible={false}
+          paginatorVisible={true}
+          handleRowClick={handleAccountDetail}
+        />
+      )}
+      <CreateUserModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        rankSelectList={rankSelectList}
+        authSelectList={authSelectList}
+        departmentInfo={departmentInfo}
+      />
       {renderModal()}
     </div>
   );
