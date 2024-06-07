@@ -86,8 +86,10 @@ const CreateUserModal = (props: any) => {
       console.log('response: ', response);
 
       HandleCloseModal();
-    } catch (error) {
-      console.log(error);
+    } catch (error:any) {
+      if (error.response.status === 403){
+        alert(error.response.data.message);
+      }
     }
   };
 
