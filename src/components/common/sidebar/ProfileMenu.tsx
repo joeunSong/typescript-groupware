@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import { useNavigate } from 'react-router-dom';
 import USER_API from '../../../services/user';
-import React from 'react';
 import ProfileModal from '../../user/ProfileModal';
 
 interface ProfileMenuProps {
@@ -12,8 +10,6 @@ interface ProfileMenuProps {
 const ProfileMenu = ({}: ProfileMenuProps) => {
   const [userInfo, setUserInfo] = useState<any>();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-
-  const navigate = useNavigate();
 
   const getUserInfo = async () => {
     try {
@@ -26,10 +22,6 @@ const ProfileMenu = ({}: ProfileMenuProps) => {
   };
 
   const handleMovePage = () => {
-    //profile 페이지 이동
-    //navigate('/user/profile');
-
-    // 임시
     setIsProfileModalOpen(true);
   };
 

@@ -11,6 +11,7 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -91,11 +92,11 @@ export const CustomModal = ({ isOpen, onClose, title, children }: CustomModalPro
       <DialogTitle className='custom-dialog-title'>
         <p>{title}</p>
         <p onClick={onClose} className='cursor-pointer'>
-          x
+          <CloseIcon />
         </p>
       </DialogTitle>
       <DialogContent>
-        <div>{children}</div>
+        <div className='mb-6'>{children}</div>
       </DialogContent>
     </Dialog>
   );

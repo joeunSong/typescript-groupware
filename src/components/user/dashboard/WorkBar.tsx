@@ -6,6 +6,8 @@ import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import USER_API from '../../../services/user';
 import { WorkRecord } from '../../../types/interface';
 import getEditable from '../../../utils/getEditable';
+import LoadingLayout from '../../common/Loading';
+import LoadingModal from '../CommuteEdit/LoadingModal';
 
 interface workBarProps {
   workInfo: WorkRecord;
@@ -14,6 +16,7 @@ interface workBarProps {
 function WorkBar({ workInfo }: workBarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditable, setIsEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 출근 시간과 퇴근 시간
   const startTime = moment(workInfo?.startAt);
@@ -39,6 +42,8 @@ function WorkBar({ workInfo }: workBarProps) {
   };
 
   const handleModalOpen = async () => {
+    setIsModalOpen(true);
+    setIsLoading(true);
     try {
       // 조정 요청 가능한지 조회
       const editable = await getEditable(workInfo.id);
@@ -47,10 +52,11 @@ function WorkBar({ workInfo }: workBarProps) {
       } else {
         setIsEditable(false);
       }
-      setIsModalOpen(true);
     } catch (error) {
-      alert('네트워크 에러. 잠시 후 다시 시도해주세요.');
+      alert(error);
       setIsModalOpen(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -83,12 +89,15 @@ function WorkBar({ workInfo }: workBarProps) {
           )}
         </div>
       </Tooltip>
-      {isModalOpen &&
-        (isEditable ? (
-          <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={workInfo} />
-        ) : (
-          <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-        ))}
+      {isModalOpen && isLoading ? (
+        <div className='fixed flex items-center justify-center z-50'>
+          <LoadingModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        </div>
+      ) : isEditable ? (
+        <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={workInfo} />
+      ) : (
+        <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      )}
     </>
   ) : (
     <></>

@@ -13,6 +13,7 @@ import {
 import ApprovalDetailModalLayout from './modal/ApprovalDetailModal';
 import { useUpdateEffect } from 'react-use';
 import _ from 'lodash';
+import LoadingLayout from '../../common/Loading';
 
 const ApprovalLayout = (props: any) => {
   const {} = props;
@@ -22,6 +23,8 @@ const ApprovalLayout = (props: any) => {
   const [selectPendingApproval, setSelectPendingApproval] = useState(null);
   // * 모달 Visible
   const [visible, setVisible] = useState(false);
+  // * 로딩중
+  const [isLoading, setIsLoading] = useState(true);
   // * comlum 정의
   const columnClassName = 'max-w-[0px] p-0';
   const columnPt = { headerCell: { className: 'p-4' } };
@@ -111,12 +114,16 @@ const ApprovalLayout = (props: any) => {
         setPendingApprovalData(commutePendingApproval.data);
       } catch (e) {
         console.log('e', e);
+      } finally {
+        setIsLoading(false);
       }
     };
     api();
   }, [visible]);
 
-  return (
+  return isLoading ? (
+    <LoadingLayout />
+  ) : (
     <>
       <ApprovalDetailModalLayout visible={visible} setVisible={setVisible} selectData={selectPendingApproval} />
       <div className='flex flex-col w-full p-[10px] gap-5'>
@@ -135,6 +142,7 @@ const ApprovalLayout = (props: any) => {
             setSelectData={setSelectPendingApproval}
             filterVisible={false}
             paginatorVisible={false}
+            emptyMessage={'받은 조정 요청이 없습니다.'}
           />
         </div>
       </div>
