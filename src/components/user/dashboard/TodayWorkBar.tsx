@@ -5,6 +5,7 @@ import CommuteEditModal from '../CommuteEdit/CommuteEditModal';
 import DisabledEditModal from '../CommuteEdit/DisabledEditModal';
 import { WorkRecord } from '../../../types/interface';
 import getEditable from '../../../utils/getEditable';
+import LoadingModal from '../CommuteEdit/LoadingModal';
 
 interface TodayWorkBarProps {
   todayWorkInfo: WorkRecord;
@@ -14,6 +15,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
   const [workTime, setWorkTime] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditable, setIsEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -63,22 +65,25 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
 
   const handleModalOpen = async () => {
     if (todayWorkInfo.isNormal) {
+      setIsModalOpen(true);
+      setIsLoading(true);
       try {
         // 조정 요청 가능한지 조회
         const editable = await getEditable(todayWorkInfo.id);
-
         if (editable) {
           setIsEditable(true);
         } else {
           setIsEditable(false);
         }
-        setIsModalOpen(true);
       } catch (error) {
-        console.log(error);
+        alert(error);
         setIsModalOpen(false);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
+
   return todayWorkInfo.startAt ? (
     <>
       <Tooltip
@@ -107,7 +112,11 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
         </div>
       </Tooltip>
       {isModalOpen &&
-        (isEditable ? (
+        (isLoading ? (
+          <div className='fixed flex items-center justify-center z-50'>
+            <LoadingModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          </div>
+        ) : isEditable ? (
           <CommuteEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} work={todayWorkInfo} />
         ) : (
           <DisabledEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />

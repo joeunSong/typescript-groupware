@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import USER_API from '../services/user';
 
 const getEditable = async (workId: number) => {
@@ -7,7 +8,7 @@ const getEditable = async (workId: number) => {
     if (editArray.length && editArray[editArray.length - 1].status === 'PENDING') return false;
     else return true;
   } catch (error) {
-    return false;
+    throw new Error((error as AxiosError).message);
   }
 };
 
