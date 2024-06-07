@@ -115,8 +115,8 @@ const CreateUserModal = (props: any) => {
               rules={{
                 required: '필수항목을 입력해주세요.',
                 pattern: {
-                  value: /^[a-z0-9._-]{5,40}$/,
-                  message: '5~40자의 영문 소문자,숫자,특수문자(.,-,_)만 사용 가능합니다.',
+                  value: /^[a-z0-9._-]{2,40}$/,
+                  message: '2~40자의 영문 소문자,숫자,특수문자(.,-,_)만 사용 가능합니다.',
                 },
               }}
               textFieldProps={{
