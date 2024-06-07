@@ -27,7 +27,6 @@ interface FormValue {
 const CreateUserModal = (props: any) => {
   const { isModalOpen, setIsModalOpen, rankSelectList, authSelectList, departmentInfo } = props;
 
-  const { instance, setBaseURL } = ApiClient;
   // const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
   const { control, handleSubmit, watch, reset } = useForm<FormValue>({
     defaultValues: {
@@ -70,7 +69,6 @@ const CreateUserModal = (props: any) => {
 
   const postUserInfo = async (data: any) => {
     try {
-      setBaseURL('http://127.0.0.1/api/');
       let sendUserData = {
         name: data.name,
         email: data.email + componyEmail,
@@ -88,8 +86,10 @@ const CreateUserModal = (props: any) => {
       console.log('response: ', response);
 
       HandleCloseModal();
-    } catch (error) {
-      console.log(error);
+    } catch (error:any) {
+      if (error.response.status === 403){
+        alert(error.response.data.message);
+      }
     }
   };
 
@@ -116,13 +116,9 @@ const CreateUserModal = (props: any) => {
               control={control}
               rules={{
                 required: '필수항목을 입력해주세요.',
-                minLength: {
-                  value: 2,
-                  message: '2글자 이상 입력해주세요',
-                },
                 pattern: {
-                  value: /^[a-zA-Z0-9.\-_]+$/,
-                  message: '특수문자 (.,-,_) 입력이 가능합니다.',
+                  value: /^[a-z0-9._-]{2,40}$/,
+                  message: '2~40자의 영문 소문자,숫자,특수문자(.,-,_)만 사용 가능합니다.',
                 },
               }}
               textFieldProps={{

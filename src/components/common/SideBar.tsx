@@ -105,13 +105,14 @@ const SideBarLayout = ({
   return (
     <div className={`flex flex-col ${width} min-w-[270px] h-full gap-5 ${padding} ${color}`}>
       {/* 상단 제목 */}
-      <div className='flex w-full items-center justify-center cursor-pointer' onClick={handleHomeLogoClick}>
+      <div className='flex items-center justify-center w-full cursor-pointer' onClick={handleHomeLogoClick}>
         {icon}
       </div>
 
       {/* Header */}
       {!_.isEmpty(headerTemplate) ? (
         <>
+          <div className='flex w-full border-solid border-b-[1px] border-[#C7C7C7]' />
           <div className='flex w-full'>{headerTemplate?.profileMenu}</div>
           <div className='flex w-full'>{headerTemplate?.attendMenu}</div>
         </>
@@ -122,7 +123,7 @@ const SideBarLayout = ({
       <div className='flex w-full border-solid border-b-[1px] border-[#C7C7C7]' />
 
       {/* Content */}
-      <div className='flex w-full felx h-auto overflow-y-auto scrollYWrap'>
+      <div className='flex w-full h-auto overflow-y-auto felx scrollYWrap'>
         <List className='w-full' component='nav' disablePadding>
           {_.map(items, (item: any, index: number) => {
             return (
