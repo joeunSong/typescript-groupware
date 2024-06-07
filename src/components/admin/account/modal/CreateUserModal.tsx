@@ -27,7 +27,6 @@ interface FormValue {
 const CreateUserModal = (props: any) => {
   const { isModalOpen, setIsModalOpen, rankSelectList, authSelectList, departmentInfo } = props;
 
-  const { instance, setBaseURL } = ApiClient;
   // const [departmentInfo, setDepartmentInfo] = useState<departmentType[]>([]);
   const { control, handleSubmit, watch, reset } = useForm<FormValue>({
     defaultValues: {
@@ -70,7 +69,6 @@ const CreateUserModal = (props: any) => {
 
   const postUserInfo = async (data: any) => {
     try {
-      setBaseURL('http://127.0.0.1/api/');
       let sendUserData = {
         name: data.name,
         email: data.email + componyEmail,
