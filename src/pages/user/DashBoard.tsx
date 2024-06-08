@@ -12,6 +12,7 @@ import findWorkStatus from '../../utils/findWorkStatus';
 import { isSameDate, isToday } from '../../utils/dateUtil';
 import { DayWork, WorkRecord } from '../../types/interface';
 import CustomChip from '../../components/user/Customchip';
+import LoadingLayout from '../../components/common/Loading';
 
 interface UserDashBoardProps {
   userInfo?: any;
@@ -26,6 +27,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
   const [currentWeek, setCurrentWeek] = useState<string[]>([]);
   const workDays = ['월', '화', '수', '목', '금', '토', '일'];
   const [weekWorkInfo, setWeekWorkInfo] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
 
   const { getHolidayList } = useHoliday();
   const holidayList = getHolidayList();
@@ -46,6 +48,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
 
   //TODO :일주일 근무 정보 받아오기
   const getWeekWorkInfo = async () => {
+    setLoading(true);
     //let startDay = moment(`${currentWeek[0]} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').toISOString();
     //let endDay = moment(`${currentWeek[6]} 23:59:59.999`, 'YYYY-MM-DD HH:mm:ss').toISOString();
     let startDay = moment(currentWeek[0]).startOf('day').toISOString();
@@ -56,6 +59,7 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
       const data = response.data;
       //console.log(data);
       setWeekWorkInfo(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -163,56 +167,60 @@ const UserDashBoard = ({ userInfo, onWork, setOnWork, todayWorkInfo, setTodayWor
           {/* <button onClick={handleNextWeek}>{'>'}</button> */}
         </div>
       </div>
-
       <TimelineBar />
-      <div className='flex flex-col h-full'>
-        {currentWeek.map((_day: string, idx: number) => (
-          // // <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-[#e0e1e2] hover:bg-[#f6f7f7]'>
-          <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-[#e0e1e2]'>
-            <div className='flex gap-[10px] p-[10px] items-center w-[200px] min-h-[60px] border-solid border-r-[1px] relative border-[#e0e1e2] font-body1-bold'>
-              {idx === 5 || idx === 6 || isHoliday(_day) ? (
-                <div className='text-red text-[16px]'>{workDays[idx]} </div>
-              ) : (
-                <div className='text text-[16px]'>{workDays[idx]} </div>
-              )}
+      {loading ? (
+        <div className='flex w-full h-full items-center justify-center'>
+          <LoadingLayout></LoadingLayout>
+        </div>
+      ) : (
+        <div className='flex flex-col h-full'>
+          {currentWeek.map((_day: string, idx: number) => (
+            <div key={idx} className='flex-1 flex border-solid border-t-[1px] border-[#e0e1e2]'>
+              <div className='flex gap-[10px] p-[10px] items-center w-[200px] border-solid border-r-[1px] border-[#e0e1e2] font-body1-bold'>
+                {idx === 5 || idx === 6 || isHoliday(_day) ? (
+                  <div className='text-red text-[16px]'>{workDays[idx]} </div>
+                ) : (
+                  <div className='text text-[16px]'>{workDays[idx]} </div>
+                )}
 
-              {isToday(_day) ? (
-                <div className='flex bg-primary items-center justify-center text-white rounded-[50%] w-[25px] h-[25px]'>{foramttedDay(_day)}</div>
-              ) : (
-                <div className='flex items-center justify-center w-[25px]'>{foramttedDay(_day)}</div>
-              )}
+                {isToday(_day) ? (
+                  <div className='flex bg-primary items-center justify-center text-white rounded-[50%] w-[25px] h-[25px]'>{foramttedDay(_day)}</div>
+                ) : (
+                  <div className='flex items-center justify-center w-[25px]'>{foramttedDay(_day)}</div>
+                )}
 
-              {/* 공휴일 표시 */}
-              {/* {isHoliday(_day) && <div className='absolute left-2.5 bottom-2 text-[12px] text-[red]'>{isHoliday(_day)}</div>} */}
+                {/* 공휴일 표시 */}
+                {/* {isHoliday(_day) && <div className='absolute left-2.5 bottom-2 text-[12px] text-[red]'>{isHoliday(_day)}</div>} */}
 
-              <div className='flex-1 flex flex-col items-center justify-center gap-[10px]'>
-                <>
-                  {/* 커스텀 칩 사용 */}
-                  {findDayWork(_day) && <CustomChip workInfo={findDayWork(_day)} />}
-                  {/* //근무 시간 */}
-                  {getWorkTime(_day) && (
-                    <div className='flex text-[10px] min-w-[60px] h-[20px] rounded-[5px]  text-[#777777] border border-solid border-[#777777]  items-center justify-center'>
-                      {getWorkTime(_day)}
-                    </div>
-                  )}
-                </>
+                <div className='flex-1 flex flex-col items-center justify-center gap-[10px] '>
+                  <>
+                    {/* 커스텀 칩 사용 */}
+                    {findDayWork(_day) && <CustomChip workInfo={findDayWork(_day)} />}
+                    {/* //근무 시간 */}
+                    {getWorkTime(_day) && (
+                      <div className='flex text-[10px] min-w-[60px] h-[20px] rounded-[5px]  text-[#777777] border border-solid border-[#777777]  items-center justify-center'>
+                        {getWorkTime(_day)}
+                      </div>
+                    )}
+                  </>
+                </div>
+              </div>
+              <div className={`flex flex-1 items-center relative ${isHoliday(_day) ? 'bg-[#F5F5F5]' : 'hover:bg-[rgba(255,127,0,0.4)]'}`}>
+                {/* //해당 날짜에 해당하는 workInfo 추출 */}
+                {weekWorkInfo
+                  .filter((_info: WorkRecord) => isSameDate(_day, _info.startAt))
+                  .map((_it: WorkRecord) => {
+                    //console.log(_it);
+                    return isToday(_day) ? <TodayWorkBar todayWorkInfo={_it} /> : <WorkBar workInfo={_it} />;
+                  })}
+
+                {/* 퇴근 시간을 기록하지 않은 오늘 근무 */}
+                {/* {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />} */}
               </div>
             </div>
-            <div className={`flex flex-1 items-center relative ${isHoliday(_day) ? 'bg-[#F5F5F5]' : ''}`}>
-              {/* //해당 날짜에 해당하는 workInfo 추출 */}
-              {weekWorkInfo
-                .filter((_info: WorkRecord) => isSameDate(_day, _info.startAt))
-                .map((_it: WorkRecord) => {
-                  //console.log(_it);
-                  return isToday(_day) ? <TodayWorkBar todayWorkInfo={_it} /> : <WorkBar workInfo={_it} />;
-                })}
-
-              {/* 퇴근 시간을 기록하지 않은 오늘 근무 */}
-              {/* {isToday(_day) && todayWorkInfo && !todayWorkInfo.endAt && <TodayWorkBar todayWorkInfo={todayWorkInfo} />} */}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
