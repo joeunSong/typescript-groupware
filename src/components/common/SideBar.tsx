@@ -153,7 +153,10 @@ const SideBarLayout = ({
                   )}
 
                   {/* TODO text overflow 처리필요 */}
-                  <ListItemText primary={item?.label} />
+                  <ListItemText
+                    primary={item?.label}
+                    sx={{ '& .MuiTypography-root': { fontWeight: item?.label === selectItem?.label ? 'bold' : '' } }}
+                  />
                   {/* 화살표 아이콘 */}
                   {_.isEmpty(item?.items) ? <></> : item.open ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
@@ -179,7 +182,10 @@ const SideBarLayout = ({
                                 <lastItem.icon />
                               </ListItemIcon>
                             )}
-                            <ListItemText primary={lastItem?.label} />
+                            <ListItemText
+                              primary={lastItem?.label}
+                              sx={{ '& .MuiTypography-root': { fontWeight: lastItem?.label === selectItem?.label ? 'bold' : '' } }}
+                            />
                           </ListItemButton>
                         );
                       })}
