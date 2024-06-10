@@ -68,7 +68,7 @@ const SideBarLayout = ({
   const handleHomeLogoClick = () => {
     const auth = localStorage.getItem(LOGIN_AUTH);
     if (auth === 'user') {
-      navigate(ENDPOINT.USER_DASHBOARD);
+      navigate(ENDPOINT.USER_MAIN);
     } else if (auth === 'admin') {
       navigate(ENDPOINT.ADMIN_DASHBOARD);
     }
