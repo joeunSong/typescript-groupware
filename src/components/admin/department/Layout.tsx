@@ -83,6 +83,7 @@ const DepartmentLayout = (props: any) => {
     getOrganization();
   }, []);
 
+  console.log('selectDepartment', selectDepartment);
   return (
     <div className='flex w-full h-full overflow-hidden'>
       {/* 조직도 */}
