@@ -46,16 +46,21 @@ const OrganizationLayout = (props: any) => {
           <PlusIcon width={20} height={20} />
         </button>
         {/* 부서 삭제 버튼 */}
-        <button
-          className='flex px-2 py-0.5 bg-[##f3f3f3] border-solid border-0 rounded-md cursor-pointer'
-          onClick={() => {
-            if (!_.isEmpty(selectDepartment) && selectDepartment?.label !== 'JIRAN') {
-              handleDepartmentDelete();
-            }
-          }}
-        >
-          <XIcon width={20} height={20} />
-        </button>
+
+        {selectDepartment?.company_id === undefined ? (
+          <></>
+        ) : (
+          <button
+            className='flex px-2 py-0.5 bg-[##f3f3f3] border-solid border-0 rounded-md cursor-pointer'
+            onClick={() => {
+              if (!_.isEmpty(selectDepartment) && selectDepartment?.label !== 'JIRAN') {
+                handleDepartmentDelete();
+              }
+            }}
+          >
+            <XIcon width={20} height={20} />
+          </button>
+        )}
       </div>
       {/* 조직도 내용 */}
       <div className='flex w-full h-full border-solid border-2 border-gray-300 rounded-lg overflow-y-auto scrollYWrap'>

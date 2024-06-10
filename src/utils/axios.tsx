@@ -1,6 +1,9 @@
 // * install librarys
 import axios from 'axios';
-import { ACCESS_TOKEN } from '../constants/constant';
+import { ACCESS_TOKEN, LOGIN_AUTH } from '../constants/constant';
+import admin from '../services/admin';
+import { useNavigate } from 'react-router-dom';
+import * as ENDPOINT from '../constants/apiEndpoints';
 
 const ApiClient = () => {
   // * 기초 설정
@@ -35,9 +38,34 @@ const ApiClient = () => {
     (res) => {
       return res;
     },
-    (err) => {
-      const result = err.response;
-      let errMessage: string = '';
+    async (err) => {
+      const { response: result, config: originalRequest } = err;
+      let errMessage: string = result.data.message;
+
+      const adminAuth = localStorage.getItem(LOGIN_AUTH);
+      if (errMessage === 'Unauthenticated' && adminAuth === 'admin') {
+        const retryLogin = async () => {
+          try {
+            // 토큰 교체
+            const _result = await admin.admin_refresh_token();
+            localStorage.setItem(ACCESS_TOKEN, _result.data.accessToken);
+            // 기존에 쏘려고했던 api 재호출
+            originalRequest.headers.Authorization = `Bearer ${_result.data.accessToken}`;
+            return instance(originalRequest);
+          } catch (err) {
+            console.log('err', err);
+            const _page = localStorage.getItem(LOGIN_AUTH);
+            localStorage.clear();
+
+            if (_page === 'user') {
+              window.location.href = ENDPOINT.USER_MAIN;
+            } else {
+              window.location.href = ENDPOINT.ADMIN_DASHBOARD;
+            }
+          }
+        };
+        retryLogin();
+      }
 
       // error response가 떨어지지 않는 경우
       if (!err.response) {

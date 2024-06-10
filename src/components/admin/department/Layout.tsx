@@ -9,7 +9,6 @@ import ContentLayout from './content/Layout';
 import { COMPANY_ID } from '../../../constants/constant';
 // * apis
 import ADMIN_API from '../../../services/admin';
-import { Button } from 'primereact/button';
 
 const DepartmentLayout = (props: any) => {
   const {} = props;
@@ -84,6 +83,7 @@ const DepartmentLayout = (props: any) => {
     getOrganization();
   }, []);
 
+  console.log('selectDepartment', selectDepartment);
   return (
     <div className='flex w-full h-full overflow-hidden'>
       {/* 조직도 */}

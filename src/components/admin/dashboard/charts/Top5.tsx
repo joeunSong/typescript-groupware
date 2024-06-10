@@ -7,6 +7,7 @@
 import _ from 'lodash';
 import { RANK_LABELS } from '../../../../constants/constant';
 import { InformationIcon } from '../../../common/JiranIcon';
+import { Tooltip } from 'primereact/tooltip';
 
 const Top5Layout = (props: any) => {
   const { originData } = props;
@@ -20,7 +21,28 @@ const Top5Layout = (props: any) => {
             {/* 제목 */}
             <div className={`flex w-full items-center px-3 gap-2`}>
               <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold'>{_label}</span>
-              <InformationIcon width={25} height={25} />
+              {_label === '근무시간' ? (
+                <>
+                  <InformationIcon width={25} height={25} dataPrTooltip='이번주 총 근무시간을 조회' dataPrPosition='top' id='info-icon' />
+                  <Tooltip target='#info-icon' mouseTrack mouseTrackLeft={10} />
+                </>
+              ) : _label === '지각 데이터' ? (
+                <>
+                  <InformationIcon width={25} height={25} dataPrTooltip='이번 달 1일부터의 총 지각 데이터' dataPrPosition='top' id='info-icon' />
+                  <Tooltip target='#info-icon' mouseTrack mouseTrackLeft={10} />
+                </>
+              ) : _label === '이상근무 데이터' ? (
+                <>
+                  <InformationIcon
+                    width={25}
+                    height={25}
+                    dataPrTooltip='이번 달 1일부터의 총 퇴근 미체크 데이터'
+                    dataPrPosition='top'
+                    id='info-icon'
+                  />
+                  <Tooltip target='#info-icon' mouseTrack mouseTrackLeft={10} />
+                </>
+              ) : null}
             </div>
             <div className='flex flex-col w-full justify-center border-solid border-[3px] border-gray-200 rounded-3xl p-2 text-center'>
               <div className='flex w-full p-2 border-solid border-b-[1px] border-gray-300 gap-2 '>
