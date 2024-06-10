@@ -17,8 +17,6 @@ const ContentLayout = (props: any) => {
   const { getOrganization, selectDepartment, selectUser, setSelectUser, departmentLeader } = props;
   // * 근태 관리자 설정 모달
   const [managerVisible, setManagerVisible] = useState(false);
-  // * 사용자 상세 정보 모달
-  // const [userDetailVisible, setUserDetailVisible] = useState(false);
   // * comlum 정의
   const columns = [
     {
@@ -57,21 +55,11 @@ const ContentLayout = (props: any) => {
 
   // * 근태 관리자 설정 모달 Open
   const handleDepartmentManager = () => {
-    if (_.isEmpty(selectDepartment?.users)) {
-      return;
-    }
     setManagerVisible(true);
   };
 
-  // useUpdateEffect(() => {
-  //   if (!_.isEmpty(selectUser)) {
-  //     setUserDetailVisible(true);
-  //   }
-  // }, [selectUser]);
-
   return (
     <>
-      {/* <AccountDetail isAccountDetailOpen={userDetailVisible} setIsAccountDetailOpen={setUserDetailVisible} accountId={selectUser?.id} /> */}
       {/* 근태 관리자 수정 모달 */}
       <DepartmentManagerModal
         visible={managerVisible}
@@ -91,19 +79,6 @@ const ContentLayout = (props: any) => {
             <span>{_.isEmpty(selectDepartment?.label) ? '부서를 선택해주세요' : selectDepartment?.label} </span>
           </div>
         </div>
-        {/* 부서 생성일  */}
-        {/* <div className='flex w-full'>
-          <div className='flex min-w-[150px]'>
-            <span className='text-[18px]'>부서 생성일</span>
-          </div>
-          <div className='flex w-full'>
-            <span>
-              {_.isEmpty(selectDepartment?.created_at)
-                ? moment().format('YYYY-MM-DD hh:mm:ss')
-                : moment(selectDepartment?.created_at).format('YYYY-MM-DD hh:mm:ss')}
-            </span>
-          </div>
-        </div> */}
         {/* 부서 근태관리자  */}
         <div className='flex w-full items-center'>
           <div className='flex min-w-[150px]'>
