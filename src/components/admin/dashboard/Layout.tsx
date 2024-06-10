@@ -9,6 +9,7 @@ import { useUpdateEffect } from 'react-use';
 import PieChartLayout from './charts/PieChart';
 import Top5Layout from './charts/Top5';
 import { InformationIcon } from '../../common/JiranIcon';
+import { Tooltip } from 'primereact/tooltip';
 
 const DashBoardLayout = (props: any) => {
   // * 회사 데이터
@@ -101,7 +102,15 @@ const DashBoardLayout = (props: any) => {
         <div className='flex flex-col w-2/3 gap-2'>
           <div className='flex w-full h-14 items-center gap-2'>
             <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold pl-2'>부서별 평균 근무 시간(5개월)</span>
-            <InformationIcon width={25} height={25} />
+            <InformationIcon
+              className='departmentBarChart'
+              width={25}
+              height={25}
+              dataPrTooltip='이번달 기준 직전 5개월 평균근무시간을 조회'
+              dataPrPosition='top'
+              id='info-icon'
+            />
+            <Tooltip target='#info-icon' mouseTrack mouseTrackLeft={10} />
           </div>
           <div className='flex flex-col w-full border-solid border-[3px] border-gray-200 rounded-3xl p-5'>
             <BarChartLayout originData={barData} departmentLabels={departmentLabels} />
@@ -125,7 +134,18 @@ const DashBoardLayout = (props: any) => {
                 },
               }}
             />
-            <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold px-2'>근무 현황</span>
+            <div className='flex items-center'>
+              <span className='block whitespace-nowrap overflow-hidden overflow-ellipsis text-2xl font-bold px-2'>근무 현황</span>
+              <InformationIcon
+                className='departmentBarChart'
+                width={25}
+                height={25}
+                dataPrTooltip='이번달 근무현황 조회'
+                dataPrPosition='top'
+                id='info-icon'
+              />
+              <Tooltip target='#info-icon' mouseTrack mouseTrackLeft={10} />
+            </div>
           </div>
           <div className='flex flex-col w-full items-center justify-center border-solid border-[3px] border-gray-200 rounded-3xl p-5'>
             <PieChartLayout originData={pieData} />

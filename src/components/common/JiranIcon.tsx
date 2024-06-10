@@ -27,6 +27,9 @@ const render = (
   height: any | undefined = null,
   className: any,
   onClick: any | undefined = null,
+  dataPrTooltip: any | undefined = null,
+  dataPrPosition: any | undefined = null,
+  id: any | undefined = null,
 ) => {
   return (
     <img
@@ -40,22 +43,125 @@ const render = (
           onClick();
         }
       }}
+      data-pr-tooltip={dataPrTooltip}
+      data-pr-position={dataPrPosition}
+      id={id}
     />
   );
 };
 
 // icon
-export const JiranFullLogoIcon = (props: any) => render(JiranFullLogo, props.w, props.h, props.width, props.height, props.className, props.onClick);
+export const JiranFullLogoIcon = (props: any) =>
+  render(
+    JiranFullLogo,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
 export const MiniOrganizationIcon = (props: any) =>
-  render(miniOrganization, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const MiniCompanyIcon = (props: any) => render(miniCompany, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const MiniFolderIcon = (props: any) => render(miniFolder, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const MiniUserLeaderIcon = (props: any) => render(miniUserLeader, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const MiniDoubleUserIcon = (props: any) => render(miniDoubleUser, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const MiniUserIcon = (props: any) => render(miniUser, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const ResetIcon = (props: any) => render(reset, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const BottomArrowIcon = (props: any) => render(bottomArrow, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const PlusIcon = (props: any) => render(plus, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const XIcon = (props: any) => render(x, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const HomeIcon = (props: any) => render(home, props.w, props.h, props.width, props.height, props.className, props.onClick);
-export const InformationIcon = (props: any) => render(information, props.w, props.h, props.width, props.height, props.className, props.onClick);
+  render(
+    miniOrganization,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
+export const MiniCompanyIcon = (props: any) =>
+  render(
+    miniCompany,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
+export const MiniFolderIcon = (props: any) =>
+  render(
+    miniFolder,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
+export const MiniUserLeaderIcon = (props: any) =>
+  render(
+    miniUserLeader,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
+export const MiniDoubleUserIcon = (props: any) =>
+  render(
+    miniDoubleUser,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
+export const MiniUserIcon = (props: any) =>
+  render(miniUser, props.w, props.h, props.width, props.height, props.className, props.onClick, props.dataPrTooltip, props.dataPrPosition, props.id);
+export const ResetIcon = (props: any) =>
+  render(reset, props.w, props.h, props.width, props.height, props.className, props.onClick, props.dataPrTooltip, props.dataPrPosition, props.id);
+export const BottomArrowIcon = (props: any) =>
+  render(
+    bottomArrow,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
+export const PlusIcon = (props: any) =>
+  render(plus, props.w, props.h, props.width, props.height, props.className, props.onClick, props.dataPrTooltip, props.dataPrPosition, props.id);
+export const XIcon = (props: any) =>
+  render(x, props.w, props.h, props.width, props.height, props.className, props.onClick, props.dataPrTooltip, props.dataPrPosition, props.id);
+export const HomeIcon = (props: any) =>
+  render(home, props.w, props.h, props.width, props.height, props.className, props.onClick, props.dataPrTooltip, props.dataPrPosition, props.id);
+export const InformationIcon = (props: any) =>
+  render(
+    information,
+    props.w,
+    props.h,
+    props.width,
+    props.height,
+    props.className,
+    props.onClick,
+    props.dataPrTooltip,
+    props.dataPrPosition,
+    props.id,
+  );
