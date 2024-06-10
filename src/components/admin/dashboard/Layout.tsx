@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { CHART_COLORS, COMPANY_ID, RANK_LABELS } from '../../../constants/constant';
+import { COMPANY_ID } from '../../../constants/constant';
 import ADMIN_API from '../../../services/admin';
 import _ from 'lodash';
 import BarChartLayout from './charts/BarChart';
-import moment from 'moment';
 import { Dropdown } from 'primereact/dropdown';
 import { useUpdateEffect } from 'react-use';
 import PieChartLayout from './charts/PieChart';
@@ -130,7 +129,7 @@ const DashBoardLayout = (props: any) => {
               className='w-[150px] border-solid border-2 border-gray-200 ring-0'
               pt={{
                 item: (context: any) => {
-                  return `${context.context.selected ? 'bg-gray-100 text-gray-900' : ''} hover:bg-indigo-100`;
+                  return `${context.context.selected ? 'bg-gray-100 text-gray-900' : ''} hover:bg-gary-100`;
                 },
               }}
             />
