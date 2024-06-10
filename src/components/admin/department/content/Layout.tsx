@@ -9,6 +9,7 @@ import CustomeDataTable from '../../../common/DataTable';
 import DepartmentManagerModal from '../modal/DepartmentManagerModal';
 import { CustomDepartmentAuth, CustomDepartmentID, CustomDepartmentName, CustomDepartmentPostion } from './CustomColumns';
 import { MiniOrganizationIcon } from '../../../common/JiranIcon';
+import { Button } from 'primereact/button';
 // * constants
 // * apis
 
@@ -109,12 +110,12 @@ const ContentLayout = (props: any) => {
             <span className='text-[18px]'>근태 관리자</span>
           </div>
           <div className='flex w-full'>
-            <CustomButton variant='contained' color='secondary' size='md' onClick={handleDepartmentManager}>
-              <div className='flex w-full justify-between'>
+            <Button className='flex items-center w-[200px] bg-primary border-solid border-0 ring-0' onClick={handleDepartmentManager}>
+              <div className='flex  w-full items-center justify-between'>
                 <span>{_.isEmpty(departmentLeader?.label) ? '근태 관리자 설정' : departmentLeader?.label}</span>
                 <MiniOrganizationIcon width={25} height={25} />
               </div>
-            </CustomButton>
+            </Button>
           </div>
         </div>
 
