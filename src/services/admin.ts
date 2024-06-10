@@ -11,6 +11,12 @@ const ADMIN_API = () => {
     return await axios.instance.post('/auth/login', { email: userName, password: password });
   };
 
+  // * 관리자 리프레시 토큰
+  const admin_refresh_token = async () => {
+    baseURLChange();
+    return await axios.instance.post('/auth/refresh');
+  };
+
   // * 조직도 조회
   const organization = async (companyId: any) => {
     baseURLChange();
@@ -121,6 +127,7 @@ const ADMIN_API = () => {
 
   return {
     admin_login,
+    admin_refresh_token,
     organization,
     department_create,
     department_delete,
