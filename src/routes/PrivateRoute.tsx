@@ -22,7 +22,6 @@ const PrivateRoute = (props: any) => {
   const navigate = useNavigate();
 
   let isAuthentication = localStorage.getItem(LOGIN_AUTH);
-
   /*
    * 로그인 하지 않았던 사용자는 로그인 페이지만 접근 가능
    * 그외에 접근시 로컬스토리지 클리어 후 사용자 로그인 페이지로 이동
@@ -30,9 +29,15 @@ const PrivateRoute = (props: any) => {
   if (isAuthentication === null) {
     if (_.includes(location?.pathname, '/login')) {
       return <Outlet />;
+    } else if (!_.includes(location?.pathname, '/login') && _.includes(location?.pathname, '/user')) {
+      localStorage.clear();
+      return <Navigate to={ENDPOINT.USER_LOGIN} />;
+    } else if (!_.includes(location?.pathname, '/login') && _.includes(location?.pathname, '/admin')) {
+      localStorage.clear();
+      return <Navigate to={ENDPOINT.ADMIN_LOGIN} />;
     } else {
       localStorage.clear();
-      navigate(ENDPOINT.USER_LOGIN);
+      return <Navigate to={ENDPOINT.USER_LOGIN} />;
     }
   } else {
     if (isAuthentication === 'user') {
@@ -61,7 +66,7 @@ const PrivateRoute = (props: any) => {
        * 로컬스토리지 초기화 후 사용자 로그인 페이지로 이동
        */
       localStorage.clear();
-      navigate(ENDPOINT.USER_LOGIN);
+      return <Navigate to={ENDPOINT.USER_LOGIN} />;
     }
   }
 
