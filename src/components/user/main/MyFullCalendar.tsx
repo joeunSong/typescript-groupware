@@ -151,7 +151,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
           <>
             {isToday(info.date) ? (
               <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>
-                <div className='flex items-center justify-center bg-[#FCAA0B] w-[25px] h-[25px] rounded-[50%] text-black'>{info.dayNumberText}</div>
+                <div className='flex items-center justify-center bg-[#FCAA0B] w-[28px] h-[28px] rounded-[50%] text-black'>{info.dayNumberText}</div>
               </div>
             ) : (
               <div className={`flex fc-day grid-day-number ${isHoliday ? 'holiday-date' : ''}`}>{info.dayNumberText}</div>
@@ -213,13 +213,13 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
           </Button>
         </div>
 
-        {(loading || !holidayList) && (
+        {(loading || holidayList.length === 0) && (
           <div className='flex w-full h-full items-center justify-center'>
             <LoadingLayout></LoadingLayout>
           </div>
         )}
 
-        <div className={`h-full ${loading ? 'hidden' : ''}`}>
+        <div className={`h-full ${loading || holidayList.length === 0 ? 'hidden' : ''}`}>
           {/* 한달 근무 유형 */}
           <div className='flex w-full min-h-[70px] rounded-[10px] border border-solid border-[#C7C7C7] mb-[10px] '>
             {workStateList.map((_it, idx) => (
