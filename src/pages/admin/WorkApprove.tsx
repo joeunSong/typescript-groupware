@@ -50,7 +50,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomDate(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'user_name',
@@ -58,7 +58,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomUserName(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'department_title',
@@ -66,7 +66,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomDepartmentTitle(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '15%' },
     },
     {
       field: 'work_type_title',
@@ -98,7 +98,7 @@ const AdminWorkApprovePage = () => {
       sortable: false,
       body: (rowData: any, tableData: any) => CustomStatus(rowData, tableData),
       className: 'max-w-[0px] p-0',
-      style: { width: '20%' },
+      style: { width: '40%' },
     },
   ];
 
