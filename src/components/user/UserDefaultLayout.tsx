@@ -19,6 +19,7 @@ import { Button } from '@mui/material';
 import USER_API from '../../services/user';
 import * as ENDPOINT from '../../constants/apiEndpoints';
 import { WorkRecord } from '../../types/interface';
+import { LogoutButton } from '../common/LogoutButton';
 
 const UserDefaultLayout = (props: any) => {
   const { children } = props;
@@ -197,9 +198,7 @@ const UserDefaultLayout = (props: any) => {
     <div className='flex w-full h-full'>
       {/* 공용 사이드바 */}
       <SideBarLayout headerTemplate={headerTemplate} items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
-      <Button className='bg-wihte h-12 w-60 absolute left-4 bottom-2' onClick={handleLogout}>
-        로그아웃
-      </Button>
+      <LogoutButton handleLogout={handleLogout} />
       <div className='flex flex-col w-full h-full'>
         {/* 헤더 */}
         <div className='flex p-6 bg-gray-100'>

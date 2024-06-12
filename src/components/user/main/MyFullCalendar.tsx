@@ -221,7 +221,7 @@ const MyFullCalendar = ({ onWork, todayWorkInfo, todayWorkInfoList }: MyFullCale
 
         <div className={`h-full ${loading || holidayList.length === 0 ? 'hidden' : ''}`}>
           {/* 한달 근무 유형 */}
-          <div className='flex w-full min-h-[70px] rounded-[10px] border border-solid border-[#C7C7C7] mb-[10px] '>
+          <div className='flex w-full min-h-[70px] rounded-[10px] border border-solid border-[#C7C7C7] mb-[10px] items-center'>
             {workStateList.map((_it, idx) => (
               <div key={idx} className='min-w-[60px] mr-[25px] p-[5px] pl-[30px] pr-[30px] text-[#777777] flex-col items-center justify-center'>
                 <div className='min-w-[60px] flex items-center justify-center mb-[5px]'>{_it.name}</div>

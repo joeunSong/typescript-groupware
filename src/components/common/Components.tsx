@@ -26,6 +26,7 @@ interface CustomButtonProps {
   color: 'primary' | 'secondary' | 'add';
   submit?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 /**
@@ -34,7 +35,7 @@ interface CustomButtonProps {
  * @param size lg: 로그인 버튼, md: 근태등록버튼
  * @returns
  */
-export const CustomButton = ({ onClick, children, variant, size, color, submit, disabled = false }: CustomButtonProps) => {
+export const CustomButton = ({ onClick, children, variant, size, color, submit, disabled = false, className }: CustomButtonProps) => {
   const width: Record<CustomButtonProps['size'], string> = {
     auto: 'auto',
     md: '14.375rem',
@@ -57,6 +58,7 @@ export const CustomButton = ({ onClick, children, variant, size, color, submit, 
         width: width[size],
       }}
       disabled={disabled}
+      className={className}
     >
       {children}
     </Button>
@@ -90,8 +92,8 @@ export const CustomModal = ({ isOpen, onClose, title, children }: CustomModalPro
       }}
     >
       <DialogTitle className='custom-dialog-title'>
-        <p>{title}</p>
-        <p onClick={onClose} className='cursor-pointer'>
+        <p className='mt-[20px] mb-[10px]'>{title}</p>
+        <p onClick={onClose} className='cursor-pointer mt-[20px] mb-[10px]'>
           <CloseIcon />
         </p>
       </DialogTitle>
