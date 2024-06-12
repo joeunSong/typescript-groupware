@@ -102,7 +102,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
           onClick={handleModalOpen}
         >
           {workTime >= 120 && (
-            <div className='p-[5px] text-[12px] text-white'>
+            <div className='p-[10px] text-[12px] text-white'>
               <div>{todayWorkInfo.workType?.title}</div>
               <div>
                 {`${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
