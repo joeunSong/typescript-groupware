@@ -1,7 +1,7 @@
 // * basic
 // * install libraries
 // * components
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Modal from '../../../common/Modal';
 import { Button } from 'primereact/button';
 // * constants
@@ -25,10 +25,19 @@ const DepartmentDeleteModal = (props: any) => {
     }
   };
 
+  // * 모달 닫기
+  const handleModalClose = () => {
+    setVisible(false);
+  };
+
   // * 헤더 템플렛
   const headerTemplate = () => {
+    return <></>;
+  };
+  // * 콘텐츠 템플렛
+  const contentTemplate = () => {
     return (
-      <div className='flex flex-col w-full items-center gap-5 p-5'>
+      <div className='flex flex-col w-full items-center gap-5 p-5 pt-10'>
         <div className='flex h-12 w-12 items-center justify-center rounded-full bg-red-100'>
           <InformationCircleIcon className='h-8 w-8 text-red-600 bg-red-100'></InformationCircleIcon>
         </div>
@@ -38,10 +47,6 @@ const DepartmentDeleteModal = (props: any) => {
         </div>
       </div>
     );
-  };
-  // * 콘텐츠 템플렛
-  const contentTemplate = () => {
-    return <></>;
   };
 
   // * 바닥 템플렛
@@ -70,6 +75,8 @@ const DepartmentDeleteModal = (props: any) => {
         footerTemplate={footerTemplate}
         dialogHeaderClassName={'p-0'}
         dialogClassName={`max-sm:w-full sm:w-9/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-5/12 3xl:w-4/12 4xl:w-3/12`}
+        dialogContentClassName={'px-[24px] pb-3'}
+        dialogFooterClassName={'px-[24px] pb-[20px]'}
       />
     </>
   );

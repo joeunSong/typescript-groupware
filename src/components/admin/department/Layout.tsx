@@ -83,7 +83,6 @@ const DepartmentLayout = (props: any) => {
     getOrganization();
   }, []);
 
-  console.log('selectDepartment', selectDepartment);
   return (
     <div className='flex w-full h-full overflow-hidden'>
       {/* 조직도 */}
@@ -101,13 +100,10 @@ const DepartmentLayout = (props: any) => {
       {/* 내용 */}
       <div className='flex flex-col w-full h-full pt-3 gap-5 bg-white'>
         {/* 부서 정보 */}
-        <div className='flex flex-col w-full gap-3 overflow-hidden'>
+        <div className='flex flex-col w-full h-full gap-3 overflow-hidden'>
           {/* 부서 정보 및 부서원 추가 */}
           <div className='flex w-full items-center justify-between'>
             <span className='text-2xl font-bold'>부서 정보</span>
-            {/* <div className='flex px-10'>
-              <button className='px-4 py-2 bg-primary border-solid botder-[1px] border-primary rounded-md text-white'>사용자 추가</button>
-            </div> */}
           </div>
           <ContentLayout
             getOrganization={getOrganization}

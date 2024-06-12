@@ -9,6 +9,7 @@ import Modal from '../../../common/Modal';
 import { COMPANY_ID } from '../../../../constants/constant';
 // * apis
 import ADMIN_API from '../../../../services/admin';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const DepartmentCreateModal = (props: any) => {
   const { visible, setVisible, getOrganization } = props;
@@ -24,18 +25,24 @@ const DepartmentCreateModal = (props: any) => {
     } catch (error: any) {}
   };
 
+  // * 모달 닫기
+  const handleModalClose = () => {
+    setVisible(false);
+  };
+
   // * 헤더 템플렛
   const headerTemplate = () => {
     return (
-      <div className='flex w-full p-3'>
-        <span className='text-xl font-bold'>부서 등록</span>
+      <div className='flex w-full justify-between px-[24px] py-[50px]'>
+        <span className='text-3xl font-bold'>부서 등록</span>
+        <XMarkIcon className=' cursor-pointer' width={25} height={25} fill='#000000' onClick={handleModalClose} />
       </div>
     );
   };
   // * 콘텐츠 템플렛
   const contentTemplate = () => {
     return (
-      <div className='flex w-full items-center bg-white gap-5 p-5'>
+      <div className='flex w-full items-center bg-white gap-5'>
         <div className='flex w-[70px] min-w-[70px]'>
           <span>부서 이름</span>
         </div>
@@ -63,6 +70,8 @@ const DepartmentCreateModal = (props: any) => {
       footerTemplate={footerTemplate}
       dialogHeaderClassName={'p-0'}
       dialogClassName={`max-sm:w-full sm:w-9/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-5/12 3xl:w-4/12 4xl:w-3/12`}
+      dialogContentClassName={'px-[24px] pb-3'}
+      dialogFooterClassName={'px-[24px] pb-[20px]'}
     />
   );
 };

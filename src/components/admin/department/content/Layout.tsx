@@ -69,48 +69,56 @@ const ContentLayout = (props: any) => {
         getOrganization={getOrganization}
       />
       {/* 부서 정보 내용 */}
-      <div className='flex flex-col w-full gap-5 overflow-hidden'>
-        {/* 부서명 */}
-        <div className='flex w-full'>
-          <div className='flex min-w-[150px]'>
-            <span className='text-[18px]'>부서명(한글)</span>
+      <div className='flex flex-col w-full h-full gap-5 overflow-hidden'>
+        {selectDepartment?.company_id === undefined || selectDepartment?.company_id === null ? (
+          <div className='flex w-full h-full justify-center items-center'>
+            <span className='text-2xl font-bold'>부서를 선택해주세요</span>
           </div>
-          <div className='flex w-full'>
-            <span>{_.isEmpty(selectDepartment?.label) ? '부서를 선택해주세요' : selectDepartment?.label} </span>
-          </div>
-        </div>
-        {/* 부서 근태관리자  */}
-        <div className='flex w-full items-center'>
-          <div className='flex min-w-[150px]'>
-            <span className='text-[18px]'>근태 관리자</span>
-          </div>
-          <div className='flex w-full'>
-            <Button className='flex items-center w-[200px] bg-primary border-solid border-0 ring-0' onClick={handleDepartmentManager}>
-              <div className='flex  w-full items-center justify-between'>
-                <span>{_.isEmpty(departmentLeader?.label) ? '근태 관리자 설정' : departmentLeader?.label}</span>
-                <MiniOrganizationIcon width={25} height={25} />
+        ) : (
+          <>
+            <div className='flex w-full'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>부서명(한글)</span>
               </div>
-            </Button>
-          </div>
-        </div>
+              <div className='flex w-full'>
+                <span>{_.isEmpty(selectDepartment?.label) ? '부서를 선택해주세요' : selectDepartment?.label} </span>
+              </div>
+            </div>
+            <div className='flex w-full items-center'>
+              <div className='flex min-w-[150px]'>
+                <span className='text-[18px]'>근태 관리자</span>
+              </div>
+              <div className='flex w-full'>
+                <Button
+                  className='flex items-center w-[200px] py-2 px-4 bg-white border-solid border-2 border-gray-300 ring-0'
+                  onClick={handleDepartmentManager}
+                >
+                  <div className='flex  w-full items-center justify-between'>
+                    <span className='text-black'>{_.isEmpty(departmentLeader?.label) ? '근태 관리자 설정' : departmentLeader?.label}</span>
+                    <MiniOrganizationIcon width={25} height={25} />
+                  </div>
+                </Button>
+              </div>
+            </div>
 
-        {/* 부서원 목록  */}
-        <div className='flex flex-col w-full h-full gap-3 overflow-hidden'>
-          <span className='text-[18px]'>부서원 목록</span>
-          <div className='flex w-full h-full scrollYWrap overflow-y-auto'>
-            <CustomeDataTable
-              data={selectDepartment?.users}
-              columns={columns}
-              headerTitle={'부서원 목록'}
-              headerTitleVisible={false}
-              selectData={selectUser}
-              setSelectData={setSelectUser}
-              filterVisible={false}
-              paginatorVisible={true}
-              emptyMessage={'부서원을 추가해주세요'}
-            />
-          </div>
-        </div>
+            <div className='flex flex-col w-full h-full gap-3 overflow-hidden'>
+              <span className='text-[18px]'>부서원 목록</span>
+              <div className='flex w-full scrollYWrap overflow-y-auto'>
+                <CustomeDataTable
+                  data={selectDepartment?.users}
+                  columns={columns}
+                  headerTitle={'부서원 목록'}
+                  headerTitleVisible={false}
+                  selectData={selectUser}
+                  setSelectData={setSelectUser}
+                  filterVisible={false}
+                  paginatorVisible={true}
+                  emptyMessage={'부서원을 추가해주세요'}
+                />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
