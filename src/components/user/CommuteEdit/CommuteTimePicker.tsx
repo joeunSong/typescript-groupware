@@ -1,9 +1,9 @@
-import { LocalizationProvider, TimePicker, TimeValidationError } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker/TimePicker';
+import { TimeValidationError } from '@mui/x-date-pickers/models/validation';
 import { Dayjs } from 'dayjs';
-import { Dispatch, SetStateAction, memo, useMemo } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 
-interface CustomTimePickerProps {
+interface CommuteTimePickerProps {
   type: string;
   initialValue: Dayjs;
   onChange: (newValue: Dayjs) => void;
@@ -12,7 +12,7 @@ interface CustomTimePickerProps {
   startAt?: Dayjs;
 }
 
-const CustomTimePicker = ({ type, initialValue, onChange, setError, error, startAt }: CustomTimePickerProps) => {
+const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, startAt }: CommuteTimePickerProps) => {
   const errorMessage = useMemo(() => {
     switch (error[type]) {
       case 'minTime': {
@@ -30,51 +30,51 @@ const CustomTimePicker = ({ type, initialValue, onChange, setError, error, start
   }, [error, type]);
 
   return (
-    <TimePicker
-      ampm={false}
-      views={['hours', 'minutes']}
-      value={initialValue}
-      onChange={(value) => {
-        console.log(value);
-        if (value) {
-          onChange(value);
-          setError((prev) => ({ ...prev, [type]: null }));
-        } else {
-          const error: TimeValidationError = 'invalidDate';
-          console.log('value is null');
-          setError((prev) => ({ ...prev, [type]: error }));
-        }
-      }}
-      onError={(newError) => setError((prev) => ({ ...prev, [type]: newError }))}
-      slotProps={{
-        textField: {
-          helperText: errorMessage,
-          FormHelperTextProps: {
-            style: { color: 'red' },
+    <div className={`${error[type] ? '' : 'mb-5'}`}>
+      <TimePicker
+        ampm={false}
+        views={['hours', 'minutes']}
+        value={initialValue}
+        onChange={(value) => {
+          if (value) {
+            setError((prev) => ({ ...prev, [type]: null }));
+            onChange(value);
+          } else {
+            const error: TimeValidationError = 'invalidDate';
+            setError((prev) => ({ ...prev, [type]: error }));
+          }
+        }}
+        onError={(newError) => setError((prev) => ({ ...prev, [type]: newError }))}
+        slotProps={{
+          textField: {
+            helperText: errorMessage,
+            FormHelperTextProps: {
+              style: { color: 'red', minHeight: '20px' },
+            },
           },
-        },
-      }}
-      {...(type === 'endAt' ? { minTime: startAt } : {})}
-    />
+        }}
+        {...(type === 'endAt' ? { minTime: startAt } : {})}
+      />
+    </div>
   );
 };
-interface CommuteTimePickerProps {
-  startAt: Dayjs;
-  startOnChange: (newValue: Dayjs) => void;
-  endAt: Dayjs;
-  endOnChange: (newValue: Dayjs) => void;
-  error: Record<string, TimeValidationError>;
-  setError: Dispatch<SetStateAction<Record<string, TimeValidationError>>>;
-}
+// interface CommuteTimePickerProps {
+//   startAt: Dayjs;
+//   startOnChange: (newValue: Dayjs) => void;
+//   endAt: Dayjs;
+//   endOnChange: (newValue: Dayjs) => void;
+//   error: Record<string, TimeValidationError>;
+//   setError: Dispatch<SetStateAction<Record<string, TimeValidationError>>>;
+// }
 
-const CommuteTimePicker = memo(({ startAt, startOnChange, endAt, endOnChange, setError, error }: CommuteTimePickerProps) => {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <CustomTimePicker type='startAt' initialValue={startAt} onChange={startOnChange} setError={setError} error={error} />
-      <span className='self-center'>-</span>
-      <CustomTimePicker type='endAt' initialValue={endAt} onChange={endOnChange} setError={setError} error={error} startAt={startAt} />
-    </LocalizationProvider>
-  );
-});
+// const CommuteTimePicker = memo(({ startAt, startOnChange, endAt, endOnChange, setError, error }: CommuteTimePickerProps) => {
+//   return (
+//     <LocalizationProvider dateAdapter={AdapterDayjs}>
+//       <CustomTimePicker type='startAt' initialValue={startAt} onChange={startOnChange} setError={setError} error={error} />
+//       <span className='self-center'>-</span>
+//       <CustomTimePicker type='endAt' initialValue={endAt} onChange={endOnChange} setError={setError} error={error} startAt={startAt} />
+//     </LocalizationProvider>
+//   );
+// });
 
 export default CommuteTimePicker;

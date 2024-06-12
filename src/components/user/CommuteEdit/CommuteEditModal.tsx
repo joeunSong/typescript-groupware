@@ -1,8 +1,8 @@
 import { CustomButton, CustomModal } from '../../common/Components';
 import { useState } from 'react';
-import { FormControl, SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { KSTtoMMDD, period } from '../../../utils/dateFormatter';
+import { KSTtoMMDD } from '../../../utils/dateFormatter';
 import WorkTypeSelect from './WorkTypeSelect';
 import CommuteTimePicker from './CommuteTimePicker';
 import { WorkRecord } from '../../../types/interface';
@@ -10,6 +10,8 @@ import USER_API from '../../../services/user';
 import { WORKTYPE_ID } from '../../../constants/constant';
 import utc from 'dayjs/plugin/utc';
 import { TimeValidationError } from '@mui/x-date-pickers/models/validation';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 interface CommuteEditModalProps {
   isModalOpen: boolean;
@@ -62,50 +64,71 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
 
   return (
     <CustomModal isOpen={isModalOpen} onClose={handleModalClose} title='근무 조정'>
-      <div className='flex flex-col gap-3 '>
-        <div className='flex gap-2 items-center'>
-          <div>{KSTtoMMDD(work.startAt)}</div>
-          <div className='border rounded-xl bg-secondary-600 px-2 py-1 text-xs'>
-            {work.startAt && work.endAt ? period(work.startAt, work.endAt) : '조정 필요'}
-          </div>
-        </div>
-        <FormControl className='gap-2'>
-          <WorkTypeSelect
-            value={workForm.type}
-            onChange={(e: SelectChangeEvent) => {
-              if (e.target.value === work.workType.title) {
-                setIsDataSame(true);
-              } else {
-                setIsDataSame(false);
-                setWorkForm({ ...workForm, type: e.target.value });
-              }
-            }}
-          />
-
-          <div className='flex space-x-2'>
-            <CommuteTimePicker
-              startAt={workForm.startAt}
-              startOnChange={(newValue: Dayjs) => {
-                if (workForm.startAt.isSame(newValue)) {
-                  setIsDataSame(true);
-                } else {
-                  setIsDataSame(false);
-                  setWorkForm((prev) => ({ ...prev, startAt: newValue }));
-                }
-              }}
-              endAt={workForm.endAt}
-              endOnChange={(newValue: Dayjs) => {
-                if (workForm.endAt.isSame(newValue)) {
-                  setIsDataSame(true);
-                } else {
-                  setIsDataSame(false);
-                  setWorkForm((prev) => ({ ...prev, endAt: newValue }));
-                }
-              }}
-              error={timepickerError}
-              setError={setTimepickerError}
-            />
-          </div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className='flex flex-col gap-3'>
+          <table className='min-w-full divide-y divide-gray-200'>
+            <tbody>
+              <tr>
+                <td className='px-6 py-2 whitespace-nowrap '>근무 유형</td>
+                <td className='px-6 py-2 whitespace-nowrap text-sm '>
+                  <WorkTypeSelect
+                    value={workForm.type}
+                    onChange={(e: SelectChangeEvent) => {
+                      if (e.target.value === work.workType.title) {
+                        setIsDataSame(true);
+                      } else {
+                        setIsDataSame(false);
+                        setWorkForm({ ...workForm, type: e.target.value });
+                      }
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td className='px-6 py-2 whitespace-nowrap h-[56px]'>근무일</td>
+                <td className='px-6 py-2 whitespace-nowrap h-[56px]'>2024년 {KSTtoMMDD(work.startAt)}</td>
+              </tr>
+              <tr>
+                <td className='px-6 py-2 whitespace-nowrap'>출근 시간</td>
+                <td className='px-6 pt-2 pb-0 whitespace-nowrap text-sm'>
+                  <CommuteTimePicker
+                    type='startAt'
+                    initialValue={workForm.startAt}
+                    onChange={(newValue: Dayjs) => {
+                      if (workForm.startAt.isSame(newValue)) {
+                        setIsDataSame(true);
+                      } else {
+                        setIsDataSame(false);
+                        setWorkForm((prev) => ({ ...prev, startAt: newValue }));
+                      }
+                    }}
+                    error={timepickerError}
+                    setError={setTimepickerError}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td className='px-6 py-2 whitespace-nowrap'>퇴근 시간</td>
+                <td className='px-6 pt-2 pb-0 whitespace-nowrap align-middle'>
+                  <CommuteTimePicker
+                    type='endAt'
+                    startAt={workForm.startAt}
+                    initialValue={workForm.endAt}
+                    onChange={(newValue: Dayjs) => {
+                      if (workForm.endAt.isSame(newValue)) {
+                        setIsDataSame(true);
+                      } else {
+                        setIsDataSame(false);
+                        setWorkForm((prev) => ({ ...prev, endAt: newValue }));
+                      }
+                    }}
+                    error={timepickerError}
+                    setError={setTimepickerError}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <div className='flex justify-center gap-3 mt-4'>
             <CustomButton
               variant='text'
@@ -128,10 +151,11 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
               승인 요청
             </CustomButton>
           </div>
-        </FormControl>
-      </div>
+        </div>
+      </LocalizationProvider>
     </CustomModal>
   );
 };
 
 export default CommuteEditModal;
+

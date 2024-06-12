@@ -25,7 +25,7 @@ const WorkTypeSelect = ({ value, onChange }: WorkTimeSelectProps) => {
   }, []);
 
   return (
-    <Select value={workType.length ? value : ''} onChange={onChange} displayEmpty inputProps={{ 'aria-label': 'Without label' }}>
+    <Select value={workType.length ? value : ''} onChange={onChange} displayEmpty inputProps={{ 'aria-label': 'Without label' }} className='w-full'>
       {typeof workType === 'object' &&
         workType.map((type) => {
           return (
