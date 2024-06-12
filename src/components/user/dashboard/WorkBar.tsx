@@ -69,7 +69,7 @@ function WorkBar({ workInfo }: workBarProps) {
         placement='top'
       >
         <div
-          className={`${workInfo.isNormal ? 'bg-primary' : 'bg-[#FF0000]'} w-0 min-h-[40px] absolute rounded-[10px] cursor-pointer`}
+          className={`${workInfo.isNormal ? 'bg-primary' : 'bg-[#FF0000]'} w-0 p-[10px] max-h-[50px] min-h-[40px] overflow-hidden absolute rounded-[10px] cursor-pointer`}
           // className={`bg-red-500 w-0 h-[30px] absolute`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
@@ -80,7 +80,7 @@ function WorkBar({ workInfo }: workBarProps) {
           onClick={handleModalOpen}
         >
           {workTime >= 120 && (
-            <div className='p-[10px] text-[12px] text-white'>
+            <div className='text-[12px] text-white'>
               <div>{workInfo.workType?.title}</div>
               <div>
                 {`${moment(workInfo.startAt).format('HH:mm')} - ${workInfo.isNormal ? moment(workInfo.endAt).format('HH:mm') : '퇴근 미등록'}`}
