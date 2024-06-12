@@ -58,10 +58,12 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
     }
   };
 
+  const buttonDisabled = !!timepickerError.startAt || !!timepickerError.endAt || isDataSame;
+
   return (
-    <CustomModal isOpen={isModalOpen} onClose={handleModalClose} title='근무 기록 조정'>
+    <CustomModal isOpen={isModalOpen} onClose={handleModalClose} title='근무 조정'>
       <div className='flex flex-col gap-3 '>
-        <div className='flex gap-2'>
+        <div className='flex gap-2 items-center'>
           <div>{KSTtoMMDD(work.startAt)}</div>
           <div className='border rounded-xl bg-secondary-600 px-2 py-1 text-xs'>
             {work.startAt && work.endAt ? period(work.startAt, work.endAt) : '조정 필요'}
@@ -104,16 +106,28 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
               setError={setTimepickerError}
             />
           </div>
-          <CustomButton
-            variant='text'
-            size='auto'
-            color='primary'
-            submit={true}
-            onClick={handleSubmit}
-            disabled={!!timepickerError.startAt || !!timepickerError.endAt || isDataSame}
-          >
-            수정
-          </CustomButton>
+          <div className='flex justify-center gap-3 mt-4'>
+            <CustomButton
+              variant='text'
+              size='auto'
+              color='secondary'
+              onClick={() => setIsModalOpen(false)}
+              className='w-[90px] text-black bg-secondary-500'
+            >
+              취소
+            </CustomButton>
+            <CustomButton
+              variant='text'
+              size='auto'
+              color={buttonDisabled ? 'secondary' : 'primary'}
+              submit={true}
+              onClick={handleSubmit}
+              disabled={buttonDisabled}
+              className='w-[90px]'
+            >
+              승인 요청
+            </CustomButton>
+          </div>
         </FormControl>
       </div>
     </CustomModal>

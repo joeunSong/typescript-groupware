@@ -4,6 +4,7 @@ import USER_API from '../../../../services/user';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 import findWorkStatus from '../../../../utils/findWorkStatus';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const ApprovalDetailModalLayout = (props: any) => {
   const { visible, setVisible, selectData } = props;
@@ -38,18 +39,24 @@ const ApprovalDetailModalLayout = (props: any) => {
     },
   ];
 
+  // * 모달 닫기
+  const handleModalClose = () => {
+    setVisible(false);
+  };
+
   // * 헤더 템플렛
   const headerTemplate = () => {
     return (
-      <div className='flex w-full justify-between p-5'>
-        <span className='text-xl font-bold'>근무 조정 상세</span>
+      <div className='flex w-full justify-between px-[24px] py-[50px]'>
+        <span className='text-3xl font-bold'>근무 조정 상세</span>
+        <XMarkIcon className=' cursor-pointer' width={25} height={25} fill='#000000' onClick={handleModalClose} />
       </div>
     );
   };
   // * 콘텐츠 템플렛
   const contentTemplate = () => {
     return (
-      <div className='flex flex-col w-full bg-white gap-5'>
+      <div className='flex flex-col w-full bg-white gap-5 px-3'>
         <div className='flex flex-col w-full gap-5 border-solid border-b-[1px] border-secondary-600 pb-5'>
           {_.map(userDetail, (detail: any) => {
             return (
@@ -92,7 +99,7 @@ const ApprovalDetailModalLayout = (props: any) => {
   // * 바닥 템플렛
   const footerTemplate = () => {
     return (
-      <div className='flex w-full justify-center px-3 pb-2'>
+      <div className='flex w-full justify-center px-3 pb-7'>
         <Button
           label='반려'
           className={`w-[100px] px-2 py-1 ring-0 border-0 text-black bg-secondary-500`}
@@ -124,6 +131,8 @@ const ApprovalDetailModalLayout = (props: any) => {
       footerTemplate={footerTemplate}
       dialogHeaderClassName={'p-0'}
       dialogClassName={`max-sm:w-full sm:w-9/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-5/12 3xl:w-4/12 4xl:w-3/12`}
+      dialogContentClassName={'px-[24px] pb-3'}
+      dialogFooterClassName={'px-[24px] pb-[20px]'}
     />
   );
 };

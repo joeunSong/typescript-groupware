@@ -10,7 +10,7 @@ import { HomeRounded } from '@mui/icons-material';
 import WorkIcon from '@mui/icons-material/Work';
 // * constants
 import * as ENDPOINT from '../../constants/apiEndpoints';
-import { OrganizationIcon } from '../common/JiranIcon';
+import { LogoutButton } from '../common/LogoutButton';
 // * apis
 
 const AdminDefaultLayout = (props: any) => {
@@ -66,9 +66,7 @@ const AdminDefaultLayout = (props: any) => {
       {/* 공용 사이드바 */}
       <SideBarLayout items={items} setItems={setItems} selectItem={selectItem} setSelectItem={setSelectItem} />
 
-      <Button className='absolute h-12 bg-wihte w-60 left-4 bottom-2' onClick={handleLogout}>
-        로그아웃
-      </Button>
+      <LogoutButton handleLogout={handleLogout} />
       <div className='flex flex-col w-full h-full pb-10 pr-4 bg-gray-100'>
         {/* 헤더 */}
         <div className='flex flex-col'>

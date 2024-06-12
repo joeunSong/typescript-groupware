@@ -94,9 +94,14 @@ const DashBoardLayout = (props: any) => {
   }, []);
 
   return (
-    <div className='flex flex-col w-full h-full bg-white p-3 gap-14'>
+    <div className='flex flex-col w-full h-full bg-white p-3 gap-3'>
+      <div className='flex w-full justify-end px-8 py-1'>
+        <button className='border-solid border-[2px] border-gray-200 rounded-md drop-shadow-md  px-4 py-2' disabled>
+          <span className='text-lg font-bold'>오피스 노트로 내보내기</span>
+        </button>
+      </div>
       {/* 차트 */}
-      <div className='flex w-full gap-10'>
+      <div className='flex w-full gap-10 pb-14'>
         {/* 부서별 평균 근무 시간 (Bar) */}
         <div className='flex flex-col w-2/3 gap-2'>
           <div className='flex w-full h-14 items-center gap-2'>
