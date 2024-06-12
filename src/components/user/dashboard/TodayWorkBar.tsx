@@ -92,7 +92,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
         placement='top'
       >
         <div
-          className={`bg-primary w-0 min-h-[40px] absolute rounded-[10px] ${todayWorkInfo.isNormal ? 'cursor-pointer' : ''}`}
+          className={`bg-primary w-0 p-[10px] max-h-[50px] min-h-[40px] absolute rounded-[10px] overflow-hidden ${todayWorkInfo.isNormal ? 'cursor-pointer' : ''}`}
           style={{
             marginLeft: `calc(100%/1440 * ${startPlace})`,
             width: `calc(100%/1440 * ${workTime})`,
@@ -102,7 +102,7 @@ function TodayWorkBar({ todayWorkInfo }: TodayWorkBarProps) {
           onClick={handleModalOpen}
         >
           {workTime >= 120 && (
-            <div className='p-[10px] text-[12px] text-white'>
+            <div className='text-[12px] text-white'>
               <div>{todayWorkInfo.workType?.title}</div>
               <div>
                 {`${moment(todayWorkInfo.startAt).format('HH:mm')} - ${todayWorkInfo.isNormal ? moment(todayWorkInfo.endAt).format('HH:mm') : '진행중'}`}
