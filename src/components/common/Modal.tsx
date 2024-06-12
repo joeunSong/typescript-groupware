@@ -13,6 +13,7 @@ const Modal = (props: any) => {
     contentTemplate,
     footerTemplate,
     dialogClassName,
+    dialogRootClassName,
     dialogHeaderClassName,
     dialogContentClassName,
     dialogFooterClassName,
@@ -34,6 +35,7 @@ const Modal = (props: any) => {
       draggable={false}
       className={`${dialogClassName ? dialogClassName : 'max-sm:w-full sm:w-10/12 md:w-10/12 lg:w-6/12 xl:w-5/12 2xl:w-4/12'} max-h-full`}
       pt={{
+        root: { className: `${dialogRootClassName ? dialogRootClassName : 'bg-white px-[1.2rem]'}` },
         header: { className: dialogHeaderClassName ? dialogHeaderClassName : 'p-5' },
         content: { className: dialogContentClassName ? dialogContentClassName : 'p-5 pt-0' },
         footer: { className: dialogFooterClassName ? dialogFooterClassName : 'p-0 ' },
