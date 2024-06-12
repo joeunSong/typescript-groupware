@@ -41,7 +41,7 @@ const ApprovalDetailModalLayout = (props: any) => {
   // * 헤더 템플렛
   const headerTemplate = () => {
     return (
-      <div className='flex w-full justify-between p-5'>
+      <div className='flex w-full justify-between pb-5 px-7 pt-7'>
         <span className='text-xl font-bold'>근무 조정 상세</span>
       </div>
     );
@@ -49,7 +49,7 @@ const ApprovalDetailModalLayout = (props: any) => {
   // * 콘텐츠 템플렛
   const contentTemplate = () => {
     return (
-      <div className='flex flex-col w-full bg-white gap-5'>
+      <div className='flex flex-col w-full bg-white gap-5 px-3'>
         <div className='flex flex-col w-full gap-5 border-solid border-b-[1px] border-secondary-600 pb-5'>
           {_.map(userDetail, (detail: any) => {
             return (
@@ -92,7 +92,7 @@ const ApprovalDetailModalLayout = (props: any) => {
   // * 바닥 템플렛
   const footerTemplate = () => {
     return (
-      <div className='flex w-full justify-center px-3 pb-2'>
+      <div className='flex w-full justify-center px-3 pb-7'>
         <Button
           label='반려'
           className={`w-[100px] px-2 py-1 ring-0 border-0 text-black bg-secondary-500`}
