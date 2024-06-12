@@ -6,12 +6,11 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 // * components
 import SideBarLayout from '../common/SideBar';
 import { Button } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
 import { HomeRounded } from '@mui/icons-material';
+import WorkIcon from '@mui/icons-material/Work';
 // * constants
 import * as ENDPOINT from '../../constants/apiEndpoints';
+import { OrganizationIcon } from '../common/JiranIcon';
 // * apis
 
 const AdminDefaultLayout = (props: any) => {
@@ -28,7 +27,7 @@ const AdminDefaultLayout = (props: any) => {
       items: [],
     },
     {
-      icon: SendIcon,
+      icon: 'OrganizationIcon',
       label: '조직도 관리',
       open: false,
       items: [
@@ -37,7 +36,7 @@ const AdminDefaultLayout = (props: any) => {
       ],
     },
     {
-      icon: DraftsIcon,
+      icon: WorkIcon,
       label: '근무 관리',
       open: false,
       items: [

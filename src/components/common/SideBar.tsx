@@ -4,7 +4,7 @@ import { Fragment, useEffect } from 'react';
 import _ from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 // * components
-import { JiranFullLogoIcon } from './JiranIcon';
+import { JiranFullLogoIcon, OrganizationIcon } from './JiranIcon';
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -148,7 +148,7 @@ const SideBarLayout = ({
                     <> </>
                   ) : (
                     <ListItemIcon style={{ minWidth: '33px' }}>
-                      <item.icon />
+                      {item.icon === 'OrganizationIcon'? <OrganizationIcon width={20}/> : <item.icon />}
                     </ListItemIcon>
                   )}
 
