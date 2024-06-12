@@ -67,7 +67,8 @@ export const CustomStartAt = (rowData: any, tableData: any) => {
 
 export const CustomEndAt = (rowData: any, tableData: any) => {
   const end_at = moment(rowData.end_at);
-  const formattedEndTime = end_at.format('HH:mm');
+  // console.log('rowData:',rowData)
+  const formattedEndTime = rowData.is_normal ? end_at.format('HH:mm'): '\u00A0';
 
   return (
     <div

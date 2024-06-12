@@ -18,6 +18,7 @@ import plus from '../../assets/svg/plus.svg';
 import x from '../../assets/svg/x.svg';
 import home from '../../assets/svg/home.svg';
 import information from '../../assets/svg/information.svg';
+import organization from '../../assets/svg/Vector.svg';
 
 const render = (
   src: any,
@@ -30,6 +31,7 @@ const render = (
   dataPrTooltip: any | undefined = null,
   dataPrPosition: any | undefined = null,
   id: any | undefined = null,
+  color: any | undefined = null,
 ) => {
   return (
     <img
@@ -165,3 +167,17 @@ export const InformationIcon = (props: any) =>
     props.dataPrPosition,
     props.id,
   );
+  export const OrganizationIcon = (props: any) =>
+    render(
+      organization,
+      props.w,
+      props.h,
+      props.width,
+      props.height,
+      props.className,
+      props.onClick,
+      props.dataPrTooltip,
+      props.dataPrPosition,
+      props.id,
+      props.color,
+    );
