@@ -29,7 +29,6 @@ const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, star
     }
   }, [error, type]);
 
-  console.log('erorr', error);
   return (
     <div className={`${error[type] ? '' : 'mb-5'}`}>
       <TimePicker
@@ -37,7 +36,6 @@ const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, star
         views={['hours', 'minutes']}
         value={initialValue}
         onChange={(value) => {
-          console.log(value);
           if (value) {
             setError((prev) => ({ ...prev, [type]: null }));
             onChange(value);
