@@ -5,11 +5,11 @@ import { Dispatch, SetStateAction, useMemo } from 'react';
 
 interface CommuteTimePickerProps {
   type: string;
-  initialValue: Dayjs;
-  onChange: (newValue: Dayjs) => void;
+  initialValue: Dayjs | null;
+  onChange: (newValue: Dayjs | null) => void;
   setError: Dispatch<SetStateAction<Record<string, TimeValidationError>>>;
   error: Record<string, TimeValidationError>;
-  startAt?: Dayjs;
+  startAt?: Dayjs | null;
 }
 
 const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, startAt }: CommuteTimePickerProps) => {
@@ -29,6 +29,7 @@ const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, star
     }
   }, [error, type]);
 
+  console.log('erorr', error);
   return (
     <div className={`${error[type] ? '' : 'mb-5'}`}>
       <TimePicker
@@ -36,12 +37,13 @@ const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, star
         views={['hours', 'minutes']}
         value={initialValue}
         onChange={(value) => {
+          console.log(value);
           if (value) {
             setError((prev) => ({ ...prev, [type]: null }));
             onChange(value);
           } else {
-            const error: TimeValidationError = 'invalidDate';
-            setError((prev) => ({ ...prev, [type]: error }));
+            setError((prev) => ({ ...prev, [type]: 'invalidDate' }));
+            onChange(null);
           }
         }}
         onError={(newError) => setError((prev) => ({ ...prev, [type]: newError }))}
@@ -53,28 +55,10 @@ const CommuteTimePicker = ({ type, initialValue, onChange, setError, error, star
             },
           },
         }}
-        {...(type === 'endAt' ? { minTime: startAt } : {})}
+        {...(type === 'endAt' && startAt ? { minTime: startAt } : {})}
       />
     </div>
   );
 };
-// interface CommuteTimePickerProps {
-//   startAt: Dayjs;
-//   startOnChange: (newValue: Dayjs) => void;
-//   endAt: Dayjs;
-//   endOnChange: (newValue: Dayjs) => void;
-//   error: Record<string, TimeValidationError>;
-//   setError: Dispatch<SetStateAction<Record<string, TimeValidationError>>>;
-// }
-
-// const CommuteTimePicker = memo(({ startAt, startOnChange, endAt, endOnChange, setError, error }: CommuteTimePickerProps) => {
-//   return (
-//     <LocalizationProvider dateAdapter={AdapterDayjs}>
-//       <CustomTimePicker type='startAt' initialValue={startAt} onChange={startOnChange} setError={setError} error={error} />
-//       <span className='self-center'>-</span>
-//       <CustomTimePicker type='endAt' initialValue={endAt} onChange={endOnChange} setError={setError} error={error} startAt={startAt} />
-//     </LocalizationProvider>
-//   );
-// });
 
 export default CommuteTimePicker;

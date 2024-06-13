@@ -21,8 +21,8 @@ interface CommuteEditModalProps {
 
 interface workFormType {
   type: string;
-  startAt: Dayjs;
-  endAt: Dayjs;
+  startAt: Dayjs | null;
+  endAt: Dayjs | null;
 }
 
 const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModalProps) => {
@@ -31,7 +31,7 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
     startAt: dayjs(work.startAt),
     endAt: dayjs(work.endAt),
   });
-  const [timepickerError, setTimepickerError] = useState<Record<string, TimeValidationError>>({ startAt: null, endAT: null });
+  const [timepickerError, setTimepickerError] = useState<Record<string, TimeValidationError>>({ startAt: null, endAt: null });
   const [isDataSame, setIsDataSame] = useState<boolean>(true);
 
   const handleModalClose = () => {
@@ -94,8 +94,8 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
                   <CommuteTimePicker
                     type='startAt'
                     initialValue={workForm.startAt}
-                    onChange={(newValue: Dayjs) => {
-                      if (workForm.startAt.isSame(newValue)) {
+                    onChange={(newValue: Dayjs | null) => {
+                      if (workForm.startAt?.isSame(newValue)) {
                         setIsDataSame(true);
                       } else {
                         setIsDataSame(false);
@@ -114,8 +114,8 @@ const CommuteEditModal = ({ isModalOpen, setIsModalOpen, work }: CommuteEditModa
                     type='endAt'
                     startAt={workForm.startAt}
                     initialValue={workForm.endAt}
-                    onChange={(newValue: Dayjs) => {
-                      if (workForm.endAt.isSame(newValue)) {
+                    onChange={(newValue: Dayjs | null) => {
+                      if (workForm.endAt?.isSame(newValue)) {
                         setIsDataSame(true);
                       } else {
                         setIsDataSame(false);
